@@ -20,7 +20,9 @@ def books_list(request):
         return Response(serializer.data)
 
     elif request.method == 'POST':
+        print(request.data)
         serializer = BookSerializer(data=request.data)
+        print(serializer)
         if serializer.is_valid():
             serializer.save()
             return Response(status=status.HTTP_201_CREATED)
@@ -28,12 +30,17 @@ def books_list(request):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['PUT','DELETE'])
-def book_edit(request, pk):
+def book_detail(request, id):
     try:
-        book = Book.objects.get(pk=pk)
-
+        book = Book.objects.get(id=id)
     except Book.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
+
+    if request.method == 'GET':
+        serializer = BookSerializer(book, context={'request': request}, many=True)
+
+        return Response(serializer.data)
+
     if request.method == 'PUT':
         serializer = BookSerializer(book, data=request.data,context={'request': request})
         if serializer.is_valid():
@@ -67,11 +74,17 @@ def authors_list(request):
             
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-def author_detail(request, pk):
+def author_detail(request, id):
     try:
-        author = Author.objects.get(pk=pk)
+        author = Author.objects.get(id=id)
     except Author.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
+
+    if request.method == 'GET':
+        serializer = AuthorSerializer(author, context={'request': request}, many=True)
+
+        return Response(serializer.data)
+
 
     if request.method == 'PUT':
         serializer = AuthorSerializer(author, data=request.data,context={'request': request})
@@ -105,11 +118,16 @@ def genre_list(request):
             
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-def genre_detail(request, pk):
+def genre_detail(request, id):
     try:
-        genre = Genre.objects.get(pk=pk)
+        genre = Genre.objects.get(id=id)
     except Genre.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
+
+    if request.method == 'GET':
+        serializer = GenreSerializer(genre, context={'request': request}, many=True)
+
+        return Response(serializer.data)
 
     if request.method == 'PUT':
         serializer = GenreSerializer(genre, data=request.data,context={'request': request})
@@ -143,12 +161,16 @@ def series_list(request):
             
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-def series_detail(request, pk):
+def series_detail(request, id):
     try:
-        series = Series.objects.get(pk=pk)
+        series = Series.objects.get(id=id)
     except Series.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
 
+    if request.method == 'GET':
+        serializer = SeriesSerializer(series, context={'request': request}, many=True)
+
+        return Response(serializer.data)
     if request.method == 'PUT':
         serializer = SeriesSerializer(series, data=request.data,context={'request': request})
         if serializer.is_valid():

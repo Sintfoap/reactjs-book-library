@@ -44,6 +44,7 @@ class NewBookModal extends Component {
               resetState={this.props.resetState}
               toggle={this.toggle}
               book={this.props.book}
+              on_change={this.props.on_change}
             />
           </ModalBody>
         </Modal>

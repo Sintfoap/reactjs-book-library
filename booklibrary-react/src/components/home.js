@@ -1,6 +1,9 @@
 import React, { Component } from "react";
 import { Col, Container, Row } from "reactstrap";
-import BookList from "./book_list";
+import Books from "./Books"
+import Authors from "./Authors"
+import Genres from "./Genres"
+import Series from "./Series"
 import NewBookModal from "./new_book_modal";
 // import NewAuthorModal from "./new_author_modal";
 // import NewGenreModal from "./new_genre_modal";
@@ -16,17 +19,18 @@ class Home extends Component {
     books: [],
     authors: [],
     genres: [],
-    series: []
+    series: [],
+    current_page: ""
   };
 
   componentDidMount() {
     this.resetState();
+    this.setState({current_page: window.location.pathname.slice(1)})
   }
 
   getBooks = () => {
     axios.get(API_URL + 'books').then(res => this.setState({ books: res.data }));
   };
-
   getAuthors = () => {
     axios.get(API_URL + 'authors').then(res => this.setState({ authors: res.data }));
   }
@@ -46,61 +50,47 @@ class Home extends Component {
     this.getSeries();
   };
 
+  getpage = () => {
+
+    switch (this.state.current_page) {
+      case "books":
+        return (
+          <Books 
+          books={this.state.books}
+          authors={this.state.authors}
+          genres={this.state.genres}
+          series={this.state.series}
+          />
+        )
+        break;
+      case "authors":
+        return (
+          <Authors />
+        )
+        break;
+      case "genres":
+        return (
+          <Genres />
+        )
+        break;
+      case "series":
+        return (
+          <Series />
+        )
+        break;
+    
+      // default:
+      //   return (
+      //     <Books />
+      //   )
+    }
+  }
+
   render() {
+
     return (
       <Container style={{ marginTop: "20px" }}>
-        <Row>
-          <Col>
-            <BookList
-              books={this.state.books}
-              resetState={this.resetState}
-            />
-          </Col>
-        </Row>
-        <Row>
-          <Col>
-            <BookList
-              authors={this.state.authors}
-              resetState={this.resetState}
-            />
-          </Col>
-        </Row>
-        <Row>
-          <Col>
-            <BookList
-              genres={this.state.genres}
-              resetState={this.resetState}
-            />
-          </Col>
-        </Row>
-        <Row>
-          <Col>
-            <BookList
-              series={this.state.series}
-              resetState={this.resetState}
-            />
-          </Col>
-        </Row>
-        <Row>
-          <Col>
-            <NewBookModal create={true} resetState={this.resetState} />
-          </Col>
-        </Row>
-        {/* <Row>
-          <Col>
-            <NewAuthorModal create={true} resetState={this.resetState} />
-          </Col>
-        </Row>
-        <Row>
-          <Col>
-           <NewGenreModal create={true} resetState={this.resetState} />
-          </Col>
-        </Row>
-        <Row>
-          <Col>
-            <NewSeriesModal create={true} resetState={this.resetState} />
-          </Col>
-        </Row> */}
+        {this.getpage()}       
       </Container>
     );
   }

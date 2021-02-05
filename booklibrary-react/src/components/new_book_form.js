@@ -7,38 +7,45 @@ import { API_URL } from "../constants";
 
 class NewBookForm extends React.Component {
   state = {
-    pk: 0,
+    id: 0,
     title: "",
     notes: "",
     author: "",
     genre: "",
-    series: ""
+    series: "",
+    on_change: undefined
   };
 
   componentDidMount() {
+    console.log(this.props)
     if (this.props.book) {
-      const { pk, title, notes, author, genre, series } = this.props.book;
-      this.setState({ pk, title, notes, author, genre, series });
+      const { id, title, notes, author, genre, series } = this.props.book;
+      this.setState({ id, title, notes, author, genre, series });
     }
   }
 
   onChange = e => {
-    this.setState({ [e.target.title]: e.target.value });
+    this.setState({ [e.target.name]: e.target.value });
   };
 
   createBook = e => {
     e.preventDefault();
-    axios.post(API_URL, this.state).then(() => {
-      this.props.resetState();
+    let book_obj = this.state
+    book_obj.genre = parseInt(book_obj.genre)
+    book_obj.author = parseInt(book_obj.author)
+    axios.post(API_URL + 'books', this.state).then(() => {
+      //this.props.resetState();
       this.props.toggle();
+      this.props.on_change()
     });
   };
 
   editBook = e => {
     e.preventDefault();
-    axios.put(API_URL + 'books/detail/' + this.state.pk, this.state).then(() => {
-      this.props.resetState();
+    axios.put(API_URL + 'books/' + this.state.id, this.state).then(() => {
+      //this.props.resetState();
       this.props.toggle();
+      this.props.on_change()
     });
   };
 

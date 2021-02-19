@@ -16,16 +16,25 @@ import { API_URL } from "../constants";
 import { setGlobalCssModule } from "reactstrap/es/utils";
 
 class Home extends Component {
-  state = {
-    books: [],
-    authors: [],
-    genres: [],
-    series: [],
-    current_page: ""
-  };
+  constructor(props) {
+    super(props);
+    this.state = { 
+      current_page: this.props.current_page,
+      books: [],
+      authors: [],
+      genres: [],
+      series: []
+    };
+  }
+
+  componentDidUpdate(prevProps) {
+    // comparison to avoid infinite loop
+    if (this.props.current_page !== prevProps.current_page) {
+      this.setState({current_page: this.props.current_page})
+    }
+  }
 
   componentDidMount() {
-    this.setState({current_page: window.location.pathname.slice(1)})
     this.resetState();
   }
 
@@ -44,6 +53,19 @@ class Home extends Component {
     axios.get(API_URL + 'series').then(res => this.setState({ series: res.data }));
   }
 
+  resetBooks = () => {
+    this.getBooks()
+  }
+  resetAuthors = () => {
+    this.getAuthors()
+  }
+  resetGenres = () => {
+    this.getGenre()
+  }
+  resetSeries = () => {
+    this.getSeries()
+  }
+
   resetState = () => {
     this.getBooks();
     this.getAuthors();
@@ -52,7 +74,6 @@ class Home extends Component {
   };
 
   getpage = () => {
-
     switch (this.state.current_page) {
       case "books":
         return (
@@ -61,22 +82,41 @@ class Home extends Component {
           authors={this.state.authors}
           genres={this.state.genres}
           series={this.state.series}
+          on_change={this.resetBooks}
           />
         )
         break;
       case "authors":
         return (
-          <Authors />
+          <Authors 
+          books={this.state.books}
+          authors={this.state.authors}
+          genres={this.state.genres}
+          series={this.state.series}
+          on_change={this.resetAuthors}
+          />
         )
         break;
       case "genres":
         return (
-          <Genres />
+          <Genres 
+          books={this.state.books}
+          authors={this.state.authors}
+          genres={this.state.genres}
+          series={this.state.series}
+          on_change={this.resetGenres}
+          />
         )
         break;
       case "series":
         return (
-          <Series />
+          <Series 
+          books={this.state.books}
+          authors={this.state.authors}
+          genres={this.state.genres}
+          series={this.state.series}
+          on_change={this.resetSeries}
+          />
         )
         break;
     

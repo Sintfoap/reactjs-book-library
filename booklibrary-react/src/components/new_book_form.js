@@ -17,7 +17,6 @@ class NewBookForm extends React.Component {
   };
 
   componentDidMount() {
-    console.log(this.props)
     if (this.props.book) {
       const { id, title, notes, author, genre, series } = this.props.book;
       this.setState({ id, title, notes, author, genre, series });

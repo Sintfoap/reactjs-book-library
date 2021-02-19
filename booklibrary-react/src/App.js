@@ -1,4 +1,10 @@
 import React, { Component, Fragment } from "react";
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Link
+} from "react-router-dom";
 import Header from "./components/Header";
 import Home from "./components/home"
 
@@ -6,8 +12,23 @@ class App extends Component {
   render() {
     return (
       <Fragment>
-        <Header />
-        <Home />
+        <Router>
+          <Header />
+          <Switch>
+            <Route path="/books">
+              <Home current_page="books"/>
+            </Route>
+            <Route path="/authors">
+              <Home current_page="authors"/>
+            </Route>
+            <Route path="/genres">
+              <Home current_page="genres"/>
+            </Route>
+            <Route path="/series">
+              <Home current_page="series"/>
+            </Route>
+          </Switch>
+        </Router>
       </Fragment>
     );
   }

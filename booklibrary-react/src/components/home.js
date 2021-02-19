@@ -1,10 +1,10 @@
 import React, { Component } from "react";
-import { Col, Container, Row } from "reactstrap";
+import { Container } from "reactstrap";
 import Books from "./Books"
 import Authors from "./Authors"
 import Genres from "./Genres"
 import Series from "./Series"
-import NewBookModal from "./new_book_modal";
+// import NewBookModal from "./new_book_modal";
 // import NewAuthorModal from "./new_author_modal";
 // import NewGenreModal from "./new_genre_modal";
 // import NewSeriesModal from "./new_series_modal";
@@ -13,6 +13,7 @@ import NewBookModal from "./new_book_modal";
 import axios from "axios";
 
 import { API_URL } from "../constants";
+import { setGlobalCssModule } from "reactstrap/es/utils";
 
 class Home extends Component {
   state = {
@@ -24,8 +25,8 @@ class Home extends Component {
   };
 
   componentDidMount() {
-    this.resetState();
     this.setState({current_page: window.location.pathname.slice(1)})
+    this.resetState();
   }
 
   getBooks = () => {
@@ -89,11 +90,12 @@ class Home extends Component {
   render() {
 
     return (
-      <Container style={{ marginTop: "20px" }}>
-        {this.getpage()}       
-      </Container>
+      <div>
+        <Container style={{ marginTop: "20px" }}>
+          {this.getpage()}
+        </Container>
+      </div>
     );
   }
 }
-
 export default Home;

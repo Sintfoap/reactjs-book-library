@@ -69,22 +69,6 @@ class Books extends React.Component {
       item.genre_name = this.find_genre(item.genre)
       item.series_name = this.find_series(item.series)
     })
-    
-    const books_list = this.state.books.map((book) => {
-      return (
-        <li> 
-          <button class="btn button-secondary">
-            {book.title}
-          </button>
-          <button onClick={() => this.deleteBook(book.id)}>
-              Delete Book
-          </button>
-          <button onClick={() => this.createBook()}>
-              Create Book
-          </button>
-        </li>
-      );
-    });
 
     return (
       <div>

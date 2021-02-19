@@ -18,55 +18,32 @@ class Series extends React.Component {
   }
 
   resetState = () => {
-    this.getBooks();
+    // this.getBooks();
     // this.getAuthors();
     // this.getGenres();
-    // this.getSeries();
+    this.getSeries();
   };
 
-  getBooks = () => {
-    axios.get(API_URL + 'books').then(res => this.setState({ books: res.data }));
+  getSeries = () => {
+    axios.get(API_URL + 'series').then(res => this.setState({ series: res.data }));
   };
 
-  deleteBook = id => {
-    axios.delete(API_URL + 'books/' + id).then(res => this.setState({ books: res.data}));
+  deleteSeries = id => {
+    axios.delete(API_URL + 'series/' + id).then(res => this.setState({ series: res.data}));
   };
-
-  createBook = () => {
-  }
 
   render() {
     const columns = [
       { key: 'id', name: 'ID' },
-      { key: 'title', name: 'Title' },
-      { key: 'notes', name: 'Notes' },
-      { key: 'author_id', name: 'Author' },
-      { key: 'genre_id', name: 'Genre' },
-      { key: 'series_id', name: 'Series' }
+      { key: 'name', name: 'Name' }
     ]
-    
-    const books_list = this.state.books.map((book) => {
-      return (
-        <li> 
-          <button class="btn button-secondary">
-            {book.title}
-          </button>
-          <button onClick={() => this.deleteBook(book.id)}>
-              Delete Book
-          </button>
-          <button onClick={() => this.createBook()}>
-              Create Book
-          </button>
-        </li>
-      );
-    });
 
     return (
       <div>
         <ul>
         <DataGrid
           columns={columns}
-          rows={this.state.books}
+          rows={this.state.series}
           defaultColumnOptions={{
             sortable: true,
             resizable: true

@@ -17,7 +17,7 @@ class ConfirmRemovalModal extends Component {
   };
 
   deleteBook = pk => {
-    axios.delete(API_URL + pk).then(() => {
+    axios.delete(API_URL + 'books/detail/' + pk).then(() => {
       this.props.resetState();
       this.toggle();
     });

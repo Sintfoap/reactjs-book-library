@@ -6,18 +6,24 @@ import axios from "axios";
 import { API_URL } from "../constants";
 
 class NewBookForm extends React.Component {
-  state = {
-    id: 0,
-    title: "",
-    notes: "",
-    author: "",
-    genre: "",
-    series: "",
-    on_change: undefined
-  };
+  constructor (props) {
+    super(props);
+    this.state = {
+      id: 0,
+      title: "",
+      notes: "",
+      author: "",
+      genre: "",
+      series: "",
+      on_change: undefined,
+      book: this.props.book
+    };
+  }
+  
 
   componentDidMount() {
-    if (this.props.book) {
+    console.log(this.state.book);
+    if (this.state.book) {
       const { id, title, notes, author, genre, series } = this.props.book;
       this.setState({ id, title, notes, author, genre, series });
     }
@@ -33,7 +39,7 @@ class NewBookForm extends React.Component {
     book_obj.genre = parseInt(book_obj.genre)
     book_obj.author = parseInt(book_obj.author)
     axios.post(API_URL + 'books', this.state).then(() => {
-      //this.props.resetState();
+      // this.props.resetState();
       this.props.toggle();
       this.props.on_change()
     });

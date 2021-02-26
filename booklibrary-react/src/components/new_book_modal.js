@@ -1,11 +1,19 @@
 import React, { Component, Fragment } from "react";
 import { Button, Modal, ModalHeader, ModalBody } from "reactstrap";
 import NewBookForm from "./new_book_form";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faTrash } from '@fortawesome/free-solid-svg-icons'
 
 class NewBookModal extends Component {
-  state = {
-    modal: false
+  constructor (props) {
+    super(props);
+    this.state = {
+    modal: false,
+    book: this.props.book
+
   };
+  }
+  
 
   toggle = () => {
     this.setState(previous => ({
@@ -17,7 +25,7 @@ class NewBookModal extends Component {
     const create = this.props.create;
 
     var title = "Editing Book";
-    var button = <Button onClick={this.toggle}>Edit</Button>;
+    var button = <Button onClick={this.toggle}><FontAwesomeIcon icon={faTrash}/></Button>;
     if (create) {
       title = "Creating New Book";
 

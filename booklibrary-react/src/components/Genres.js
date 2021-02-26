@@ -7,27 +7,6 @@ import NewGenreModal from "./new_genre_modal";
 import { API_URL } from "../constants";
 
 class Genres extends React.Component {
-  state = {
-    books: [],
-    authors: [],
-    genres: [],
-    series:[],
-  };
-
-  componentDidMount() {
-    this.resetState();
-  }
-
-  resetState = () => {
-    // this.getBooks();
-    // this.getAuthors();
-    this.getGenres();
-    // this.getSeries();
-  };
-
-  getGenres = () => {
-    axios.get(API_URL + 'genres').then(res => this.setState({ genres: res.data }));
-  };
 
   deleteGenre = id => {
     axios.delete(API_URL + 'genres/' + id).then(res => this.setState({ genres: res.data}));
@@ -55,7 +34,7 @@ class Genres extends React.Component {
         <ul>
         <DataGrid
           columns={columns}
-          rows={this.state.genres}
+          rows={this.props.genres}
           defaultColumnOptions={{
             sortable: true,
             resizable: true

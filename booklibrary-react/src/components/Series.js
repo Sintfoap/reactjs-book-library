@@ -6,27 +6,6 @@ import axios from "axios";
 import { API_URL } from "../constants";
 
 class Series extends React.Component {
-  state = {
-    books: [],
-    authors: [],
-    genres: [],
-    series:[],
-  };
-
-  componentDidMount() {
-    this.resetState();
-  }
-
-  resetState = () => {
-    // this.getBooks();
-    // this.getAuthors();
-    // this.getGenres();
-    this.getSeries();
-  };
-
-  getSeries = () => {
-    axios.get(API_URL + 'series').then(res => this.setState({ series: res.data }));
-  };
 
   deleteSeries = id => {
     axios.delete(API_URL + 'series/' + id).then(res => this.setState({ series: res.data}));
@@ -43,7 +22,7 @@ class Series extends React.Component {
         <ul>
         <DataGrid
           columns={columns}
-          rows={this.state.series}
+          rows={this.props.series}
           defaultColumnOptions={{
             sortable: true,
             resizable: true

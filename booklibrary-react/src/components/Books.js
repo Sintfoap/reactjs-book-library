@@ -3,23 +3,26 @@ import DataGrid from 'react-data-grid';
 import ReactModal from 'react-modal';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faTrash } from '@fortawesome/free-solid-svg-icons'
+import { faEdit } from '@fortawesome/free-solid-svg-icons'
 
 import axios from "axios";
 import NewBookModal from "./new_book_modal";
+import EditBookModal from "./edit_book_modal";
 
 import { API_URL } from "../constants";
+
 
 ReactModal.setAppElement('#root')
 
 const EditorFormatter = ({ value, row }) => {
-  return <a href="#" onClick={() => row.edit.on_click(row)} ><FontAwesomeIcon icon={faTrash} /></a>
-}
+  return <EditBookModal href="#" onClick={() => row.edit.on_click(row)} viewing_book={row}><FontAwesomeIcon icon={faEdit}/></EditBookModal>
+  }
+
 class Books extends React.Component {
   constructor () {
     super();
     this.state = {
-      showModal: false,
+      showModal: false,  
       viewing_book: {}
     };
     
@@ -28,7 +31,7 @@ class Books extends React.Component {
   }
 
   handleOpenModal (row) {
-    console.log(row)
+    // console.log(row)
     this.setState({ viewing_book: row, showModal: true });
   }
   
@@ -72,7 +75,7 @@ class Books extends React.Component {
       { key: 'edit', name: 'Edit', formatter: EditorFormatter }
     ]
     let displayed_books = this.props.books.slice()
-    displayed_books.forEach((item,index) => {
+    displayed_books.forEach((item) => {
       item.author_name = this.find_author(item.author)
       item.genre_name = this.find_genre(item.genre)
       item.series_name = this.find_series(item.series)
@@ -80,18 +83,15 @@ class Books extends React.Component {
     })
     return (
       <div>
-        <NewBookModal 
-          create={true}
-          on_change={() => this.props.on_change()}
-        />
-        <ReactModal 
+        {/* <NewBookModal 
+            create={true}
+            on_change={() => this.props.on_change()}
+        /> */}
+         <EditBookModal 
            isOpen={this.state.showModal}
            contentLabel="Minimal Modal Example"
-        >
-        <p>{this.state.viewing_book.id}</p>
-          <p>{this.state.viewing_book.title}</p>
-          <p>{this.state.viewing_book.notes}</p>
-        </ReactModal>
+          />
+
         <DataGrid
           columns={columns}
           rows={this.props.books}

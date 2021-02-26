@@ -20,7 +20,7 @@ export default function App() {
           alt="Logo"
         />
         <Navbar bg="light" expand="lg">
-          <NavLink>
+          {/* <NavLink>
             <Link to="/books">Books</Link>
           </NavLink>
           <NavLink>
@@ -31,7 +31,15 @@ export default function App() {
           </NavLink>
           <NavLink>
             <Link to="/series">Series</Link>
-          </NavLink>
+          </NavLink> */}
+          <Link to="/books">Books
+          </Link>
+          <Link to="/authors">Authors
+          </Link>
+          <Link to="/genres">Genres
+          </Link>
+          <Link to="/series">Series
+          </Link>
         </Navbar>
       </div>
     // </Router>

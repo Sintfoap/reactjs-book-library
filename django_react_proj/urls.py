@@ -21,14 +21,14 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     #BOOKS
     re_path(r'^api/booklibrary/books$', views.books_list),
-    re_path(r'^api/booklibrary/books/([0-9])$', views.book_detail),
+    path(r'api/booklibrary/books/<int:id>', views.book_detail),
     #AUTHORS
     re_path(r'^api/booklibrary/authors$', views.authors_list),
-    re_path(r'^api/booklibrary/authors/([0-9])$', views.author_detail),
+    path(r'api/booklibrary/authors/<int:id>', views.author_detail),
     #GENRES
     re_path(r'^api/booklibrary/genres$', views.genre_list),
-    re_path(r'^api/booklibrary/genres/([0-9])$', views.genre_detail),
+    path(r'api/booklibrary/genres/<int:id>', views.genre_detail),
     #SERIES
     re_path(r'^api/booklibrary/series$', views.series_list),
-    re_path(r'^api/booklibrary/series/([0-9])$', views.series_detail),
+    path(r'api/booklibrary/series/<int:id>', views.series_detail),
 ]

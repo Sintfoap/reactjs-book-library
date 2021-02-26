@@ -20,10 +20,10 @@ class Home extends Component {
     super(props);
     this.state = { 
       current_page: this.props.current_page,
-      books: [],
-      authors: [],
-      genres: [],
-      series: []
+      books: undefined,
+      authors: undefined,
+      genres: undefined,
+      series: undefined
     };
   }
 
@@ -41,6 +41,7 @@ class Home extends Component {
   getBooks = () => {
     axios.get(API_URL + 'books').then(res => this.setState({ books: res.data }));
   };
+
   getAuthors = () => {
     axios.get(API_URL + 'authors').then(res => this.setState({ authors: res.data }));
   }

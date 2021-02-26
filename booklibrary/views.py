@@ -29,7 +29,7 @@ def books_list(request):
             
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-@api_view(['PUT','DELETE'])
+@api_view(['PUT','DELETE', 'GET'])
 def book_detail(request, id):
     try:
         book = Book.objects.get(id=id)

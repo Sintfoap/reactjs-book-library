@@ -2,8 +2,7 @@ import React, { Component, Fragment } from "react";
 import {
   BrowserRouter as Router,
   Switch,
-  Route,
-  Link
+  Route
 } from "react-router-dom";
 import Header from "./components/Header";
 import Home from "./components/home"

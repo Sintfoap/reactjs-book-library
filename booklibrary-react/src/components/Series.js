@@ -25,7 +25,7 @@ class Series extends React.Component {
     super();
     this.state = {
       showModal: false,
-      creating_new_book: false,
+      creating_new_series: false,
       viewing_series: {}
     };
   
@@ -43,7 +43,7 @@ class Series extends React.Component {
 
   handleOpenModal (row) {
     console.log(row)
-    this.setState({ viewing_book: row, showModal: true, creating_new_book: false });
+    this.setState({ viewing_series: row, showModal: true, creating_new_series: false });
   }
   
   handleCloseModal () {

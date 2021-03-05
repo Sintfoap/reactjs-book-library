@@ -111,6 +111,9 @@ class Books extends React.Component {
            new={this.state.creating_new_book}
            close_modal={this.handleCloseModal}
            on_change={this.on_book_change}
+           authors={this.props.authors}
+           genres={this.props.genres}
+           series={this.props.series}
           />
         <Button onClick={() => {
           this.setState({

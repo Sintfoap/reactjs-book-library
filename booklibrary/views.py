@@ -60,12 +60,12 @@ def authors_list(request):
     if request.method == 'GET':
         data = Author.objects.all()
 
-        serializer = AuthorSerializer(data, context={'request': request}, many=True)
+        serializer = AuthorGetSerializer(data, context={'request': request}, many=True)
 
         return Response(serializer.data)
 
     elif request.method == 'POST':
-        serializer = AuthorSerializer(data=request.data)
+        serializer = AuthorEditSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(status=status.HTTP_201_CREATED)
@@ -80,13 +80,13 @@ def author_detail(request, id):
         return Response(status=status.HTTP_404_NOT_FOUND)
 
     if request.method == 'GET':
-        serializer = AuthorSerializer(author, context={'request': request}, many=True)
+        serializer = AuthorGetSerializer(author, context={'request': request}, many=True)
 
         return Response(serializer.data)
 
 
     if request.method == 'PUT':
-        serializer = AuthorSerializer(author, data=request.data,context={'request': request})
+        serializer = AuthorEditSerializer(author, data=request.data,context={'request': request})
         if serializer.is_valid():
             serializer.save()
             return Response(status=status.HTTP_204_NO_CONTENT)

@@ -19,7 +19,7 @@ class EditAuthorModal extends React.Component  {
             return {
                 id: this.props.viewing_author.id,
                 first_name: this.props.viewing_author.first_name,
-                last_name: this.props.last_name
+                last_name: this.props.viewing_author.last_name
             }
         }else {
             return {

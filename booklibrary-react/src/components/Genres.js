@@ -62,11 +62,9 @@ class Genres extends React.Component {
     });
   };
 
-  find_books = (id) =>{
-    const book = this.props.books.find(book => book.id === id)
-    if (book){
-      return book.title
-    }
+  derive_book_titles = (genre) =>{
+    const book_titles = genre.books.map(book => book.title)
+    return book_titles.join(", ")
   }
 
   render() {
@@ -79,7 +77,7 @@ class Genres extends React.Component {
     ]
     let displayed_genres = this.props.genres.slice()
     displayed_genres.forEach((item) =>{
-      item.book_title = this.find_books(item.book)
+      item.book_title = this.derive_book_titles(item)
       item.edit = {id: item.id, on_click: this.handleOpenModal}
       item.delete = {id: item.id, on_click: this.handleDeleteModal}
     })

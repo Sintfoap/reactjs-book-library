@@ -43,7 +43,8 @@ class EditBookModal extends React.Component  {
     }
 
     onChange = e => {
-      this.setState({ [e.target.name]: e.target.value });
+        console.log(e)
+        this.setState({ [e.target.name]: e.target.value });
     };
 
     createBook = e => {
@@ -62,12 +63,45 @@ class EditBookModal extends React.Component  {
         this.props.on_change()
       });
     };
+
+    authors_dropdown_list() {
+        let items = [];
+        this.props.authors.forEach(author => {
+            items.push(<option key={author.first_name + " " + author.last_name} value={author.id}>{author.first_name + " " + author.last_name}</option>);
+        });
+        return items;
+    }
+
+    genres_dropdown_list() {
+        let items = [];
+        this.props.genres.forEach(genre => {
+            items.push(<option key={genre.category} value={genre.id}>{genre.category}</option>);
+        });
+        return items;
+    }
+
+    series_dropdown_list() {
+        let items = [];
+        this.props.series.forEach(series => {
+            items.push(<option key={series.name} value={series.id}>{series.name}</option>);
+        });
+        return items;
+    }
+
     render(){
-        // console.log(this.props)
+        const customStyles = {
+          content: {
+            "max-height": "80%",
+            height: "fit-content",
+            margin: "auto",
+            width: "50%"
+          }
+        };
         return(
             <div>
                 <ReactModal
                 isOpen={this.props.isOpen}
+                style={customStyles}
                 >
                     <Form onSubmit={this.props.new ? this.createBook : this.editBook}>
                         <FormGroup>
@@ -77,12 +111,13 @@ class EditBookModal extends React.Component  {
                             name="title"
                             onChange={this.onChange}
                             value={this.state.title || ""}
+                            required={true}
                         />
                         </FormGroup>
                         <FormGroup>
                         <Label for="notes">Notes:</Label>
                         <Input
-                            type="text"
+                            type="textarea"
                             name="notes"
                             onChange={this.onChange}
                             value={this.state.notes || ""}
@@ -90,30 +125,22 @@ class EditBookModal extends React.Component  {
                         </FormGroup>
                         <FormGroup>
                         <Label for="author">Author:</Label>
-                        <Input
-                            type="text"
-                            name="author"
-                            onChange={this.onChange}
-                            value={this.state.author || ""}
-                        />
+                        <select name="author" value={this.state.author || ""} onChange={this.onChange} class="form-control"  data-live-search="true" required>
+                            {this.authors_dropdown_list()}
+                        </select>
                         </FormGroup>
                         <FormGroup>
                         <Label for="genre">Genre:</Label>
-                        <Input
-                            type="text"
-                            name="genre"
-                            onChange={this.onChange}
-                            value={this.state.genre || ""}
-                        />
+                        <select name="genre" value={this.state.genre || ""} onChange={this.onChange} class="form-control"  data-live-search="true" required>
+                            {this.genres_dropdown_list()}
+                        </select>
                         </FormGroup>
                         <FormGroup>
                         <Label for="series">Series:</Label>
-                        <Input
-                            type="text"
-                            name="series"
-                            onChange={this.onChange}
-                            value={this.state.series || ""}
-                        />
+                        <select name="series" value={this.state.series || ""} onChange={this.onChange} class="form-control">
+                            <option value=''></option>
+                            {this.series_dropdown_list()}
+                        </select>
                         </FormGroup>
                         <Button>Send</Button>
                     </Form>

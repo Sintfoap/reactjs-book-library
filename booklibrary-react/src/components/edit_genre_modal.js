@@ -18,14 +18,12 @@ class EditGenreModal extends React.Component  {
       if (!this.props.new){
         return {
           id: this.props.Viewing_genre.id,
-          title: this.props.Viewing_genre.category,
-          // books: this.props.viewing_genre.books
+          category: this.props.Viewing_genre.category
         }
       }else {
         return {
           id: -1,
-          category: "",
-          // books: "",
+          category: ""
         }
       }
   }

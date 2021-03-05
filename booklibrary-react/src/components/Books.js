@@ -7,11 +7,9 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faEdit, faTrash } from '@fortawesome/free-solid-svg-icons'
 
 import axios from "axios";
-import NewBookModal from "./new_book_modal";
 import EditBookModal from "./edit_book_modal";
 
 import { API_URL } from "../constants";
-
 
 ReactModal.setAppElement('#root')
 
@@ -108,7 +106,7 @@ class Books extends React.Component {
       <div>
          <EditBookModal
            isOpen={this.state.showModal}
-           contentLabel="Minimal Modal Example"
+           contentLabel="Book Modal"
            viewing_book={this.state.viewing_book}
            new={this.state.creating_new_book}
            close_modal={this.handleCloseModal}

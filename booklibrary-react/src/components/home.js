@@ -4,6 +4,7 @@ import Books from "./Books"
 import Authors from "./Authors"
 import Genres from "./Genres"
 import Series from "./Series"
+import Loading_animation from './Loading_animation.gif';
 // import NewBookModal from "./new_book_modal";
 // import NewAuthorModal from "./new_author_modal";
 // import NewGenreModal from "./new_genre_modal";
@@ -14,18 +15,23 @@ import axios from "axios";
 
 import { API_URL } from "../constants";
 import { setGlobalCssModule } from "reactstrap/es/utils";
+import EditBookModal from "./edit_book_modal";
 
 class Home extends Component {
   constructor(props) {
     super(props);
     this.state = { 
       current_page: this.props.current_page,
-      books: undefined,
-      authors: undefined,
-      genres: undefined,
-      series: undefined
+      books: [],
+      authors: [],
+      genres: [],
+      series: [],
+      book_confermation: undefined,
+      author_confermation: undefined,
+      genre_confermation: undefined,
+      series_confermation: undefined,
     };
-  }
+  }  
 
   componentDidUpdate(prevProps) {
     // comparison to avoid infinite loop
@@ -40,18 +46,22 @@ class Home extends Component {
 
   getBooks = () => {
     axios.get(API_URL + 'books').then(res => this.setState({ books: res.data }));
+    this.setState({ book_confermation: "-1" })
   };
 
   getAuthors = () => {
     axios.get(API_URL + 'authors').then(res => this.setState({ authors: res.data }));
+    this.setState({ author_confermation: "-1" })
   }
 
   getGenre = () => {
     axios.get(API_URL + 'genres').then(res => this.setState({ genres: res.data }));
+    this.setState({ genre_confermation: "-1" })
   }
 
   getSeries = () => {
     axios.get(API_URL + 'series').then(res => this.setState({ series: res.data }));
+    this.setState({ series_confermation: "-1" })
   }
 
   resetBooks = () => {
@@ -73,6 +83,19 @@ class Home extends Component {
     this.getGenre();
     this.getSeries();
   };
+
+  loading_screen(){
+    if((this.book_confermation === undefined), (this.author_confermation === undefined),  (this.genre_confermation === undefined),  (this.series_confermation === undefined)){
+      <div className="text-center row">
+        <img
+          src={ Loading_animation }
+          alt="Loading_animation"
+        />
+      </div>
+      this.loading_screen      
+    }
+    this.getpage()
+  }
 
   getpage = () => {
     switch (this.state.current_page) {
@@ -120,11 +143,6 @@ class Home extends Component {
           />
         )
         break;
-    
-      // default:
-      //   return (
-      //     <Books />
-      //   )
     }
   }
 

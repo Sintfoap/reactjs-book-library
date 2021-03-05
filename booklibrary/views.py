@@ -20,9 +20,7 @@ def books_list(request):
         return Response(serializer.data)
 
     elif request.method == 'POST':
-        print(request.data)
         serializer = BookSerializer(data=request.data)
-        print(serializer)
         if serializer.is_valid():
             serializer.save()
             return Response(status=status.HTTP_201_CREATED)
@@ -74,6 +72,7 @@ def authors_list(request):
             
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+@api_view(['PUT','DELETE', 'GET'])
 def author_detail(request, id):
     try:
         author = Author.objects.get(id=id)
@@ -115,9 +114,10 @@ def genre_list(request):
         if serializer.is_valid():
             serializer.save()
             return Response(status=status.HTTP_201_CREATED)
-            
+        
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+@api_view(['PUT','DELETE', 'GET'])
 def genre_detail(request, id):
     try:
         genre = Genre.objects.get(id=id)
@@ -135,7 +135,6 @@ def genre_detail(request, id):
             serializer.save()
             return Response(status=status.HTTP_204_NO_CONTENT)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
     elif request.method == 'DELETE':
         genre.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
@@ -161,6 +160,7 @@ def series_list(request):
             
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+@api_view(['PUT','DELETE', 'GET'])
 def series_detail(request, id):
     try:
         series = Series.objects.get(id=id)

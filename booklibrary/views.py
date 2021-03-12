@@ -105,12 +105,12 @@ def genre_list(request):
     if request.method == 'GET':
         data = Genre.objects.all()
 
-        serializer = GenreSerializer(data, context={'request': request}, many=True)
+        serializer = GenreGetSerializer(data, context={'request': request}, many=True)
 
         return Response(serializer.data)
 
     elif request.method == 'POST':
-        serializer = GenreSerializer(data=request.data)
+        serializer = GenreEditSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(status=status.HTTP_201_CREATED)
@@ -125,12 +125,12 @@ def genre_detail(request, id):
         return Response(status=status.HTTP_404_NOT_FOUND)
 
     if request.method == 'GET':
-        serializer = GenreSerializer(genre, context={'request': request}, many=True)
+        serializer = GenreGetSerializer(genre, context={'request': request}, many=True)
 
         return Response(serializer.data)
 
     if request.method == 'PUT':
-        serializer = GenreSerializer(genre, data=request.data,context={'request': request})
+        serializer = GenreEditSerializer(genre, data=request.data,context={'request': request})
         if serializer.is_valid():
             serializer.save()
             return Response(status=status.HTTP_204_NO_CONTENT)
@@ -148,12 +148,12 @@ def series_list(request):
     if request.method == 'GET':
         data = Series.objects.all()
 
-        serializer = SeriesSerializer(data, context={'request': request}, many=True)
+        serializer = SeriesGetSerializer(data, context={'request': request}, many=True)
 
         return Response(serializer.data)
 
     elif request.method == 'POST':
-        serializer = SeriesSerializer(data=request.data)
+        serializer = SeriesEditSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(status=status.HTTP_201_CREATED)
@@ -168,11 +168,11 @@ def series_detail(request, id):
         return Response(status=status.HTTP_404_NOT_FOUND)
 
     if request.method == 'GET':
-        serializer = SeriesSerializer(series, context={'request': request}, many=True)
+        serializer = SeriesGetSerializer(series, context={'request': request}, many=True)
 
         return Response(serializer.data)
     if request.method == 'PUT':
-        serializer = SeriesSerializer(series, data=request.data,context={'request': request})
+        serializer = SeriesEditSerializer(series, data=request.data,context={'request': request})
         if serializer.is_valid():
             serializer.save()
             return Response(status=status.HTTP_204_NO_CONTENT)

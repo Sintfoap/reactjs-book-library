@@ -4,20 +4,20 @@ import { Button } from "reactstrap";
 import ReactModal from 'react-modal';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faEdit, faTrash } from '@fortawesome/free-solid-svg-icons'
+import { faEdit, faPlusSquare, faTrash } from '@fortawesome/free-solid-svg-icons'
 
 import axios from "axios";
-import EditAuthorModal from "./edit_author_modal";
+import AuthorModal from "./author_modal";
 
 import { API_URL } from "../constants";
 
 ReactModal.setAppElement('#root')
 
 const EditorFormatter = ({ value, row }) => {
-  return <a href="#" onClick={() => row.edit.on_click(row)}><FontAwesomeIcon icon={faEdit}/></a>
+  return <Button href="#" outline color="primary" className="btn-sm" onClick={() => row.edit.on_click(row)}><FontAwesomeIcon icon={faEdit}/></Button>
   }
 const DeleteFormatter = ({ value, row }) => {
-  return <a href="#" onClick={() => row.delete.on_click(row)}><FontAwesomeIcon icon={faTrash}/></a>
+  return <Button href="#" outline color="danger" className="btn-sm" onClick={() => row.delete.on_click(row)}><FontAwesomeIcon icon={faTrash}/></Button>
   }
 
 class Authors extends React.Component {
@@ -80,7 +80,7 @@ class Authors extends React.Component {
 
     return (
       <div>
-        <EditAuthorModal
+        <AuthorModal
           isOpen={this.state.showModal}
           contentLabel="Author Modal"
           viewing_author={this.state.viewing_author}
@@ -88,11 +88,11 @@ class Authors extends React.Component {
           close_modal={this.handleCloseModal}
           on_change={this.on_author_change}
         />
-        <Button onClick={() => {
+        <Button outline color="success" className="Add_button" onClick={() => {
           this.setState({
             showModal: true,
             creating_new_author: true
-          })}}>MAKE ME AN AUTHOR</Button>
+          })}}><FontAwesomeIcon icon={ faPlusSquare }/> New Author </Button>
         <DataGrid
           columns={columns}
           rows={this.props.authors}

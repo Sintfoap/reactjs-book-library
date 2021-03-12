@@ -9,7 +9,7 @@ import {
 import {
   Link
 } from "react-router-dom";
-import logo from './logo.png';
+import logo from '../constants/images/logo.png';
 
 export default function App() {
   return (
@@ -21,10 +21,10 @@ export default function App() {
           alt="Logo"
         />
         <Navbar className="row" bg="dark" variant="dark">
-          <Link className="btn btn-outline-secondary" to="/books">Books</Link>
-          <Link className="btn btn-outline-secondary" to="/authors">Authors</Link>
-          <Link className="btn btn-outline-secondary" to="/genres">Genres</Link>
-          <Link className="btn btn-outline-secondary" to="/series">Series</Link>
+          <Link className="btn btn-outline-secondary Nav_button" to="/books">Books</Link>
+          <Link className="btn btn-outline-secondary Nav_button" to="/authors">Authors</Link>
+          <Link className="btn btn-outline-secondary Nav_button" to="/genres">Genres</Link>
+          <Link className="btn btn-outline-secondary Nav_button" to="/series">Series</Link>
         </Navbar>
       </div>
     </Container>

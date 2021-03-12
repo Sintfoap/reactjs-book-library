@@ -4,7 +4,7 @@ import Books from "./Books"
 import Authors from "./Authors"
 import Genres from "./Genres"
 import Series from "./Series"
-import Loading_animation from './Loading_animation.gif';
+import Loading_animation from '../constants/images/Loading_animation.gif';
 // import NewBookModal from "./new_book_modal";
 // import NewAuthorModal from "./new_author_modal";
 // import NewGenreModal from "./new_genre_modal";

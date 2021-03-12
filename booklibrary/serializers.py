@@ -12,21 +12,32 @@ class AuthorGetSerializer(serializers.ModelSerializer):
     class Meta:
         model = Author
         fields = ('id','first_name', 'last_name', 'books')
+
 class AuthorEditSerializer(serializers.ModelSerializer):
     class Meta:
         model = Author
         fields = ('id','first_name', 'last_name')
 
-class GenreSerializer(serializers.ModelSerializer):
+class GenreGetSerializer(serializers.ModelSerializer):
     books = BookSerializer(many=True)
 
     class Meta:
         model = Genre
         fields = ('id','category', 'books')
 
-class SeriesSerializer(serializers.ModelSerializer):
+class GenreEditSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Genre
+        fields = ('id','category')
+
+class SeriesGetSerializer(serializers.ModelSerializer):
     books = BookSerializer(many=True)
 
     class Meta:
         model = Series
         fields = ('id','name', 'books')
+
+class SeriesEditSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Series
+        fields = ('id','name')    

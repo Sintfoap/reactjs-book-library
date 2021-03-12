@@ -4,20 +4,20 @@ import ReactModal from 'react-modal';
 import { Button } from "reactstrap";
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faEdit, faTrash } from '@fortawesome/free-solid-svg-icons'
+import { faEdit, faTrash, faPlusSquare } from '@fortawesome/free-solid-svg-icons'
 
 import axios from "axios";
-import EditGenreModal from "./edit_genre_modal";
+import GenreModal from "./genre_modal";
 
 import { API_URL } from "../constants";
 
 ReactModal.setAppElement('#root')
 
 const EditorFormatter = ({ value, row }) => {
-  return <a href="#" onClick={() => row.edit.on_click(row)}><FontAwesomeIcon icon={faEdit}/></a>
+  return <Button href="#" outline color="primary" className="btn-sm" onClick={() => row.edit.on_click(row)}><FontAwesomeIcon icon={faEdit}/></Button>
   }
 const DeleteFormatter = ({ value, row }) => {
-  return <a href="#" onClick={() => row.delete.on_click(row)}><FontAwesomeIcon icon={faTrash}/></a>
+  return <Button href="#" outline color="danger" className="btn-sm" onClick={() => row.delete.on_click(row)}><FontAwesomeIcon icon={faTrash}/></Button>
   }
 
 class Genres extends React.Component {
@@ -26,7 +26,7 @@ class Genres extends React.Component {
     this.state = {
       showModal: false,
       creating_new_genre: false,
-      Viewing_genre: {}
+      viewing_genre: {}
     };
 
     this.handleDeleteModal = this.handleDeleteModal.bind(this);
@@ -43,7 +43,7 @@ class Genres extends React.Component {
 
   handleOpenModal (row) {
     console.log(row)
-    this.setState({ Viewing_genre: row, showModal: true, creating_new_genre: false });
+    this.setState({ viewing_genre: row, showModal: true, creating_new_genre: false });
   }
 
   handleCloseModal () {
@@ -83,19 +83,19 @@ class Genres extends React.Component {
     })
     return (
       <div>
-        <EditGenreModal 
+        <GenreModal 
           isOpen={this.state.showModal}
           contentLabel="Genre Modal"
-          Viewing_genre={this.state.Viewing_genre}
+          viewing_genre={this.state.viewing_genre}
           new={this.state.creating_new_genre}
           close_modal={this.handleCloseModal}
           on_change={this.on_genre_change}
         />
-        <Button onClick={() => {
+        <Button outline color="success" className="Add_button" onClick={() => {
           this.setState({
             showModal:  true,
             creating_new_genre: true
-          })}}>MAKE ME A GENRE</Button>
+          })}}><FontAwesomeIcon icon={ faPlusSquare }/> New Genre </Button>
         <DataGrid
           columns={columns}
           rows={this.props.genres}

@@ -4,20 +4,20 @@ import ReactModal from 'react-modal';
 import { Button } from "reactstrap";
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faEdit, faTrash } from '@fortawesome/free-solid-svg-icons'
+import { faEdit, faPlusSquare, faTrash } from '@fortawesome/free-solid-svg-icons'
 
 import axios from "axios";
-import EditBookModal from "./edit_book_modal";
+import BookModal from "./book_modal";
 
 import { API_URL } from "../constants";
 
 ReactModal.setAppElement('#root')
 
 const EditorFormatter = ({ value, row }) => {
-  return <a href="#" onClick={() => row.edit.on_click(row)}><FontAwesomeIcon icon={faEdit}/></a>
+  return <Button href="#" outline color="primary" className="btn-sm" onClick={() => row.edit.on_click(row)}><FontAwesomeIcon icon={faEdit}/></Button>
   }
 const DeleteFormatter = ({ value, row }) => {
-  return <a href="#" onClick={() => row.delete.on_click(row)}><FontAwesomeIcon icon={faTrash}/></a>
+  return <Button href="#" outline color="danger" className="btn-sm" onClick={() => row.delete.on_click(row)}><FontAwesomeIcon icon={faTrash}/></Button>
   }
 
 class Books extends React.Component {
@@ -104,7 +104,7 @@ class Books extends React.Component {
     })
     return (
       <div>
-         <EditBookModal
+         <BookModal
            isOpen={this.state.showModal}
            contentLabel="Book Modal"
            viewing_book={this.state.viewing_book}
@@ -115,11 +115,11 @@ class Books extends React.Component {
            genres={this.props.genres}
            series={this.props.series}
           />
-        <Button onClick={() => {
+        <Button outline color="success" className="Add_button" onClick={() => {
           this.setState({
             showModal: true,
             creating_new_book: true
-          })}}>MAKE ME A BOOK</Button>
+          })}}><FontAwesomeIcon icon={ faPlusSquare }/> New Book </Button>
         <DataGrid
           columns={columns}
           rows={this.props.books}

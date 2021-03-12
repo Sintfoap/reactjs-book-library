@@ -6,7 +6,7 @@ import axios from "axios";
 
 import { API_URL } from "../constants";
 
-class SeriesModal extends React.Component  {
+class DeleteModal extends React.Component  {
     constructor (props) {
         super(props);
         console.log(props)
@@ -15,16 +15,9 @@ class SeriesModal extends React.Component  {
     }
 
     build_state() {
-        if (!this.props.new){
-            return {
-                id: this.props.viewing_series.id,
-                name: this.props.viewing_series.name
-            }
-        }else {
-            return {
-                id: -1,
-                name: ""
-            }
+        return {
+            text: "",
+            error: false
         }
     }
     componentDidUpdate(prevProps) {
@@ -34,48 +27,48 @@ class SeriesModal extends React.Component  {
       }
     }
 
+    confirm = e => {
+        e.preventDefault();
+        if(this.state.text.toLowerCase() == "delete"){
+            console.log("TADA YOU SAID DELETE")
+            this.props.on_change()
+        }else{
+            console.log("Did not type delete")
+            this.setState({error: true})
+        }
+    }
+
     onChange = e => {
-      this.setState({ [e.target.name]: e.target.value });
+        console.log(e)
+        this.setState({ [e.target.name]: e.target.value });
     };
 
-    createSeries = e => {
-      e.preventDefault();
-      let series_obj = this.state
-      axios.post(API_URL + 'series', this.state).then(() => {
-        this.props.on_change()
-      });
-    };
-  
-    editSeries = e => {
-      e.preventDefault();
-      axios.put(API_URL + 'series/' + this.state.id, this.state).then(() => {
-        this.props.on_change()
-      });
-    };
     render(){
-      const customStyles = {
-        content: {
-          "max-height": "80%",
-          height: "fit-content",
-          margin: "auto",
-          width: "50%"
-        }
-      };
-        // console.log(this.props)
+        const customStyles = {
+          content: {
+            "maxHeight": "80%",
+            height: "fit-content",
+            margin: "auto",
+            width: "50%"
+          }
+        };
         return(
             <div>
                 <ReactModal
                 isOpen={this.props.isOpen}
                 style={customStyles}
                 >
-                    <Form onSubmit={this.props.new ? this.createSeries : this.editSeries}>
+                    <Form onSubmit={this.confirm}>
                         <FormGroup>
-                        <Label for="name">Name:</Label>
+                        <Label for="text">Please type "<i>Delete</i>" to confirm you would like to delete {this.props.item_type} <b>{this.props.item_desc}</b>:</Label>
                         <Input
                             type="text"
-                            name="name"
+                            name="text"
                             onChange={this.onChange}
-                            value={this.state.name || ""}
+                            value={this.state.text}
+                            required={true}
+                            placeholder="Delete"
+                            className={this.state.error ? 'delete-modal-error' : ''}
                         />
                         </FormGroup>
                         <Button className={"submit_modal_button"}>Submit</Button>
@@ -86,4 +79,4 @@ class SeriesModal extends React.Component  {
         )
     }
 }
-export default SeriesModal
+export default DeleteModal

@@ -14,10 +14,10 @@ import { API_URL } from "../constants";
 ReactModal.setAppElement('#root')
 
 const EditorFormatter = ({ value, row }) => {
-  return <Button href="#" outline color="primary" className="btn-sm" onClick={() => row.edit.on_click(row)}><FontAwesomeIcon icon={faEdit}/></Button>
+  return <Button href="#" outline color="primary" className="btn-sm edit-delete-button" onClick={() => row.edit.on_click(row)}><FontAwesomeIcon icon={faEdit}/></Button>
   }
 const DeleteFormatter = ({ value, row }) => {
-  return <Button href="#" outline color="danger" className="btn-sm" onClick={() => row.delete.on_click(row)}><FontAwesomeIcon icon={faTrash}/></Button>
+  return <Button href="#" outline color="danger" className="btn-sm edit-delete-button" onClick={() => row.delete.on_click(row)}><FontAwesomeIcon icon={faTrash}/></Button>
   }
 
 class Genres extends React.Component {
@@ -69,11 +69,11 @@ class Genres extends React.Component {
 
   render() {
     const columns = [
-      { key: 'id', name: 'ID' },
+      // { key: 'id', name: 'ID' },
       { key: 'category', name: 'Category' },
       { key: 'book_title', name: 'Book'},
-      { key: 'edit', name: 'Edit', formatter: EditorFormatter },
-      { key: 'delete', name: 'Delete', formatter: DeleteFormatter }
+      { key: 'edit', name: 'Edit', width: 55, formatter: EditorFormatter },
+      { key: 'delete', name: 'Delete', width: 60, formatter: DeleteFormatter }
     ]
     let displayed_genres = this.props.genres.slice()
     displayed_genres.forEach((item) =>{
@@ -101,7 +101,8 @@ class Genres extends React.Component {
           rows={this.props.genres}
           defaultColumnOptions={{
             sortable: true,
-            resizable: true
+            resizable: true,
+            minWidth: 55
           }}
         />
       </div>

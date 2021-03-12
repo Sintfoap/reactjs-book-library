@@ -14,10 +14,10 @@ import { API_URL } from "../constants";
 ReactModal.setAppElement('#root')
 
 const EditorFormatter = ({ value, row }) => {
-  return <Button href="#" outline color="primary" className="btn-sm" onClick={() => row.edit.on_click(row)}><FontAwesomeIcon icon={faEdit}/></Button>
+  return <Button href="#" outline color="primary" className="btn-sm edit-delete-button" onClick={() => row.edit.on_click(row)}><FontAwesomeIcon icon={faEdit}/></Button>
   }
 const DeleteFormatter = ({ value, row }) => {
-  return <Button href="#" outline color="danger" className="btn-sm" onClick={() => row.delete.on_click(row)}><FontAwesomeIcon icon={faTrash}/></Button>
+  return <Button href="#" outline color="danger" className="btn-sm edit-delete-button" onClick={() => row.delete.on_click(row)}><FontAwesomeIcon icon={faTrash}/></Button>
   }
 
 class Series extends React.Component {
@@ -63,10 +63,10 @@ class Series extends React.Component {
 
   render() {
     const columns = [
-      { key: 'id', name: 'ID' },
+      // { key: 'id', name: 'ID' },
       { key: 'name', name: 'Name' },
-      { key: 'edit', name: 'Edit', formatter: EditorFormatter },
-      { key: 'delete', name: 'Delete', formatter: DeleteFormatter }
+      { key: 'edit', name: 'Edit', width: 55, formatter: EditorFormatter },
+      { key: 'delete', name: 'Delete', width: 60, formatter: DeleteFormatter }
     ]
     let displayed_series = this.props.series.slice()
     displayed_series.forEach((item) => {
@@ -95,7 +95,8 @@ class Series extends React.Component {
           // rowsCount={this.props.books.length}
           defaultColumnOptions={{
             sortable: true,
-            resizable: true
+            resizable: true,
+            minWidth: 55
           }}
         />
       </div>

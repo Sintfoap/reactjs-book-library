@@ -89,7 +89,7 @@ class AuthorModal extends React.Component  {
                             value={this.state.last_name || ""}
                         />
                         </FormGroup>
-                        <Button>Submit</Button>
+                        <Button className={"submit_modal_button"}>Submit</Button>
                     </Form>
                     <Button onClick={this.props.close_modal}>Cancel</Button>
                 </ReactModal>

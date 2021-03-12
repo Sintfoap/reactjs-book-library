@@ -15,6 +15,7 @@
     "package.json": "^2.0.1",
     "react": "^16.14.0",
     "react-data-grid": "^7.0.0-canary.36",
+    "react-data-grid-addons": "^7.0.0-alpha.24",
     "react-dom": "^16.14.0",
     "react-modal": "^3.12.1",
     "react-router-dom": "^5.2.0",

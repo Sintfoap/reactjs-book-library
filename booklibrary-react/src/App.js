@@ -26,6 +26,9 @@ class App extends Component {
             <Route path="/series">
               <Home current_page="series"/>
             </Route>
+            <Route path="/">
+              <Home current_page="books"/>
+            </Route>
           </Switch>
         </Router>
       </Fragment>

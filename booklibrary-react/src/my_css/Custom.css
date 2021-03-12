@@ -5,3 +5,19 @@
 .Add_button {
     margin-bottom: 10px;
 }
+
+.edit-delete-button {
+    vertical-align: baseline;
+    margin: 2px auto auto auto;
+    display: block;
+    width: 31px;
+}
+
+input.delete-modal-error
+{
+    border: 1px solid #eb516d;
+}
+
+button.submit_modal_button {
+    float: right;
+}

@@ -77,7 +77,7 @@ class GenreModal extends React.Component  {
               value={this.state.category || ""}
             />
             </FormGroup>
-            <Button>Submit</Button>
+            <Button className={"submit_modal_button"}>Submit</Button>
           </Form>
           <Button onClick={this.props.close_modal}>Cancel</Button>
         </ReactModal>

@@ -8,16 +8,17 @@ import { faEdit, faPlusSquare, faTrash } from '@fortawesome/free-solid-svg-icons
 
 import axios from "axios";
 import BookModal from "./book_modal";
+import DeleteModal from "./Delete_modal";
 
 import { API_URL } from "../constants";
 
 ReactModal.setAppElement('#root')
 
 const EditorFormatter = ({ value, row }) => {
-  return <Button href="#" outline color="primary" className="btn-sm" onClick={() => row.edit.on_click(row)}><FontAwesomeIcon icon={faEdit}/></Button>
+  return <Button href="#" outline color="primary" className="btn-sm edit-delete-button" onClick={() => row.edit.on_click(row)}><FontAwesomeIcon icon={faEdit}/></Button>
   }
 const DeleteFormatter = ({ value, row }) => {
-  return <Button href="#" outline color="danger" className="btn-sm" onClick={() => row.delete.on_click(row)}><FontAwesomeIcon icon={faTrash}/></Button>
+  return <Button href="#" outline color="danger" className="btn-sm edit-delete-button" onClick={() => row.delete.on_click(row)}><FontAwesomeIcon icon={faTrash}/></Button>
   }
 
 class Books extends React.Component {
@@ -25,6 +26,7 @@ class Books extends React.Component {
     super();
     this.state = {
       showModal: false,
+      showDeleteModal: false,
       creating_new_book: false,
       viewing_book: {}
     };
@@ -33,12 +35,13 @@ class Books extends React.Component {
     this.handleOpenModal = this.handleOpenModal.bind(this);
     this.handleCloseModal = this.handleCloseModal.bind(this);
     this.on_book_change = this.on_book_change.bind(this);
+    this.on_delete_book_change = this.on_delete_book_change.bind(this);
   }
 
   handleDeleteModal (row) {
-    // if(confirm("Do you want to delete book " + String(row.id) + " " + row.title + "?")){
-      this.deleteBook(row.id)
-    //}
+    console.log("Clicked delete")
+    console.log(row)
+    this.setState({ viewing_book: row, showDeleteModal: true})
   }
 
   handleOpenModal (row) {
@@ -47,7 +50,7 @@ class Books extends React.Component {
   }
   
   handleCloseModal () {
-    this.setState({ showModal: false });
+    this.setState({ showModal: false, showDeleteModal: false });
   }
 
   on_book_change() {
@@ -55,12 +58,12 @@ class Books extends React.Component {
     this.props.on_change();
   }
 
-  deleteBook = id => {
-    axios.delete(API_URL + 'books/' + id).then(res => {
-      this.setState({ books: res.data})
+  on_delete_book_change() {
+    axios.delete(API_URL + 'books/' + this.state.viewing_book.id).then(() => {
+      this.handleCloseModal()
       this.props.on_change()
     });
-  };
+  }
 
   find_author = (id) => {
     const author = this.props.authors.find(author => author.id === id)
@@ -85,14 +88,14 @@ class Books extends React.Component {
 
   render() {
     const columns = [
-      { key: 'id', name: 'ID' },
+      // { key: 'id', name: 'ID' },
       { key: 'title', name: 'Title' },
       { key: 'notes', name: 'Notes' },
       { key: 'author_name', name: 'Author' },
       { key: 'genre_name', name: 'Genre' },
       { key: 'series_name', name: 'Series' },
-      { key: 'edit', name: 'Edit', formatter: EditorFormatter },
-      { key: 'delete', name: 'Delete', formatter: DeleteFormatter }
+      { key: 'edit', resizable: false, name: 'Edit', width: 55, formatter: EditorFormatter },
+      { key: 'delete', resizable: false, name: 'Delete', width: 60, formatter: DeleteFormatter }
     ]
     let displayed_books = this.props.books.slice()
     displayed_books.forEach((item) => {
@@ -104,17 +107,26 @@ class Books extends React.Component {
     })
     return (
       <div>
-         <BookModal
-           isOpen={this.state.showModal}
-           contentLabel="Book Modal"
-           viewing_book={this.state.viewing_book}
-           new={this.state.creating_new_book}
-           close_modal={this.handleCloseModal}
-           on_change={this.on_book_change}
-           authors={this.props.authors}
-           genres={this.props.genres}
-           series={this.props.series}
-          />
+        <BookModal
+          isOpen={this.state.showModal}
+          contentLabel="Book Modal"
+          viewing_book={this.state.viewing_book}
+          new={this.state.creating_new_book}
+          close_modal={this.handleCloseModal}
+          on_change={this.on_book_change}
+          authors={this.props.authors}
+          genres={this.props.genres}
+          series={this.props.series}
+        />
+        <DeleteModal
+          isOpen={this.state.showDeleteModal}
+          contentLabel="Delete Book"
+          viewing_book={this.state.viewing_book}
+          close_modal={this.handleCloseModal}
+          item_type={"Book"}
+          item_desc={this.state.viewing_book.title}
+          on_change={this.on_delete_book_change}
+        />
         <Button outline color="success" className="Add_button" onClick={() => {
           this.setState({
             showModal: true,
@@ -123,11 +135,13 @@ class Books extends React.Component {
         <DataGrid
           columns={columns}
           rows={this.props.books}
+          enableFilterRow= {true}
           // rowGetter={i => this.props.books[i]}
           // rowsCount={this.props.books.length}
           defaultColumnOptions={{
             sortable: true,
-            resizable: true
+            resizable: true,
+            minWidth: 55
           }}
         />
       </div>

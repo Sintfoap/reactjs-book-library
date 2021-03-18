@@ -9,17 +9,12 @@ import { faEdit, faPlusSquare, faTrash } from '@fortawesome/free-solid-svg-icons
 import axios from "axios";
 import BookModal from "./book_modal";
 import DeleteModal from "./Delete_modal";
+import EditorFormatter from "./Edit_formatter.js"
+import DeleteFormatter from "./Delete_formater.js"
 
 import { API_URL } from "../constants";
 
 ReactModal.setAppElement('#root')
-
-const EditorFormatter = ({ value, row }) => {
-  return <Button href="#" outline color="primary" className="btn-sm edit-delete-button" onClick={() => row.edit.on_click(row)}><FontAwesomeIcon icon={faEdit}/></Button>
-  }
-const DeleteFormatter = ({ value, row }) => {
-  return <Button href="#" outline color="danger" className="btn-sm edit-delete-button" onClick={() => row.delete.on_click(row)}><FontAwesomeIcon icon={faTrash}/></Button>
-  }
 
 class Books extends React.Component {
   constructor () {
@@ -68,7 +63,7 @@ class Books extends React.Component {
   find_author = (id) => {
     const author = this.props.authors.find(author => author.id === id)
     if(author){
-      return author.first_name + " " + author.last_name
+      return author.last_name + ", " + author.first_name
     }
   }
 
@@ -94,7 +89,7 @@ class Books extends React.Component {
       { key: 'author_name', name: 'Author' },
       { key: 'genre_name', name: 'Genre' },
       { key: 'series_name', name: 'Series' },
-      { key: 'edit', resizable: false, name: 'Edit', width: 55, formatter: EditorFormatter },
+      { key: 'edit', resizable: false, name: 'Edit', width: 55, formatter: EditorFormatter},
       { key: 'delete', resizable: false, name: 'Delete', width: 60, formatter: DeleteFormatter }
     ]
     let displayed_books = this.props.books.slice()
@@ -140,7 +135,7 @@ class Books extends React.Component {
           // rowsCount={this.props.books.length}
           defaultColumnOptions={{
             sortable: true,
-            resizable: true,
+            // resizable: true,
             minWidth: 55
           }}
         />

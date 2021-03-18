@@ -8,23 +8,20 @@ import { faEdit, faTrash, faPlusSquare } from '@fortawesome/free-solid-svg-icons
 
 import axios from "axios";
 import SeriesModal from "./series_modal";
+import DeleteModal from "./Delete_modal";
+import EditorFormatter from "./Edit_formatter.js"
+import DeleteFormatter from "./Delete_formater.js"
 
 import { API_URL } from "../constants";
 
 ReactModal.setAppElement('#root')
-
-const EditorFormatter = ({ value, row }) => {
-  return <Button href="#" outline color="primary" className="btn-sm edit-delete-button" onClick={() => row.edit.on_click(row)}><FontAwesomeIcon icon={faEdit}/></Button>
-  }
-const DeleteFormatter = ({ value, row }) => {
-  return <Button href="#" outline color="danger" className="btn-sm edit-delete-button" onClick={() => row.delete.on_click(row)}><FontAwesomeIcon icon={faTrash}/></Button>
-  }
 
 class Series extends React.Component {
   constructor () {
     super();
     this.state = {
       showModal: false,
+      showDeleteModal: false,
       creating_new_series: false,
       viewing_series: {}
     };
@@ -33,12 +30,13 @@ class Series extends React.Component {
     this.handleOpenModal = this.handleOpenModal.bind(this);
     this.handleCloseModal = this.handleCloseModal.bind(this);
     this.on_series_change = this.on_series_change.bind(this);
+    this.on_delete_series_change = this.on_delete_series_change.bind(this);
   }
 
   handleDeleteModal (row) {
-    // if(confirm("Do you want to delete book " + String(row.id) + " " + row.title + "?")){
-      this.deleteSeries(row.id)
-    //}
+    console.log("Clicked delete")
+    console.log(row)
+    this.setState({ viewing_series: row, showDeleteModal: true})
   }
 
   handleOpenModal (row) {
@@ -47,19 +45,20 @@ class Series extends React.Component {
   }
   
   handleCloseModal () {
-    this.setState({ showModal: false });
+    this.setState({ showModal: false,showDeleteModal: false });
   }
 
   on_series_change() {
     this.handleCloseModal()
     this.props.on_change();
   }
-  deleteSeries = id => {
-    axios.delete(API_URL + 'series/' + id).then(res => {
-      this.setState({ series: res.data})
+
+  on_delete_series_change() {
+    axios.delete(API_URL + 'series/' + this.state.viewing_series.id).then(() => {
+      this.handleCloseModal()
       this.props.on_change()
     });
-  };
+  }
 
   render() {
     const columns = [
@@ -83,6 +82,15 @@ class Series extends React.Component {
            close_modal={this.handleCloseModal}
            on_change={this.on_series_change}
           />
+        <DeleteModal
+          isOpen={this.state.showDeleteModal}
+          contentLabel="Delete Series"
+          viewing_series={this.state.viewing_series}
+          close_modal={this.handleCloseModal}
+          item_type={"Series"}
+          item_desc={this.state.viewing_series.name}
+          on_change={this.on_delete_series_change}
+        />
         <Button outline color="success" className="Add_button" onClick={() => {
           this.setState({
             showModal: true,
@@ -95,7 +103,7 @@ class Series extends React.Component {
           // rowsCount={this.props.books.length}
           defaultColumnOptions={{
             sortable: true,
-            resizable: true,
+            // resizable: true,
             minWidth: 55
           }}
         />

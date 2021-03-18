@@ -142,9 +142,9 @@ class BookModal extends React.Component  {
                             {this.series_dropdown_list()}
                         </select>
                         </FormGroup>
-                        <Button className={"submit_modal_button"}>Submit</Button>
+                        <Button>Submit</Button>
+                        <Button onClick={this.props.close_modal} className={"close_modal_button"}>Cancel</Button>
                     </Form>
-                    <Button onClick={this.props.close_modal}>Cancel</Button>
                 </ReactModal>
             </div>
         )

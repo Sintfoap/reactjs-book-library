@@ -18,6 +18,6 @@ input.delete-modal-error
     border: 1px solid #eb516d;
 }
 
-button.submit_modal_button {
+button.close_modal_button {
     float: right;
 }

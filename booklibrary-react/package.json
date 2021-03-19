@@ -17,14 +17,14 @@
     "react-data-grid": "^7.0.0-canary.36",
     "react-data-grid-addons": "^7.0.0-alpha.24",
     "react-dom": "^16.14.0",
-    "react-dropdown": "^1.9.2",
     "react-modal": "^3.12.1",
     "react-router-dom": "^5.2.0",
     "react-scripts": "^4.0.1",
+    "react-select-search": "^2.2.3",
     "reactstrap": "^8.9.0",
     "web-vitals": ""
   },
-  "scripts": { 
+  "scripts": {
     "start": "react-scripts start",
     "startprod": "export PORT=80 react-scripts start",
     "build": "react-scripts build",

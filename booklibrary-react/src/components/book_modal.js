@@ -1,6 +1,9 @@
 import React, { Component } from "react";
 import ReactModal from 'react-modal';
+import SelectSearch from 'react-select-search';
 import { Button, Form, FormGroup, Input, Label } from "reactstrap";
+
+import 'react-select-search/style.css'
 
 import axios from "axios";
 
@@ -46,6 +49,10 @@ class BookModal extends React.Component  {
         console.log(e)
         this.setState({ [e.target.name]: e.target.value });
     };
+    onDropdownChange = (id, item) => {
+        console.log(id, item)
+        this.setState({ [item.type]: id });
+    };
 
     createBook = e => {
       e.preventDefault();
@@ -67,7 +74,12 @@ class BookModal extends React.Component  {
     authors_dropdown_list() {
         let items = [];
         this.props.authors.forEach(author => {
-            items.push(<option key={author.first_name + " " + author.last_name} value={author.id}>{author.first_name + " " + author.last_name}</option>);
+            items.push(
+                {
+                    value: author.id,
+                    name: author.last_name + ", " + author.first_name,
+                    type: 'author'
+                })
         });
         return items;
     }
@@ -125,9 +137,14 @@ class BookModal extends React.Component  {
                         </FormGroup>
                         <FormGroup>
                         <Label for="author">Author:</Label>
-                        <select name="author" value={this.state.author || ""} onChange={this.onChange} class="form-control"  data-live-search="true" required>
-                            {this.authors_dropdown_list()}
-                        </select>
+                        <SelectSearch
+                        name="author"
+                        search
+                        placeholder="Select an Author"
+                        value={this.state.author || ""}
+                        options = {this.authors_dropdown_list()}
+                        onChange={this.onDropdownChange}
+                        />
                         </FormGroup>
                         <FormGroup>
                         <Label for="genre">Genre:</Label>

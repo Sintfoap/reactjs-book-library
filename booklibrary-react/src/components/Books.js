@@ -1,10 +1,11 @@
 import React from "react";
-import DataGrid from 'react-data-grid';
+import BootstrapTable from 'react-bootstrap-table-next';
+import filterFactory, { textFilter } from 'react-bootstrap-table2-filter';
 import ReactModal from 'react-modal';
 import { Button } from "reactstrap";
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faEdit, faPlusSquare, faTrash } from '@fortawesome/free-solid-svg-icons'
+import { faPlusSquare } from '@fortawesome/free-solid-svg-icons'
 
 import axios from "axios";
 import BookModal from "./book_modal";
@@ -84,13 +85,13 @@ class Books extends React.Component {
   render() {
     const columns = [
       // { key: 'id', name: 'ID' },
-      { key: 'title', name: 'Title' },
-      { key: 'notes', name: 'Notes' },
-      { key: 'author_name', name: 'Author' },
-      { key: 'genre_name', name: 'Genre' },
-      { key: 'series_name', name: 'Series' },
-      { key: 'edit', resizable: false, name: 'Edit', width: 55, formatter: EditorFormatter},
-      { key: 'delete', resizable: false, name: 'Delete', width: 60, formatter: DeleteFormatter }
+      { dataField: 'title', text: 'Title', filter: textFilter({delay: 0}) },
+      { dataField: 'notes', text: 'Notes', filter: textFilter({delay: 0}) },
+      { dataField: 'author_name', text: 'Author', filter: textFilter({delay: 0}) },
+      { dataField: 'genre_name', text: 'Genre', filter: textFilter({delay: 0}) },
+      { dataField: 'series_name', text: 'Series', filter: textFilter({delay: 0}) },
+      { dataField: 'edit', resizable: false, text: 'Edit', style: { width: 55 }, formatter: EditorFormatter},
+      { dataField: 'delete', resizable: false, text: 'Delete', style: { width: 60 }, formatter: DeleteFormatter }
     ]
     let displayed_books = this.props.books.slice()
     displayed_books.forEach((item) => {
@@ -127,17 +128,11 @@ class Books extends React.Component {
             showModal: true,
             creating_new_book: true
           })}}><FontAwesomeIcon icon={ faPlusSquare }/> New Book </Button>
-        <DataGrid
+        <BootstrapTable
+        keyField={"wut"}
+        filter={ filterFactory() }
           columns={columns}
-          rows={this.props.books}
-          enableFilterRow= {true}
-          // rowGetter={i => this.props.books[i]}
-          // rowsCount={this.props.books.length}
-          defaultColumnOptions={{
-            sortable: true,
-            // resizable: true,
-            minWidth: 55
-          }}
+          data={this.props.books}
         />
       </div>
       );

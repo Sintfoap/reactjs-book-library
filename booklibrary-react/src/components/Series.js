@@ -1,10 +1,11 @@
 import React from "react";
-import DataGrid from 'react-data-grid';
+import BootstrapTable from 'react-bootstrap-table-next';
+import filterFactory, { textFilter } from 'react-bootstrap-table2-filter';
 import ReactModal from 'react-modal';
 import { Button } from "reactstrap";
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faEdit, faTrash, faPlusSquare } from '@fortawesome/free-solid-svg-icons'
+import { faPlusSquare } from '@fortawesome/free-solid-svg-icons'
 
 import axios from "axios";
 import SeriesModal from "./series_modal";
@@ -63,9 +64,9 @@ class Series extends React.Component {
   render() {
     const columns = [
       // { key: 'id', name: 'ID' },
-      { key: 'name', name: 'Name' },
-      { key: 'edit', name: 'Edit', width: 55, formatter: EditorFormatter },
-      { key: 'delete', name: 'Delete', width: 60, formatter: DeleteFormatter }
+      { dataField: 'name', text: 'Name', filter: textFilter({delay: 0}) },
+      { dataField: 'edit', text: 'Edit', style: { width: 55 }, formatter: EditorFormatter },
+      { dataField: 'delete', text: 'Delete', style: { width: 60 }, formatter: DeleteFormatter }
     ]
     let displayed_series = this.props.series.slice()
     displayed_series.forEach((item) => {
@@ -96,16 +97,11 @@ class Series extends React.Component {
             showModal: true,
             creating_new_series: true
           })}}><FontAwesomeIcon icon={ faPlusSquare }/> New Series </Button>
-        <DataGrid
+        <BootstrapTable
+            keyField={"wut"}
+            filter={ filterFactory() }
           columns={columns}
-          rows={this.props.series}
-          // rowGetter={i => this.props.books[i]}
-          // rowsCount={this.props.books.length}
-          defaultColumnOptions={{
-            sortable: true,
-            // resizable: true,
-            minWidth: 55
-          }}
+          data={this.props.series}
         />
       </div>
       );

@@ -21,3 +21,7 @@ input.delete-modal-error
 button.close_modal_button {
     float: right;
 }
+
+div.select-search {
+    width: 100%;
+}

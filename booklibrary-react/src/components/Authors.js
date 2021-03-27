@@ -1,10 +1,11 @@
 import React from "react";
-import DataGrid from 'react-data-grid';
+import BootstrapTable from 'react-bootstrap-table-next';
+import filterFactory, { textFilter } from 'react-bootstrap-table2-filter';
 import { Button } from "reactstrap";
 import ReactModal from 'react-modal';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faEdit, faPlusSquare, faTrash } from '@fortawesome/free-solid-svg-icons'
+import { faPlusSquare } from '@fortawesome/free-solid-svg-icons'
 
 import axios from "axios";
 import AuthorModal from "./author_modal";
@@ -65,13 +66,13 @@ class Authors extends React.Component {
   render() {
     const columns = [
       // { key: 'id', name: 'ID' },
-      { key: 'last_name', name: 'Last name', },
-      { key: 'first_name', name: 'First name' },
-      { key: 'edit', name: 'Edit', width: 55, formatter: EditorFormatter },
-      { key: 'delete', name: 'Delete', width: 60, formatter: DeleteFormatter }
+      { dataField: 'full_name', text: 'Name', filter: textFilter({delay: 0}) },
+      { dataField: 'edit', text: 'Edit', style: { width: 55 }, formatter: EditorFormatter },
+      { dataField: 'delete', text: 'Delete', style: { width: 60 }, formatter: DeleteFormatter }
     ]
     let displayed_authors = this.props.authors.slice()
     displayed_authors.forEach((item) => {
+      item.full_name = item.last_name + ", " + item.first_name
       item.edit = {id: item.id, on_click: this.handleOpenModal}
       item.delete = {id: item.id, on_click: this.handleDeleteModal}
     })
@@ -101,16 +102,11 @@ class Authors extends React.Component {
               showModal: true,
               creating_new_author: true
             })}}><FontAwesomeIcon icon={ faPlusSquare }/> New Author </Button>
-          <DataGrid
+          <BootstrapTable
+            keyField={"wut"}
+            filter={ filterFactory() }
             columns={columns}
-            rows={this.props.authors}
-            // rowGetter={i => this.props.books[i]}
-            // rowsCount={this.props.books.length}
-            defaultColumnOptions={{
-              sortable: true,
-              // resizable: true,
-              minWidth: 55
-            }}
+            data={this.props.authors}
           />
         </div>
       </div>

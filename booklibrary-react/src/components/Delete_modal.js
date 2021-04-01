@@ -1,15 +1,11 @@
-import React, { Component } from "react";
+import React from "react";
 import ReactModal from 'react-modal';
 import { Button, Form, FormGroup, Input, Label } from "reactstrap";
-
-import axios from "axios";
-
-import { API_URL } from "../constants";
 
 class DeleteModal extends React.Component  {
     constructor (props) {
         super(props);
-        console.log(props)
+        // console.log(props)
         let my_state = this.build_state()
         this.state = my_state
     }
@@ -29,17 +25,17 @@ class DeleteModal extends React.Component  {
 
     confirm = e => {
         e.preventDefault();
-        if(this.state.text.toLowerCase() == "delete"){
-            console.log("TADA YOU SAID DELETE")
+        if(this.state.text.toLowerCase() === "delete"){
+            // console.log("TADA YOU SAID DELETE")
             this.props.on_change()
         }else{
-            console.log("Did not type delete")
+            // console.log("Did not type delete")
             this.setState({error: true})
         }
     }
 
     onChange = e => {
-        console.log(e)
+        // console.log(e)
         this.setState({ [e.target.name]: e.target.value });
     };
 

@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React from "react";
 import ReactModal from 'react-modal';
 import SelectSearch from 'react-select-search';
 import { Button, Form, FormGroup, Input, Label } from "reactstrap";
@@ -12,7 +12,7 @@ import { API_URL } from "../constants";
 class BookModal extends React.Component {
     constructor(props) {
         super(props);
-        console.log(props)
+        // console.log(props)
         let my_state = this.build_state()
         this.state = my_state
     }
@@ -46,11 +46,11 @@ class BookModal extends React.Component {
     }
 
     onChange = e => {
-        console.log(e)
+        // console.log(e)
         this.setState({ [e.target.name]: e.target.value });
     };
     onDropdownChange = (id, item) => {
-        console.log(id, item)
+        // console.log(id, item)
         this.setState({ [item.type]: id });
     };
 
@@ -59,8 +59,8 @@ class BookModal extends React.Component {
         let book_obj = this.state
         book_obj.genre = parseInt(book_obj.genre)
         book_obj.author = parseInt(book_obj.author)
-        book_obj.series = book_obj.series == " " ? "" : parseInt(book_obj.series)
-        if (book_obj.series == "") {
+        book_obj.series = book_obj.series === " " ? "" : parseInt(book_obj.series)
+        if (book_obj.series === "") {
             delete book_obj.series
         }
         console.log(this.state)
@@ -74,7 +74,7 @@ class BookModal extends React.Component {
         let book_obj = this.state
         book_obj.genre = parseInt(book_obj.genre)
         book_obj.author = parseInt(book_obj.author)
-        book_obj.series = book_obj.series == " " ? "" : parseInt(book_obj.series)
+        book_obj.series = book_obj.series === " " ? "" : parseInt(book_obj.series)
         //   if (book_obj.series == "") {
         //       delete book_obj.series
         //   }

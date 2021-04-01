@@ -3,10 +3,14 @@ import BootstrapTable from 'react-bootstrap-table-next';
 import filterFactory, { textFilter } from 'react-bootstrap-table2-filter';
 import ReactModal from 'react-modal';
 import { Button } from "reactstrap";
+import {
+  Link
+} from "react-router-dom";
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPlusSquare } from '@fortawesome/free-solid-svg-icons'
 
+import GenreDetail from "./GenreDetail"
 import axios from "axios";
 import GenreModal from "./genre_modal";
 import DeleteModal from "./Delete_modal";
@@ -16,6 +20,10 @@ import DeleteFormatter from "./Delete_formater.js"
 import { API_URL } from "../constants";
 
 ReactModal.setAppElement('#root')
+
+function DetailFormatter(value, row) {
+  return <Button onClick={() => row.get.on_click(row) }  color="light">{String(value)}</Button>
+}
 
 class Genres extends React.Component {
   constructor () {
@@ -35,14 +43,14 @@ class Genres extends React.Component {
   }
 
   handleDeleteModal (row) {
-    console.log("Clicked delete")
-    console.log(row)
+    // console.log("Clicked delete")
+    // console.log(row)
     this.setState({ viewing_genre: row, showDeleteModal: true})
   }
 
 
   handleOpenModal (row) {
-    console.log(row)
+    // console.log(row)
     this.setState({ viewing_genre: row, showModal: true, creating_new_genre: false });
   }
 
@@ -62,22 +70,33 @@ class Genres extends React.Component {
     });
   }
 
-  // derive_book_titles = (genre) =>{
-  //   const book_titles = genre.books.map(book => book.title)
-  //   return book_titles.join(", ")
-  // }
+  derive_book_titles = (genre) =>{
+    const book_titles = genre.books.map(book => book.title)
+    return book_titles.join(", ")
+  }
+  
+  genre_details = (row) =>{
+    this.call_genre_details(row)
+  }
+  call_genre_details = (row) =>{
+    <Link to="/genres/detail"/>
+    return <GenreDetail
+    genre={row}
+    />
+  }
 
   render() {
     const columns = [
       // { key: 'id', name: 'ID' },
-      { dataField: 'category', text: 'Category', filter: textFilter({delay: 0}) },
-      // { key: 'book_title', name: 'Book'},
+      { dataField: 'category', text: 'Genre ',filter: textFilter({delay: 0}), formatter: DetailFormatter },
+      // { dataField: 'book_title', text: 'Book ',filter: textFilter({delay: 0})},
       { dataField: 'edit', text: 'Edit', style: { width: 55 }, formatter: EditorFormatter },
-      { dataField: 'delete', text : 'Delete', style: { width: 60 }, formatter: DeleteFormatter }
+      { dataField: 'delete', text : 'Delete', style: { width: 60 }, formatter: DeleteFormatter },
+
     ]
     let displayed_genres = this.props.genres.slice()
     displayed_genres.forEach((item) =>{
-      // item.book_title = this.derive_book_titles(item)
+      item.catagory = {id: item.id, on_click: this.genre_details}
       item.edit = {id: item.id, on_click: this.handleOpenModal}
       item.delete = {id: item.id, on_click: this.handleDeleteModal}
     })

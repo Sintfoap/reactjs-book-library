@@ -14,6 +14,8 @@ class App extends Component {
         <Router>
           <Header />
           <Switch>
+            <Route path="/genres/detail">
+            </Route>
             <Route path="/books">
               <Home current_page="books"/>
             </Route>

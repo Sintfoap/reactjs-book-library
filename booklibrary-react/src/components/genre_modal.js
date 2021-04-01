@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React from "react";
 import ReactModal from 'react-modal';
 import { Button, Form, FormGroup, Input, Label } from "reactstrap";
 
@@ -9,7 +9,7 @@ import { API_URL } from "../constants";
 class GenreModal extends React.Component  {
   constructor (props) {
     super(props);
-    console.log(props)
+    // console.log(props)
     let my_state = this.build_state()
     this.state = my_state
   }

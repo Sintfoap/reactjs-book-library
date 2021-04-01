@@ -35,13 +35,13 @@ class Series extends React.Component {
   }
 
   handleDeleteModal (row) {
-    console.log("Clicked delete")
-    console.log(row)
+    // console.log("Clicked delete")
+    // console.log(row)
     this.setState({ viewing_series: row, showDeleteModal: true})
   }
 
   handleOpenModal (row) {
-    console.log(row)
+    // console.log(row)
     this.setState({ viewing_series: row, showModal: true, creating_new_series: false });
   }
   

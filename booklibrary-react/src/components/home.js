@@ -5,16 +5,10 @@ import Authors from "./Authors"
 import Genres from "./Genres"
 import Series from "./Series"
 import Loading_animation from '../constants/images/Loading_animation.gif';
-// import NewBookModal from "./new_book_modal";
-// import NewAuthorModal from "./new_author_modal";
-// import NewGenreModal from "./new_genre_modal";
-// import NewSeriesModal from "./new_series_modal";
-
 
 import axios from "axios";
 
 import { API_URL } from "../constants";
-import { setGlobalCssModule } from "reactstrap/es/utils";
 
 class Home extends Component {
   constructor(props) {
@@ -89,12 +83,12 @@ class Home extends Component {
   }
 
   getpage = () => {
-    console.log(this)
+    // console.log(this)
     if((this.state.book_confirmation === undefined) || (this.state.author_confirmation === undefined) ||  (this.state.genre_confirmation === undefined) || (this.state.series_confirmation === undefined)){
       return this.loading_screen()
     } else {
-      switch (this.state.current_page) {
-        case "books":
+      switch (this.state.current_page) {        
+        default: case "books":
           return (
             <Books 
             books={this.state.books}
@@ -104,7 +98,6 @@ class Home extends Component {
             on_change={this.resetBooks}
             />
           )
-          break;
         case "authors":
           return (
             <Authors 
@@ -115,7 +108,6 @@ class Home extends Component {
             on_change={this.resetAuthors}
             />
           )
-          break;
         case "genres":
           return (
             <Genres 
@@ -126,7 +118,6 @@ class Home extends Component {
             on_change={this.resetGenres}
             />
           )
-          break;
         case "series":
           return (
             <Series 
@@ -137,7 +128,7 @@ class Home extends Component {
             on_change={this.resetSeries}
             />
           )
-          break;
+
       }
     }
   }

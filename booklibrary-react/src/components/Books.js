@@ -35,13 +35,13 @@ class Books extends React.Component {
   }
 
   handleDeleteModal (row) {
-    console.log("Clicked delete")
-    console.log(row)
+    // console.log("Clicked delete")
+    // console.log(row)
     this.setState({ viewing_book: row, showDeleteModal: true})
   }
 
   handleOpenModal (row) {
-    console.log(row)
+    // console.log(row)
     this.setState({ viewing_book: row, showModal: true, creating_new_book: false });
   }
   
@@ -86,8 +86,8 @@ class Books extends React.Component {
     const columns = [
       // { key: 'id', name: 'ID' },
       { dataField: 'title', text: 'Title', filter: textFilter({delay: 0}) },
-      { dataField: 'notes', text: 'Notes', filter: textFilter({delay: 0}) },
-      { dataField: 'author_name', text: 'Author', filter: textFilter({delay: 0}) },
+      { dataField: 'notes', text: 'Notes', style: { width: 250 }, filter: textFilter({delay: 0}) },
+      { dataField: 'author_name', text: 'Author', filter: textFilter({delay: 0})},
       { dataField: 'genre_name', text: 'Genre', filter: textFilter({delay: 0}) },
       { dataField: 'series_name', text: 'Series', filter: textFilter({delay: 0}) },
       { dataField: 'edit', resizable: false, text: 'Edit', style: { width: 55 }, formatter: EditorFormatter},

@@ -6,17 +6,17 @@ import axios from "axios";
 
 import { API_URL } from "../constants";
 
-class GenreDetail extends React.Component {
+class SeriesDetail extends React.Component {
     constructor() {
         super();
         this.state = {
-            genre: undefined,
-            genre_confirmation: false
+            series: undefined,
+            series_confirmation: false
         }
     }
   
     componentDidMount() {
-      this.getGenre();
+      this.getSeries();
     }
 
 
@@ -30,16 +30,16 @@ class GenreDetail extends React.Component {
     }
 
 
-    getGenre = () => {
-        axios.get(API_URL + 'genres/' + this.props.match.params.id).then(res => this.setState({ genre: res.data, genre_confirmation: true }));
+    getSeries = () => {
+        axios.get(API_URL + 'series/' + this.props.match.params.id).then(res => this.setState({ series: res.data, series_confirmation: true }));
     }
 
     render() {
-        if(this.state.genre_confirmation){
+        if(this.state.series_confirmation){
             return (<div>
-                <h1>{this.state.genre.id}</h1>
-                <p>{this.state.genre.category}</p>
-                <p>{JSON.stringify(this.state.genre.books)}</p>
+                <h1>{this.state.series.id}</h1>
+                <p>{this.state.series.name}</p>
+                <p>{JSON.stringify(this.state.series.books)}</p>
                 </div>)
         }else {
             return this.loading_screen()
@@ -47,4 +47,4 @@ class GenreDetail extends React.Component {
 
     }
 }
-export default withRouter(GenreDetail)
+export default withRouter(SeriesDetail)

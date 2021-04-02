@@ -6,6 +6,10 @@ import {
 } from "react-router-dom";
 import Header from "./components/Header";
 import Home from "./components/home"
+import GenreDetail from "./components/GenreDetail"
+import AuthorDetail from "./components/AuthorDetail";
+import SeriesDetail from "./components/SeriesDetail";
+import BookDetail from "./components/BookDetail";
 
 class App extends Component {
   render() {
@@ -14,7 +18,13 @@ class App extends Component {
         <Router>
           <Header />
           <Switch>
-            <Route path="/genres/detail">
+            <Route path="/books/:id" children={<BookDetail />}>
+            </Route>
+            <Route path="/authors/:id" children={<AuthorDetail />}>
+            </Route>
+            <Route path="/genres/:id" children={<GenreDetail />}>
+            </Route>
+            <Route path="/series/:id" children={<SeriesDetail />}>
             </Route>
             <Route path="/books">
               <Home current_page="books"/>

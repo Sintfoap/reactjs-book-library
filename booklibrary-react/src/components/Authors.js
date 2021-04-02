@@ -14,6 +14,7 @@ import EditorFormatter from "./Edit_formatter.js"
 import DeleteFormatter from "./Delete_formater.js"
 
 import { API_URL } from "../constants";
+import BuildDetailFormatter from "./Detail_formatter";
 
 ReactModal.setAppElement('#root')
 
@@ -66,7 +67,7 @@ class Authors extends React.Component {
   render() {
     const columns = [
       // { key: 'id', name: 'ID' },
-      { dataField: 'full_name', text: 'Name', filter: textFilter({delay: 0}) },
+      { dataField: 'full_name', text: 'Name', filter: textFilter({delay: 0}), formatter: BuildDetailFormatter('/authors/') },
       { dataField: 'edit', text: 'Edit', style: { width: 55 }, formatter: EditorFormatter },
       { dataField: 'delete', text: 'Delete', style: { width: 60 }, formatter: DeleteFormatter }
     ]

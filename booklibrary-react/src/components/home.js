@@ -45,7 +45,7 @@ class Home extends Component {
     axios.get(API_URL + 'authors').then(res => this.setState({ authors: res.data, author_confirmation: true }));
   }
 
-  getGenre = () => {
+  getGenres = () => {
     axios.get(API_URL + 'genres').then(res => this.setState({ genres: res.data, genre_confirmation: true }));
   }
 
@@ -60,7 +60,7 @@ class Home extends Component {
     this.getAuthors()
   }
   resetGenres = () => {
-    this.getGenre()
+    this.getGenres()
   }
   resetSeries = () => {
     this.getSeries()
@@ -69,7 +69,7 @@ class Home extends Component {
   resetState = () => {
     this.getBooks();
     this.getAuthors();
-    this.getGenre();
+    this.getGenres();
     this.getSeries();
   };
 

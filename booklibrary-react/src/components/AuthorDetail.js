@@ -6,17 +6,17 @@ import axios from "axios";
 
 import { API_URL } from "../constants";
 
-class GenreDetail extends React.Component {
+class AuthorDetail extends React.Component {
     constructor() {
         super();
         this.state = {
-            genre: undefined,
-            genre_confirmation: false
+            author: undefined,
+            author_confirmation: false
         }
     }
   
     componentDidMount() {
-      this.getGenre();
+      this.getAuthor();
     }
 
 
@@ -30,16 +30,16 @@ class GenreDetail extends React.Component {
     }
 
 
-    getGenre = () => {
-        axios.get(API_URL + 'genres/' + this.props.match.params.id).then(res => this.setState({ genre: res.data, genre_confirmation: true }));
+    getAuthor = () => {
+        axios.get(API_URL + 'authors/' + this.props.match.params.id).then(res => this.setState({ author: res.data, author_confirmation: true }));
     }
 
     render() {
-        if(this.state.genre_confirmation){
+        if(this.state.author_confirmation){
             return (<div>
-                <h1>{this.state.genre.id}</h1>
-                <p>{this.state.genre.category}</p>
-                <p>{JSON.stringify(this.state.genre.books)}</p>
+                <h1>{this.state.author.id}</h1>
+                <p>{this.state.author.last_name + ', ' + this.state.author.first_name}</p>
+                <p>{JSON.stringify(this.state.author.books)}</p>
                 </div>)
         }else {
             return this.loading_screen()
@@ -47,4 +47,4 @@ class GenreDetail extends React.Component {
 
     }
 }
-export default withRouter(GenreDetail)
+export default withRouter(AuthorDetail)

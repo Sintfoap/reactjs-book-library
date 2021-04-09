@@ -15,6 +15,7 @@ import DeleteFormatter from "./Delete_formater.js"
 
 import { API_URL } from "../constants";
 import BuildDetailFormatter from "./Detail_formatter";
+import Database from "./Database";
 
 ReactModal.setAppElement('#root')
 
@@ -71,7 +72,7 @@ class Authors extends React.Component {
       { dataField: 'edit', text: 'Edit', style: { width: 55 }, formatter: EditorFormatter },
       { dataField: 'delete', text: 'Delete', style: { width: 60 }, formatter: DeleteFormatter }
     ]
-    let displayed_authors = this.props.authors.slice()
+    let displayed_authors = Database.authors.slice()
     displayed_authors.forEach((item) => {
       item.full_name = item.last_name + ", " + item.first_name
       item.edit = {id: item.id, on_click: this.handleOpenModal}
@@ -107,7 +108,7 @@ class Authors extends React.Component {
             keyField={"wut"}
             filter={ filterFactory() }
             columns={columns}
-            data={this.props.authors}
+            data={Database.authors}
           />
         </div>
       </div>

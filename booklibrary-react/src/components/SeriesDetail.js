@@ -5,6 +5,8 @@ import loading_screen from './Loading_screen'
 import axios from "axios";
 
 import { API_URL } from "../constants";
+import BookDataGrid from "./BookDataGrid";
+import Database from "./Database";
 
 class SeriesDetail extends React.Component {
     constructor() {
@@ -14,9 +16,19 @@ class SeriesDetail extends React.Component {
             series_confirmation: false
         }
     }
-  
+
+    check_if_ready_to_render() {
+      if(Database.everything_loaded()) {
+        this.getSeries();
+      }
+    }
+
     componentDidMount() {
-      this.getSeries();
+      if(!Database.everything_loaded()) {
+        Database.resetState(this.check_if_ready_to_render);
+      }else {
+        this.getSeries();
+      }
     }
 
 
@@ -28,7 +40,13 @@ class SeriesDetail extends React.Component {
         if(this.state.series_confirmation){
             return (<div className="container">
                 <h1>{this.state.series.name}</h1>
-                {/* <p>{JSON.stringify(this.state.series.books)}</p> */}
+                <BookDataGrid
+                books={this.state.series.books}
+                on_change={() => {Database.resetBooks(this.check_if_ready_to_render)}}
+                authors={Database.authors}
+                genres={Database.genres}
+                series={Database.series}
+                />
                 </div>)
         }else {
             return loading_screen

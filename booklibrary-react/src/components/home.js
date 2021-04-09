@@ -4,26 +4,19 @@ import Books from "./Books"
 import Authors from "./Authors"
 import Genres from "./Genres"
 import Series from "./Series"
-import loading_screen from './Loading_screen.js'
+import loading_screen from './Loading_screen'
 
-import axios from "axios";
-
-import { API_URL } from "../constants";
+import Database from './Database'
 
 class Home extends Component {
   constructor(props) {
     super(props);
     this.state = { 
       current_page: this.props.current_page,
-      books: [],
-      authors: [],
-      genres: [],
-      series: [],
-      book_confirmation: undefined,
-      author_confirmation: undefined,
-      genre_confirmation: undefined,
-      series_confirmation: undefined
+      load_page: false
     };
+    
+    this.check_if_ready_to_render = this.check_if_ready_to_render.bind(this);
   }  
 
   componentDidUpdate(prevProps) {
@@ -33,51 +26,21 @@ class Home extends Component {
     }
   }
 
+  check_if_ready_to_render() {
+    if(Database.everything_loaded()) {
+      this.setState({load_page: true})
+    }
+  }
+
   componentDidMount() {
-    this.resetState();
+    if(!Database.everything_loaded()) {
+      Database.resetState(this.check_if_ready_to_render);
+    }
   }
-
-  getBooks = () => {
-    axios.get(API_URL + 'books').then(res => this.setState({ books: res.data, book_confirmation: true }));
-  };
-
-  getAuthors = () => {
-    axios.get(API_URL + 'authors').then(res => this.setState({ authors: res.data, author_confirmation: true }));
-  }
-
-  getGenres = () => {
-    axios.get(API_URL + 'genres').then(res => this.setState({ genres: res.data, genre_confirmation: true }));
-  }
-
-  getSeries = () => {
-    axios.get(API_URL + 'series').then(res => this.setState({ series: res.data, series_confirmation: true }));
-  }
-
-  resetBooks = () => {
-    this.getBooks()
-  }
-  resetAuthors = () => {
-    this.getAuthors()
-  }
-  resetGenres = () => {
-    this.getGenres()
-  }
-  resetSeries = () => {
-    this.getSeries()
-  }
-
-  resetState = () => {
-    this.getBooks();
-    this.getAuthors();
-    this.getGenres();
-    this.getSeries();
-  };
 
   getpage = () => {
     // console.log(this)
-    if((this.state.book_confirmation === undefined) || (this.state.author_confirmation === undefined) ||  (this.state.genre_confirmation === undefined) || (this.state.series_confirmation === undefined)){
-      return loading_screen()
-    } else {
+    if(Database.everything_loaded()){
       switch (this.state.current_page) {        
         default: case "books":
           return (
@@ -86,7 +49,7 @@ class Home extends Component {
             authors={this.state.authors}
             genres={this.state.genres}
             series={this.state.series}
-            on_change={this.resetBooks}
+            on_change={() => {Database.resetBooks(this.check_if_ready_to_render)}}
             />
           )
         case "authors":
@@ -96,7 +59,7 @@ class Home extends Component {
             authors={this.state.authors}
             genres={this.state.genres}
             series={this.state.series}
-            on_change={this.resetAuthors}
+            on_change={() => {Database.resetAuthors(this.check_if_ready_to_render)}}
             />
           )
         case "genres":
@@ -106,7 +69,7 @@ class Home extends Component {
             authors={this.state.authors}
             genres={this.state.genres}
             series={this.state.series}
-            on_change={this.resetGenres}
+            on_change={() => {Database.resetGenres(this.check_if_ready_to_render)}}
             />
           )
         case "series":
@@ -116,11 +79,13 @@ class Home extends Component {
             authors={this.state.authors}
             genres={this.state.genres}
             series={this.state.series}
-            on_change={this.resetSeries}
+            on_change={() => {Database.resetSeries(this.check_if_ready_to_render)}}
             />
           )
 
       }
+    } else {
+      return loading_screen()
     }
   }
 

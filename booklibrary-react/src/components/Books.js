@@ -8,6 +8,7 @@ import { faPlusSquare } from '@fortawesome/free-solid-svg-icons'
 import BookModal from "./book_modal";
 
 import BookDataGrid from "./BookDataGrid";
+import Database from "./Database";
 
 ReactModal.setAppElement('#root')
 
@@ -33,7 +34,7 @@ class Books extends React.Component {
 
   on_book_change() {
     this.handleCloseModal()
-    this.props.on_change();
+    Database.on_change();
   }
 
   render() {
@@ -45,9 +46,9 @@ class Books extends React.Component {
           new={true}
           close_modal={this.handleCloseModal}
           on_change={this.on_book_change}
-          authors={this.props.authors}
-          genres={this.props.genres}
-          series={this.props.series}
+          authors={Database.authors}
+          genres={Database.genres}
+          series={Database.series}
         />
         <Button outline color="success" className="Add_button" onClick={() => {
           this.setState({
@@ -55,11 +56,11 @@ class Books extends React.Component {
             creating_new_book: true
           })}}><FontAwesomeIcon icon={ faPlusSquare }/> New Book </Button>
         <BookDataGrid
-          books={this.props.books}
+          books={Database.books}
           on_change={this.props.on_change}
-          authors={this.props.authors}
-          genres={this.props.genres}
-          series={this.props.series}
+          authors={Database.authors}
+          genres={Database.genres}
+          series={Database.series}
         />
       </div>
       );

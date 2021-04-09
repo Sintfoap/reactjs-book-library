@@ -15,6 +15,7 @@ import DeleteFormatter from "./Delete_formater.js"
 
 import { API_URL } from "../constants";
 import BuildDetailFormatter from "./Detail_formatter";
+import Database from "./Database";
 
 ReactModal.setAppElement('#root')
 
@@ -77,7 +78,7 @@ class Genres extends React.Component {
       { dataField: 'delete', text : 'Delete', style: { width: 60 }, formatter: DeleteFormatter },
 
     ]
-    let displayed_genres = this.props.genres.slice()
+    let displayed_genres = Database.genres.slice()
     displayed_genres.forEach((item) =>{
       item.edit = {id: item.id, on_click: this.handleOpenModal}
       item.delete = {id: item.id, on_click: this.handleDeleteModal}
@@ -110,7 +111,7 @@ class Genres extends React.Component {
           keyField={"wut"}
           filter={ filterFactory() }
           columns={columns}
-          data={this.props.genres}
+          data={Database.genres}
         />
       </div>
       );

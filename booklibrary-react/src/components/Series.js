@@ -15,6 +15,7 @@ import DeleteFormatter from "./Delete_formater.js"
 
 import { API_URL } from "../constants";
 import BuildDetailFormatter from "./Detail_formatter";
+import Database from "./Database";
 
 ReactModal.setAppElement('#root')
 
@@ -69,7 +70,7 @@ class Series extends React.Component {
       { dataField: 'edit', text: 'Edit', style: { width: 55 }, formatter: EditorFormatter },
       { dataField: 'delete', text: 'Delete', style: { width: 60 }, formatter: DeleteFormatter }
     ]
-    let displayed_series = this.props.series.slice()
+    let displayed_series = Database.series.slice()
     displayed_series.forEach((item) => {
       item.edit = {id: item.id, on_click: this.handleOpenModal}
       item.delete = {id: item.id, on_click: this.handleDeleteModal}
@@ -102,7 +103,7 @@ class Series extends React.Component {
             keyField={"wut"}
             filter={ filterFactory() }
           columns={columns}
-          data={this.props.series}
+          data={Database.series}
         />
       </div>
       );

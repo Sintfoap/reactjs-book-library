@@ -36,10 +36,9 @@ class AuthorDetail extends React.Component {
 
     render() {
         if(this.state.author_confirmation){
-            return (<div>
-                <h1>{this.state.author.id}</h1>
-                <p>{this.state.author.last_name + ', ' + this.state.author.first_name}</p>
-                <p>{JSON.stringify(this.state.author.books)}</p>
+            return (<div className="container">
+                <h1>{this.state.author.last_name + ', ' + this.state.author.first_name}</h1>
+                {/* <p>{JSON.stringify(this.state.author.books)}</p> */}
                 </div>)
         }else {
             return this.loading_screen()

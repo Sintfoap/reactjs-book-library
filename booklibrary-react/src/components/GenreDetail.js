@@ -1,6 +1,6 @@
 import React from "react";
 import { withRouter } from "react-router";
-import Loading_animation from '../constants/images/Loading_animation.gif';
+import loading_screen from './Loading_screen'
 
 import axios from "axios";
 
@@ -20,29 +20,18 @@ class GenreDetail extends React.Component {
     }
 
 
-    loading_screen() {
-        return <div className="text-center row">
-            <img
-                src={Loading_animation}
-                alt="Loading_animation"
-            />
-        </div>
-    }
-
-
     getGenre = () => {
         axios.get(API_URL + 'genres/' + this.props.match.params.id).then(res => this.setState({ genre: res.data, genre_confirmation: true }));
     }
 
     render() {
         if(this.state.genre_confirmation){
-            return (<div>
-                <h1>{this.state.genre.id}</h1>
-                <p>{this.state.genre.category}</p>
-                <p>{JSON.stringify(this.state.genre.books)}</p>
+            return (<div className="container">
+                <h1>{this.state.genre.category}</h1>
+                {/* <p>{JSON.stringify(this.state.genre.books)}</p> */}
                 </div>)
         }else {
-            return this.loading_screen()
+            return loading_screen
         }
 
     }

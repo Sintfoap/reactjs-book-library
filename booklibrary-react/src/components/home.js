@@ -4,7 +4,7 @@ import Books from "./Books"
 import Authors from "./Authors"
 import Genres from "./Genres"
 import Series from "./Series"
-import Loading_animation from '../constants/images/Loading_animation.gif';
+import loading_screen from './Loading_screen.js'
 
 import axios from "axios";
 
@@ -73,19 +73,10 @@ class Home extends Component {
     this.getSeries();
   };
 
-  loading_screen(){
-    return <div className="text-center row">
-    <img
-      src={ Loading_animation }
-      alt="Loading_animation"
-    />
-  </div>
-  }
-
   getpage = () => {
     // console.log(this)
     if((this.state.book_confirmation === undefined) || (this.state.author_confirmation === undefined) ||  (this.state.genre_confirmation === undefined) || (this.state.series_confirmation === undefined)){
-      return this.loading_screen()
+      return loading_screen()
     } else {
       switch (this.state.current_page) {        
         default: case "books":

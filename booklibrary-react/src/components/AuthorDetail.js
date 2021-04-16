@@ -1,6 +1,5 @@
 import React from "react";
 import { withRouter } from "react-router";
-import Loading_animation from '../constants/images/Loading_animation.gif';
 
 import axios from "axios";
 

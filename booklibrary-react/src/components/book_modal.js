@@ -25,7 +25,9 @@ class BookModal extends React.Component {
                 notes: this.props.viewing_book.notes,
                 author: this.props.viewing_book.author,
                 genre: this.props.viewing_book.genre,
-                series: this.props.viewing_book.series
+                series: this.props.viewing_book.series,
+                number_in_series: this.props.viewing_book.number_in_series,
+                un_owned: this.props.viewing_book.un_owned
             }
         } else {
             return {
@@ -34,10 +36,15 @@ class BookModal extends React.Component {
                 notes: "",
                 author: "",
                 genre: "",
-                series: ""
+                series: "",
+                number_in_series: "",
+                showAuthorModal: false,
+                showModal: false
+                
             }
         }
     }
+
     componentDidUpdate(prevProps) {
         // comparison to avoid infinite loop
         if (this.props !== prevProps) {
@@ -60,8 +67,12 @@ class BookModal extends React.Component {
         book_obj.genre = parseInt(book_obj.genre)
         book_obj.author = parseInt(book_obj.author)
         book_obj.series = book_obj.series === " " ? "" : parseInt(book_obj.series)
+        book_obj.number_in_series = book_obj.number_in_series === " " ? "": parseInt(book_obj.number_in_series)
         if (book_obj.series === "") {
             delete book_obj.series
+        }
+        if (book_obj.number_in_series === "") {
+            delete book_obj.number_in_series
         }
         console.log(this.state)
         axios.post(API_URL + 'books', this.state).then(() => {
@@ -75,9 +86,7 @@ class BookModal extends React.Component {
         book_obj.genre = parseInt(book_obj.genre)
         book_obj.author = parseInt(book_obj.author)
         book_obj.series = book_obj.series === " " ? "" : parseInt(book_obj.series)
-        //   if (book_obj.series == "") {
-        //       delete book_obj.series
-        //   }
+        book_obj.number_in_series = book_obj.number_in_series === " " ? "": parseInt(book_obj.number_in_series)
         axios.put(API_URL + 'books/' + book_obj.id, book_obj).then(() => {
             this.props.on_change()
         });
@@ -193,6 +202,24 @@ class BookModal extends React.Component {
                                 options={this.series_dropdown_list()}
                                 onChange={this.onDropdownChange}
                             />
+                        </FormGroup>
+                        {(this.state.series) !== "" &&
+                        <FormGroup>
+                            <Label for="number_in_series">Number in Series:</Label>
+                            <Input
+                                name="number_in_series"
+                                onChange={this.onChange}
+                                value={this.state.number_in_series || ""}
+                            />
+                        </FormGroup>}
+                        <FormGroup check>
+                            <Label check for="un_owned"></Label>
+                            <Input
+                                type="checkbox"
+                                name="un_owned"
+                                onChange={this.onChange}
+                                value={this.props.un_owned || false}
+                            />Un-Owned
                         </FormGroup>
                         <Button>Submit</Button>
                         <Button onClick={this.props.close_modal} className={"close_modal_button"}>Cancel</Button>

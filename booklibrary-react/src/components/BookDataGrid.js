@@ -72,12 +72,13 @@ class BookDataGrid extends React.Component {
             return book.series_obj.name
         }
     }
+    
 
     render() {
         const columns = [
             // { key: 'id', name: 'ID' },
             { dataField: 'title', text: 'Title', filter: textFilter({ delay: 0 }), formatter: BuildDetailFormatter('/books/') },
-            { dataField: 'notes', text: 'Notes', style: { width: 250 }, filter: textFilter({ delay: 0 }) },
+            { dataField: 'notes', text: 'Notes', style: { width: 250, "fontStyle": "italic"}, filter: textFilter({ delay: 0 })},
             { dataField: 'author_name', text: 'Author', filter: textFilter({ delay: 0 }), formatter: BuildDetailFormatter('/authors/', 'author') },
             { dataField: 'genre_name', text: 'Genre', filter: textFilter({ delay: 0 }), formatter: BuildDetailFormatter('/genres/', 'genre') },
             { dataField: 'series_name', text: 'Series', filter: textFilter({ delay: 0 }), formatter: BuildDetailFormatter('/series/', 'series') },
@@ -104,6 +105,8 @@ class BookDataGrid extends React.Component {
                     authors={this.props.authors}
                     genres={this.props.genres}
                     series={this.props.series}
+                    number_in_series={this.props.number_in_series}
+                    un_owned={this.props.un_owned}
                 />
                 <DeleteModal
                     isOpen={this.state.showDeleteModal}

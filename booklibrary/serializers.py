@@ -15,7 +15,7 @@ class SeriesEditSerializer(serializers.ModelSerializer):
 class BookEditSerializer(serializers.ModelSerializer):
     class Meta:
         model = Book
-        fields = ('id', 'title', 'notes', 'author', 'genre', 'series')
+        fields = ('id', 'title', 'notes', 'author', 'genre', 'series','number_in_series','un_owned')
 
 class BookGetSerializer(serializers.ModelSerializer):
     author_obj = serializers.SerializerMethodField('get_author')
@@ -34,7 +34,7 @@ class BookGetSerializer(serializers.ModelSerializer):
             return {}
     class Meta:
         model = Book
-        fields = ('id', 'title', 'notes', 'author', 'genre', 'series', 'author_obj', 'genre_obj', 'series_obj')
+        fields = ('id', 'title', 'notes', 'author', 'genre', 'series', 'author_obj', 'genre_obj', 'series_obj','number_in_series','un_owned')
 
 class AuthorGetSerializer(serializers.ModelSerializer):
     books = BookGetSerializer(many=True)

@@ -7,13 +7,16 @@ import axios from "axios";
 import { API_URL } from "../constants";
 import BookDataGrid from "./BookDataGrid";
 import Database from "./Database";
+import SeriesModal from "./series_modal";
+import DeleteModal from "./Delete_modal";
+import { Button } from "bootstrap";
 
 class SeriesDetail extends React.Component {
     constructor() {
         super();
         this.state = {
             series: undefined,
-            series_confirmation: false
+            series_confirmation: false,
         }
     }
 

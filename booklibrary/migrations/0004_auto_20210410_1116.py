@@ -10,14 +10,9 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.RemoveField(
-            model_name='series',
-            name='number_in_series',
-        ),
         migrations.AddField(
             model_name='book',
-            name='number_in_series',
-            field=models.CharField(default=1, max_length=200),
-            preserve_default=False,
+            name='owned',
+            field=models.BooleanField(default=True),
         ),
     ]

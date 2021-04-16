@@ -11,9 +11,8 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.AddField(
-            model_name='series',
+            model_name='book',
             name='number_in_series',
-            field=models.CharField(default=1, max_length=200),
-            preserve_default=False,
+            field=models.IntegerField(null=True)
         ),
     ]

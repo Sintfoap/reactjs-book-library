@@ -28,7 +28,7 @@ class Book(models.Model):
     genre = models.ForeignKey(Genre, on_delete=models.PROTECT, related_name='books')
     series = models.ForeignKey(Series, on_delete=models.PROTECT, blank=True, null=True, related_name='books')
     number_in_series = models.CharField(max_length=200, null=True)
-    un_owned = models.BooleanField(default=False)
+    owned = models.BooleanField(default=True)
 
     def __str__(self):
         return str(self.title)

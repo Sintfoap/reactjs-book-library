@@ -27,7 +27,7 @@ class BookModal extends React.Component {
                 genre: this.props.viewing_book.genre,
                 series: this.props.viewing_book.series,
                 number_in_series: this.props.viewing_book.number_in_series,
-                un_owned: this.props.viewing_book.un_owned
+                owned: this.props.viewing_book.owned
             }
         } else {
             return {
@@ -39,8 +39,8 @@ class BookModal extends React.Component {
                 series: "",
                 number_in_series: "",
                 showAuthorModal: false,
-                showModal: false
-                
+                showModal: false,
+                owned: true
             }
         }
     }
@@ -54,7 +54,11 @@ class BookModal extends React.Component {
 
     onChange = e => {
         // console.log(e)
-        this.setState({ [e.target.name]: e.target.value });
+        if(e.target.name == "owned"){
+            this.setState({ [e.target.name]: e.target.checked })
+        }else {
+            this.setState({ [e.target.name]: e.target.value });
+        }
     };
     onDropdownChange = (id, item) => {
         // console.log(id, item)
@@ -203,23 +207,24 @@ class BookModal extends React.Component {
                                 onChange={this.onDropdownChange}
                             />
                         </FormGroup>
-                        {(this.state.series) !== "" &&
+                        {(this.state.series) !== "" && (this.state.series) !== " " && (this.state.series) !== undefined && (this.state.series) !== null &&
                         <FormGroup>
                             <Label for="number_in_series">Number in Series:</Label>
                             <Input
+                                type="number"
                                 name="number_in_series"
                                 onChange={this.onChange}
                                 value={this.state.number_in_series || ""}
                             />
                         </FormGroup>}
                         <FormGroup check>
-                            <Label check for="un_owned"></Label>
+                            <Label check for="owned"></Label>
                             <Input
                                 type="checkbox"
-                                name="un_owned"
+                                name="owned"
                                 onChange={this.onChange}
-                                value={this.props.un_owned || false}
-                            />Un-Owned
+                                checked={this.state.owned || false}
+                            />Owned
                         </FormGroup>
                         <Button>Submit</Button>
                         <Button onClick={this.props.close_modal} className={"close_modal_button"}>Cancel</Button>

@@ -49,6 +49,7 @@ class SeriesDetail extends React.Component {
                 authors={Database.authors}
                 genres={Database.genres}
                 series={Database.series}
+                sort_field={"number_in_series"}
                 />
                 </div>)
         }else {

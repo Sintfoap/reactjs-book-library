@@ -28,6 +28,7 @@ class BookDataGrid extends React.Component {
         this.handleCloseModal = this.handleCloseModal.bind(this);
         this.on_book_change = this.on_book_change.bind(this);
         this.on_delete_book_change = this.on_delete_book_change.bind(this);
+        this.sort_books = this.sort_books.bind(this);
     }
 
     on_book_change() {
@@ -69,8 +70,19 @@ class BookDataGrid extends React.Component {
 
     find_series = (book) => {
         if (book.series_obj) {
+            if(book.number_in_series){
+                return book.series_obj.name + " (" + book.number_in_series.toString() + ")"
+            }
             return book.series_obj.name
         }
+    }
+
+    sort_books = (a, b) => {
+        console.log(a)
+        console.log(b)
+        console.log(a[this.props.sort_field])
+        console.log(b[this.props.sort_field])
+        return a[this.props.sort_field]-b[this.props.sort_field]
     }
     
 
@@ -85,14 +97,16 @@ class BookDataGrid extends React.Component {
             { dataField: 'edit', resizable: false, text: 'Edit', style: { width: 55 }, formatter: EditorFormatter },
             { dataField: 'delete', resizable: false, text: 'Delete', style: { width: 60 }, formatter: DeleteFormatter }
         ]
-        let displayed_books = this.props.books.slice()
-        displayed_books.forEach((item) => {
+        this.props.books.forEach((item) => {
             item.author_name = this.find_author(item)
             item.genre_name = this.find_genre(item)
             item.series_name = this.find_series(item)
             item.edit = { id: item.id, on_click: this.handleOpenModal }
             item.delete = { id: item.id, on_click: this.handleOpenDeleteModal }
         })
+        if(this.props.sort_field) {
+            this.props.books.sort(this.sort_books);
+        }
         return (
             <div>
                 <BookModal
@@ -106,7 +120,7 @@ class BookDataGrid extends React.Component {
                     genres={this.props.genres}
                     series={this.props.series}
                     number_in_series={this.props.number_in_series}
-                    un_owned={this.props.un_owned}
+                    owned={this.props.owned}
                 />
                 <DeleteModal
                     isOpen={this.state.showDeleteModal}

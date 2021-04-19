@@ -4,7 +4,7 @@ import {
   Navbar
 } from 'reactstrap';
 import {
-  Link
+  Link, NavLink
 } from "react-router-dom";
 import logo from '../constants/images/logo_cropped.png';
 
@@ -16,15 +16,14 @@ export default function App() {
           <img
             src={ logo }
             alt="Logo"
-            
           />
           <i><h5><Link style={{ color: 'black' }} to="/books">- Library -</Link></h5></i>
         </div>
         <Navbar style={{ marginLeft: 10 }} className="row" bg="dark" variant="dark">
-          <Link className="btn btn-outline-secondary Nav_button" to="/books">Books</Link>
-          <Link className="btn btn-outline-secondary Nav_button" to="/authors">Authors</Link>
-          <Link className="btn btn-outline-secondary Nav_button" to="/genres">Genres</Link>
-          <Link className="btn btn-outline-secondary Nav_button" to="/series">Series</Link>
+          <NavLink className="btn btn-outline-secondary Nav_button" to="/books">Books</NavLink>
+          <NavLink className="btn btn-outline-secondary Nav_button" to="/authors">Authors</NavLink>
+          <NavLink className="btn btn-outline-secondary Nav_button" to="/genres">Genres</NavLink>
+          <NavLink className="btn btn-outline-secondary Nav_button" to="/series">Series</NavLink>
         </Navbar>
       </div>
     </Container>

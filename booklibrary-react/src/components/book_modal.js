@@ -54,7 +54,7 @@ class BookModal extends React.Component {
 
     onChange = e => {
         // console.log(e)
-        if(e.target.name == "owned"){
+        if(e.target.name === "owned"){
             this.setState({ [e.target.name]: e.target.checked })
         }else {
             this.setState({ [e.target.name]: e.target.value });
@@ -226,7 +226,7 @@ class BookModal extends React.Component {
                                 checked={this.state.owned || false}
                             />Owned
                         </FormGroup>
-                        <Button>Submit</Button>
+                        <form onSubmit={e => { e.preventDefault(); }}><Button >Submit</Button></form>
                         <Button onClick={this.props.close_modal} className={"close_modal_button"}>Cancel</Button>
                     </Form>
                 </ReactModal>

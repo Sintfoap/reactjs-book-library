@@ -7,9 +7,6 @@ import axios from "axios";
 import { API_URL } from "../constants";
 import BookDataGrid from "./BookDataGrid";
 import Database from "./Database";
-import SeriesModal from "./series_modal";
-import DeleteModal from "./Delete_modal";
-import { Button } from "bootstrap";
 
 class SeriesDetail extends React.Component {
     constructor() {
@@ -18,6 +15,8 @@ class SeriesDetail extends React.Component {
             series: undefined,
             series_confirmation: false,
         }
+        this.check_if_ready_to_render = this.check_if_ready_to_render.bind(this);
+
     }
 
     check_if_ready_to_render() {

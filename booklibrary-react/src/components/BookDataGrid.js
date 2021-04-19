@@ -78,11 +78,13 @@ class BookDataGrid extends React.Component {
     }
 
     sort_books = (a, b) => {
-        console.log(a)
-        console.log(b)
-        console.log(a[this.props.sort_field])
-        console.log(b[this.props.sort_field])
         return a[this.props.sort_field]-b[this.props.sort_field]
+    }
+
+    find_owned = (book) => {
+        if (!book.owned) {
+            return {backgroundColor: "pink"}
+        }
     }
     
 
@@ -136,6 +138,7 @@ class BookDataGrid extends React.Component {
                     filter={filterFactory()}
                     columns={columns}
                     data={this.props.books}
+                    rowStyle={this.find_owned}
                 />
             </div>
         )

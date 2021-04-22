@@ -71,7 +71,7 @@ class BookDataGrid extends React.Component {
     find_series = (book) => {
         if (book.series_obj) {
             if(book.number_in_series){
-                return book.series_obj.name + " (" + book.number_in_series.toString() + ")"
+                return book.series_obj.name + " #" + book.number_in_series.toString()
             }
             return book.series_obj.name
         }

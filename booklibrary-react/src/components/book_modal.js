@@ -8,6 +8,12 @@ import 'react-select-search/style.css'
 import axios from "axios";
 
 import { API_URL } from "../constants";
+import Database from "./Database";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPlusSquare } from "@fortawesome/free-solid-svg-icons";
+import GenreModal from "./genre_modal";
+import AuthorModal from "./author_modal";
+import SeriesModal from "./series_modal";
 
 class BookModal extends React.Component {
     constructor(props) {
@@ -15,6 +21,16 @@ class BookModal extends React.Component {
         // console.log(props)
         let my_state = this.build_state()
         this.state = my_state
+        this.check_if_ready_to_render = this.check_if_ready_to_render.bind(this);
+        this.handleOpenAuthorModal = this.handleOpenAuthorModal.bind(this);
+        this.handleCloseAuthorModal = this.handleCloseAuthorModal.bind(this);
+        this.on_author_change = this.on_author_change.bind(this);
+        this.handleOpenGenreModal = this.handleOpenGenreModal.bind(this);
+        this.handleCloseGenreModal = this.handleCloseGenreModal.bind(this);
+        this.on_genre_change = this.on_genre_change.bind(this);
+        this.handleOpenSeriesModal = this.handleOpenSeriesModal.bind(this);
+        this.handleCloseSeriesModal = this.handleCloseSeriesModal.bind(this);
+        this.on_series_change = this.on_series_change.bind(this);
     }
 
     build_state() {
@@ -38,12 +54,61 @@ class BookModal extends React.Component {
                 genre: "",
                 series: "",
                 number_in_series: "",
-                showAuthorModal: false,
-                showModal: false,
                 owned: true
             }
         }
     }
+
+    handleOpenAuthorModal () {
+        this.props.close_modal()
+        this.setState({showAuthorModal: true});
+      }
+      
+      handleCloseAuthorModal () {
+        this.setState({ showAuthorModal: false })        
+        Database.resetState(this.check_if_ready_to_render)
+        this.props.open_modal()   
+      }
+    
+      on_author_change() {
+        this.handleCloseAuthorModal()
+      }
+
+      handleOpenGenreModal () {
+        this.props.close_modal()
+        this.setState({showGenreModal: true});
+      }
+      
+      handleCloseGenreModal () {
+        this.setState({ showGenreModal: false })        
+        Database.resetState(this.check_if_ready_to_render)
+        this.props.open_modal()   
+      }
+    
+      on_genre_change() {
+        this.handleCloseGenreModal()
+      }
+
+      handleOpenSeriesModal () {
+        this.props.close_modal()
+        this.setState({showSeriesModal: true});
+      }
+      
+      handleCloseSeriesModal () {
+        this.setState({ showSeriesModal: false })        
+        Database.resetState(this.check_if_ready_to_render)
+        this.props.open_modal()   
+      }
+    
+      on_series_change() {
+        this.handleCloseSeriesModal()
+      }
+    
+      check_if_ready_to_render() {
+        if(Database.everything_loaded()) {
+          this.build_state();
+        }
+      }
 
     componentDidUpdate(prevProps) {
         // comparison to avoid infinite loop
@@ -60,6 +125,7 @@ class BookModal extends React.Component {
             this.setState({ [e.target.name]: e.target.value });
         }
     };
+
     onDropdownChange = (id, item) => {
         // console.log(id, item)
         this.setState({ [item.type]: id });
@@ -150,6 +216,30 @@ class BookModal extends React.Component {
         };
         return (
             <div>
+                <AuthorModal
+                    isOpen={this.state.showAuthorModal}
+                    contentLabel="Author Modal"
+                    viewing_author={this.state.author}
+                    new={true}
+                    close_modal={this.handleCloseAuthorModal}
+                    on_change={this.on_author_change}
+                />
+                <GenreModal 
+                  isOpen={this.state.showGenreModal}
+                  contentLabel="Genre Modal"
+                  viewing_genre={this.state.genre}
+                  new={true}
+                  close_modal={this.handleCloseGenreModal}
+                  on_change={this.on_genre_change}
+                />
+                <SeriesModal 
+                  isOpen={this.state.showSeriesModal}
+                  contentLabel="Series Modal"
+                  viewing_genre={this.state.series}
+                  new={true}
+                  close_modal={this.handleCloseSeriesModal}
+                  on_change={this.on_series_change}
+                />
                 <ReactModal
                     isOpen={this.props.isOpen}
                     style={customStyles}
@@ -175,7 +265,7 @@ class BookModal extends React.Component {
                             />
                         </FormGroup>
                         <FormGroup>
-                            <Label for="author">Author:</Label>
+                            <Label className="col-11" for="author">Author:
                             <SelectSearch
                                 name="author"
                                 search
@@ -183,10 +273,10 @@ class BookModal extends React.Component {
                                 value={this.state.author || ""}
                                 options={this.authors_dropdown_list()}
                                 onChange={this.onDropdownChange}
-                            />
+                            /></Label><Button href="#" outline color="success" className="btn-sm edit-delete-button" onClick={() => this.handleOpenAuthorModal()} style={{marginTop: 30, float: "right"}}><FontAwesomeIcon icon={faPlusSquare}></FontAwesomeIcon></Button>
                         </FormGroup>
                         <FormGroup>
-                            <Label for="genre">Genre:</Label>
+                            <Label className="col-11" for="genre">Genre:
                             <SelectSearch
                                 name="genre"
                                 search
@@ -194,10 +284,10 @@ class BookModal extends React.Component {
                                 value={this.state.genre || ""}
                                 options={this.genres_dropdown_list()}
                                 onChange={this.onDropdownChange}
-                            />
+                            /></Label><Button href="#" outline color="success" className="btn-sm edit-delete-button" onClick={() => this.handleOpenGenreModal()} style={{marginTop: 30, float: "right"}}><FontAwesomeIcon icon={faPlusSquare}></FontAwesomeIcon></Button>
                         </FormGroup>
                         <FormGroup>
-                            <Label for="series">Series:</Label>
+                            <Label className="col-11" for="series">Series:
                             <SelectSearch
                                 name="series"
                                 search
@@ -205,7 +295,7 @@ class BookModal extends React.Component {
                                 value={this.state.series || ""}
                                 options={this.series_dropdown_list()}
                                 onChange={this.onDropdownChange}
-                            />
+                            /></Label><Button href="#" outline color="success" className="btn-sm edit-delete-button" onClick={() => this.handleOpenSeriesModal()} style={{marginTop: 30, float: "right"}}><FontAwesomeIcon icon={faPlusSquare}></FontAwesomeIcon></Button>
                         </FormGroup>
                         {(this.state.series) !== "" && (this.state.series) !== " " && (this.state.series) !== undefined && (this.state.series) !== null &&
                         <FormGroup>

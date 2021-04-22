@@ -24,7 +24,8 @@ class Books extends React.Component {
     this.on_book_change = this.on_book_change.bind(this);
   }
 
-  handleOpenModal (row) {
+  handleOpenModal () {
+    Database.resetState(this.check)
     this.setState({ showModal: true });
   }
   
@@ -45,6 +46,7 @@ class Books extends React.Component {
           contentLabel="Book Modal"
           new={true}
           close_modal={this.handleCloseModal}
+          open_modal={this.handleOpenModal}
           on_change={this.on_book_change}
           authors={Database.authors}
           genres={Database.genres}

@@ -7,6 +7,10 @@ import { API_URL } from "../constants";
 import Database from "./Database";
 import loading_screen from "./Loading_screen";
 import BookDataGrid from "./BookDataGrid";
+import AuthorModal from "./author_modal";
+import { Button } from "reactstrap";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faEdit } from "@fortawesome/free-solid-svg-icons";
 
 class AuthorDetail extends React.Component {
     constructor() {
@@ -16,8 +20,25 @@ class AuthorDetail extends React.Component {
             author_confirmation: false
         }
         this.check_if_ready_to_render = this.check_if_ready_to_render.bind(this);
+        this.handleOpenModal = this.handleOpenModal.bind(this);
+        this.handleCloseModal = this.handleCloseModal.bind(this);
+        this.on_author_change = this.on_author_change.bind(this);
     }
 
+    handleOpenModal (row) {
+      // console.log(row)
+      this.setState({showModal: true});
+    }
+    
+    handleCloseModal () {
+      this.setState({ showModal: false });
+    }
+  
+    on_author_change() {
+      this.handleCloseModal()
+      Database.resetState(this.check_if_ready_to_render)
+    }
+  
     check_if_ready_to_render() {
       if(Database.everything_loaded()) {
         this.getAuthor();
@@ -39,13 +60,21 @@ class AuthorDetail extends React.Component {
     render() {
         if(this.state.author_confirmation){
             return (<div className="container">
-                <h1>{this.state.author.last_name + ', ' + this.state.author.first_name}</h1>
+                <div className="row"><h1>{this.state.author.last_name + ', ' + this.state.author.first_name}</h1><Button href="#" outline color="primary" className="btn-sm edit-delete-button" onClick={() => this.handleOpenModal(this.state.author)} style={{marginLeft: 13}}><FontAwesomeIcon icon={faEdit}/></Button></div>
                 <BookDataGrid
                 books={this.state.author.books}
                 on_change={() => {Database.resetBooks(this.check_if_ready_to_render)}}
                 authors={Database.authors}
                 genres={Database.genres}
                 series={Database.series}
+                />
+                <AuthorModal
+                  isOpen={this.state.showModal}
+                  contentLabel="Author Modal"
+                  viewing_author={this.state.author}
+                  new={false}
+                  close_modal={this.handleCloseModal}
+                  on_change={this.on_author_change}
                 />
                 </div>)
         }else {

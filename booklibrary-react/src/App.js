@@ -10,6 +10,7 @@ import GenreDetail from "./components/GenreDetail"
 import AuthorDetail from "./components/AuthorDetail";
 import SeriesDetail from "./components/SeriesDetail";
 import BookDetail from "./components/BookDetail";
+import { ToastContainer } from "react-toastify"
 
 class App extends Component {
   render() {
@@ -42,6 +43,16 @@ class App extends Component {
               <Home current_page="books"/>
             </Route>
           </Switch>
+          <ToastContainer
+          position="top-right"
+          autoClose={5000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover></ToastContainer>
         </Router>
       </Fragment>
     );

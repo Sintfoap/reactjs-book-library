@@ -9,7 +9,6 @@ import { API_URL } from "../constants";
 class GenreModal extends React.Component  {
   constructor (props) {
     super(props);
-    // console.log(props)
     let my_state = this.build_state()
     this.state = my_state
   }

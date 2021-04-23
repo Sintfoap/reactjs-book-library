@@ -31,4 +31,6 @@ urlpatterns = [
     #SERIES
     re_path(r'^api/booklibrary/series$', views.series_list),
     path(r'api/booklibrary/series/<int:id>', views.series_detail),
+    #TESTERROR
+    re_path(r'^api/booklibrary/throwerror$', views.throw_error),
 ]

@@ -8,12 +8,14 @@ import 'react-select-search/style.css'
 import axios from "axios";
 
 import { API_URL } from "../constants";
+import { find_error_message_in_response } from "../constants/utils"
 import Database from "./Database";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlusSquare } from "@fortawesome/free-solid-svg-icons";
 import GenreModal from "./genre_modal";
 import AuthorModal from "./author_modal";
 import SeriesModal from "./series_modal";
+import { toast } from "react-toastify";
 
 class BookModal extends React.Component {
     constructor(props) {
@@ -43,6 +45,9 @@ class BookModal extends React.Component {
                 genre: this.props.viewing_book.genre,
                 series: this.props.viewing_book.series,
                 number_in_series: this.props.viewing_book.number_in_series,
+                showAuthorModal: false,
+                showGenreModal: false,
+                showSeriesModal: false,
                 owned: this.props.viewing_book.owned
             }
         } else {
@@ -54,61 +59,63 @@ class BookModal extends React.Component {
                 genre: "",
                 series: "",
                 number_in_series: "",
+                showAuthorModal: false,
+                showGenreModal: false,
+                showSeriesModal: false,
                 owned: true
             }
         }
     }
 
-    handleOpenAuthorModal () {
-        this.props.close_modal()
-        this.setState({showAuthorModal: true});
-      }
-      
-      handleCloseAuthorModal () {
-        this.setState({ showAuthorModal: false })        
-        Database.resetState(this.check_if_ready_to_render)
-        this.props.open_modal()   
-      }
-    
-      on_author_change() {
+    handleOpenAuthorModal() {
+        // this.props.close_modal()
+        this.setState({ showAuthorModal: true });
+    }
+
+    handleCloseAuthorModal() {
+        this.setState({ showAuthorModal: false })
+    }
+
+    on_author_change() {
         this.handleCloseAuthorModal()
-      }
-
-      handleOpenGenreModal () {
-        this.props.close_modal()
-        this.setState({showGenreModal: true});
-      }
-      
-      handleCloseGenreModal () {
-        this.setState({ showGenreModal: false })        
         Database.resetState(this.check_if_ready_to_render)
-        this.props.open_modal()   
-      }
-    
-      on_genre_change() {
+    }
+
+    handleOpenGenreModal() {
+        // this.props.close_modal()
+        this.setState({ showGenreModal: true });
+    }
+
+    handleCloseGenreModal() {
+        this.setState({ showGenreModal: false })
+    }
+
+    on_genre_change() {
         this.handleCloseGenreModal()
-      }
-
-      handleOpenSeriesModal () {
-        this.props.close_modal()
-        this.setState({showSeriesModal: true});
-      }
-      
-      handleCloseSeriesModal () {
-        this.setState({ showSeriesModal: false })        
         Database.resetState(this.check_if_ready_to_render)
-        this.props.open_modal()   
-      }
-    
-      on_series_change() {
+    }
+
+    handleOpenSeriesModal() {
+        // this.props.close_modal()
+        this.setState({ showSeriesModal: true });
+    }
+
+    handleCloseSeriesModal() {
+        this.setState({ showSeriesModal: false })
+    }
+
+    on_series_change() {
         this.handleCloseSeriesModal()
-      }
-    
-      check_if_ready_to_render() {
-        if(Database.everything_loaded()) {
-          this.build_state();
+        Database.resetState(this.check_if_ready_to_render)
+    }
+
+    check_if_ready_to_render() {
+        console.log("check_if_ready_to_render")
+        console.log(this.state)
+        if (Database.everything_loaded()) {
+            this.setState({})
         }
-      }
+    }
 
     componentDidUpdate(prevProps) {
         // comparison to avoid infinite loop
@@ -119,9 +126,9 @@ class BookModal extends React.Component {
 
     onChange = e => {
         // console.log(e)
-        if(e.target.name === "owned"){
+        if (e.target.name === "owned") {
             this.setState({ [e.target.name]: e.target.checked })
-        }else {
+        } else {
             this.setState({ [e.target.name]: e.target.value });
         }
     };
@@ -137,7 +144,7 @@ class BookModal extends React.Component {
         book_obj.genre = parseInt(book_obj.genre)
         book_obj.author = parseInt(book_obj.author)
         book_obj.series = book_obj.series === " " ? "" : parseInt(book_obj.series)
-        book_obj.number_in_series = book_obj.number_in_series === " " ? "": parseInt(book_obj.number_in_series)
+        book_obj.number_in_series = book_obj.number_in_series === " " ? "" : parseInt(book_obj.number_in_series)
         if (book_obj.series === "") {
             delete book_obj.series
         }
@@ -147,6 +154,8 @@ class BookModal extends React.Component {
         console.log(this.state)
         axios.post(API_URL + 'books', this.state).then(() => {
             this.props.on_change()
+        }).catch((thrown) => {
+            toast.error(JSON.stringify(find_error_message_in_response(thrown.response)))
         });
     };
 
@@ -156,15 +165,17 @@ class BookModal extends React.Component {
         book_obj.genre = parseInt(book_obj.genre)
         book_obj.author = parseInt(book_obj.author)
         book_obj.series = book_obj.series === " " ? "" : parseInt(book_obj.series)
-        book_obj.number_in_series = book_obj.number_in_series === " " ? "": parseInt(book_obj.number_in_series)
+        book_obj.number_in_series = book_obj.number_in_series === " " ? "" : parseInt(book_obj.number_in_series)
         axios.put(API_URL + 'books/' + book_obj.id, book_obj).then(() => {
             this.props.on_change()
+        }).catch((thrown) => {
+            toast.error(JSON.stringify(find_error_message_in_response(thrown.response)))
         });
     };
 
     authors_dropdown_list() {
         let items = [];
-        this.props.authors.forEach(author => {
+        Database.authors.forEach(author => {
             items.push(
                 {
                     value: author.id,
@@ -177,7 +188,7 @@ class BookModal extends React.Component {
 
     genres_dropdown_list() {
         let items = [];
-        this.props.genres.forEach(genre => {
+        Database.genres.forEach(genre => {
             items.push(
                 {
                     value: genre.id,
@@ -194,7 +205,7 @@ class BookModal extends React.Component {
             name: "",
             type: 'series'
         }];
-        this.props.series.forEach(series => {
+        Database.series.forEach(series => {
             items.push(
                 {
                     value: series.id,
@@ -224,102 +235,113 @@ class BookModal extends React.Component {
                     close_modal={this.handleCloseAuthorModal}
                     on_change={this.on_author_change}
                 />
-                <GenreModal 
-                  isOpen={this.state.showGenreModal}
-                  contentLabel="Genre Modal"
-                  viewing_genre={this.state.genre}
-                  new={true}
-                  close_modal={this.handleCloseGenreModal}
-                  on_change={this.on_genre_change}
+                <GenreModal
+                    isOpen={this.state.showGenreModal}
+                    contentLabel="Genre Modal"
+                    viewing_genre={this.state.genre}
+                    new={true}
+                    close_modal={this.handleCloseGenreModal}
+                    on_change={this.on_genre_change}
                 />
-                <SeriesModal 
-                  isOpen={this.state.showSeriesModal}
-                  contentLabel="Series Modal"
-                  viewing_genre={this.state.series}
-                  new={true}
-                  close_modal={this.handleCloseSeriesModal}
-                  on_change={this.on_series_change}
+                <SeriesModal
+                    isOpen={this.state.showSeriesModal}
+                    contentLabel="Series Modal"
+                    viewing_genre={this.state.series}
+                    new={true}
+                    close_modal={this.handleCloseSeriesModal}
+                    on_change={this.on_series_change}
                 />
-                <ReactModal
-                    isOpen={this.props.isOpen}
-                    style={customStyles}
-                >
-                    <Form onSubmit={this.props.new ? this.createBook : this.editBook}>
-                        <FormGroup>
-                            <Label for="title">Title:</Label>
-                            <Input
-                                type="text"
-                                name="title"
-                                onChange={this.onChange}
-                                value={this.state.title || ""}
-                                required={true}
-                            />
-                        </FormGroup>
-                        <FormGroup>
-                            <Label for="notes">Notes:</Label>
-                            <Input
-                                type="textarea"
-                                name="notes"
-                                onChange={this.onChange}
-                                value={this.state.notes || ""}
-                            />
-                        </FormGroup>
-                        <FormGroup>
-                            <Label className="col-11" for="author">Author:
+                {this.state.showAuthorModal === this.state.showGenreModal === this.state.showSeriesModal === false &&
+                    <ReactModal
+                        isOpen={this.props.isOpen}
+                        style={customStyles}
+                    >
+                        <Form onSubmit={this.props.new ? this.createBook : this.editBook}>
+                            <FormGroup>
+                                <Label for="title">Title:</Label>
+                                <Input
+                                    type="text"
+                                    name="title"
+                                    onChange={this.onChange}
+                                    value={this.state.title || ""}
+                                    required={true}
+                                />
+                            </FormGroup>
+                            <FormGroup>
+                                <Label for="notes">Notes:</Label>
+                                <Input
+                                    type="textarea"
+                                    name="notes"
+                                    onChange={this.onChange}
+                                    value={this.state.notes || ""}
+                                />
+                            </FormGroup>
+                            <FormGroup>
+                                <Label className="col-11" for="author">Author:
                             <SelectSearch
-                                name="author"
-                                search
-                                placeholder="Select an Author"
-                                value={this.state.author || ""}
-                                options={this.authors_dropdown_list()}
-                                onChange={this.onDropdownChange}
-                            /></Label><Button href="#" outline color="success" className="btn-sm edit-delete-button" onClick={() => this.handleOpenAuthorModal()} style={{marginTop: 30, float: "right"}}><FontAwesomeIcon icon={faPlusSquare}></FontAwesomeIcon></Button>
-                        </FormGroup>
-                        <FormGroup>
-                            <Label className="col-11" for="genre">Genre:
+                                        name="author"
+                                        search
+                                        placeholder="Select an Author"
+                                        value={this.state.author || ""}
+                                        options={this.authors_dropdown_list()}
+                                        onChange={this.onDropdownChange}
+                                    /></Label>
+                                    {this.props.showCreateButtons && 
+                                    <Button href="#" outline color="success" className="btn-sm edit-delete-button" onClick={() => this.handleOpenAuthorModal()} style={{ marginTop: 30, float: "right" }}><FontAwesomeIcon icon={faPlusSquare}></FontAwesomeIcon></Button>
+                                    }
+                            </FormGroup>
+                            <FormGroup>
+                                <Label className="col-11" for="genre">Genre:
                             <SelectSearch
-                                name="genre"
-                                search
-                                placeholder="Select a Genre"
-                                value={this.state.genre || ""}
-                                options={this.genres_dropdown_list()}
-                                onChange={this.onDropdownChange}
-                            /></Label><Button href="#" outline color="success" className="btn-sm edit-delete-button" onClick={() => this.handleOpenGenreModal()} style={{marginTop: 30, float: "right"}}><FontAwesomeIcon icon={faPlusSquare}></FontAwesomeIcon></Button>
-                        </FormGroup>
-                        <FormGroup>
-                            <Label className="col-11" for="series">Series:
+                                        name="genre"
+                                        search
+                                        placeholder="Select a Genre"
+                                        value={this.state.genre || ""}
+                                        options={this.genres_dropdown_list()}
+                                        onChange={this.onDropdownChange}
+                                    /></Label>
+                                    {this.props.showCreateButtons && 
+                                    <Button href="#" outline color="success" className="btn-sm edit-delete-button" onClick={() => this.handleOpenGenreModal()} style={{ marginTop: 30, float: "right" }}><FontAwesomeIcon icon={faPlusSquare}></FontAwesomeIcon></Button>
+                                    }
+                            </FormGroup>
+                            <FormGroup>
+                                <Label className="col-11" for="series">Series:
                             <SelectSearch
-                                name="series"
-                                search
-                                placeholder="Select a Series"
-                                value={this.state.series || ""}
-                                options={this.series_dropdown_list()}
-                                onChange={this.onDropdownChange}
-                            /></Label><Button href="#" outline color="success" className="btn-sm edit-delete-button" onClick={() => this.handleOpenSeriesModal()} style={{marginTop: 30, float: "right"}}><FontAwesomeIcon icon={faPlusSquare}></FontAwesomeIcon></Button>
+                                        name="series"
+                                        search
+                                        placeholder="Select a Series"
+                                        value={this.state.series || ""}
+                                        options={this.series_dropdown_list()}
+                                        onChange={this.onDropdownChange}
+                                    /></Label>
+                                    {this.props.showCreateButtons && 
+                                    <Button href="#" outline color="success" className="btn-sm edit-delete-button" onClick={() => this.handleOpenSeriesModal()} style={{ marginTop: 30, float: "right" }}><FontAwesomeIcon icon={faPlusSquare}></FontAwesomeIcon></Button>
+                                    }
+                            </FormGroup>
+                            {(this.state.series) !== "" && (this.state.series) !== " " && (this.state.series) !== undefined && (this.state.series) !== null &&
+                                <FormGroup>
+                                    <Label for="number_in_series">Number in Series:</Label>
+                                    <Input
+                                        type="number"
+                                        name="number_in_series"
+                                        onChange={this.onChange}
+                                        value={this.state.number_in_series || ""}
+                                    />
+                                </FormGroup>}
+                            <FormGroup check>
+                                <Label check for="owned"></Label>
+                                <Input
+                                    type="checkbox"
+                                    name="owned"
+                                    onChange={this.onChange}
+                                    checked={this.state.owned || false}
+                                />Owned
                         </FormGroup>
-                        {(this.state.series) !== "" && (this.state.series) !== " " && (this.state.series) !== undefined && (this.state.series) !== null &&
-                        <FormGroup>
-                            <Label for="number_in_series">Number in Series:</Label>
-                            <Input
-                                type="number"
-                                name="number_in_series"
-                                onChange={this.onChange}
-                                value={this.state.number_in_series || ""}
-                            />
-                        </FormGroup>}
-                        <FormGroup check>
-                            <Label check for="owned"></Label>
-                            <Input
-                                type="checkbox"
-                                name="owned"
-                                onChange={this.onChange}
-                                checked={this.state.owned || false}
-                            />Owned
-                        </FormGroup>
-                        <form onSubmit={e => { e.preventDefault(); }}><Button >Submit</Button></form>
-                        <Button onClick={this.props.close_modal} className={"close_modal_button"}>Cancel</Button>
-                    </Form>
-                </ReactModal>
+                            <form onSubmit={e => { e.preventDefault(); }}><Button >Submit</Button>
+                            <Button onClick={this.props.close_modal} className={"close_modal_button"}>Cancel</Button></form>
+                        </Form>
+                    </ReactModal>
+                }
             </div>
         )
     }

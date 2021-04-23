@@ -14,8 +14,10 @@ import EditorFormatter from "./Edit_formatter.js"
 import DeleteFormatter from "./Delete_formater.js"
 
 import { API_URL } from "../constants";
+import { find_error_message_in_response } from "../constants/utils"
 import BuildDetailFormatter from "./Detail_formatter";
 import Database from "./Database";
+import { toast } from "react-toastify";
 
 ReactModal.setAppElement('#root')
 
@@ -60,6 +62,8 @@ class Series extends React.Component {
     axios.delete(API_URL + 'series/' + this.state.viewing_series.id).then(() => {
       this.handleCloseModal()
       this.props.on_change()
+    }).catch((thrown) => {
+      toast.error(JSON.stringify(find_error_message_in_response(thrown.response)))
     });
   }
 

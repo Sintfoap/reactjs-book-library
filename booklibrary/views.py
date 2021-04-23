@@ -6,6 +6,11 @@ from rest_framework import status
 from .models import *
 from .serializers import *
 
+from django.conf import settings
+import logging
+logging.basicConfig(level=logging.DEBUG if settings.DEBUG else logging.INFO)
+logging.debug("PRINTING DEBUG LOGS")
+logging.info("PRINTING INFO LOGS")
 #################################################################################################################################################################################################
 ###############################     BOOKS     ###################################################################################################################################################
 #################################################################################################################################################################################################
@@ -93,6 +98,8 @@ def author_detail(request, id):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     elif request.method == 'DELETE':
+        if len(author.books.all()) > 0:
+            return Response("Cannot delete author " + str(author) + " because it has associated books", status=status.HTTP_400_BAD_REQUEST)
         author.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
@@ -136,6 +143,8 @@ def genre_detail(request, id):
             return Response(status=status.HTTP_204_NO_CONTENT)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     elif request.method == 'DELETE':
+        if len(genre.books.all()) > 0:
+            return Response("Cannot delete genre " + str(genre) + " because it has associated books", status=status.HTTP_400_BAD_REQUEST)
         genre.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
@@ -179,5 +188,12 @@ def series_detail(request, id):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     elif request.method == 'DELETE':
+        if len(series.books.all()) > 0:
+            return Response("Cannot delete series " + str(series) + " because it has associated books", status=status.HTTP_400_BAD_REQUEST)
         series.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+## THROW ERROR TEST
+@api_view(['PUT','POST','DELETE', 'GET'])
+def throw_error(request):
+    return Response("RECEIVED " + request.method + " REQUEST", status=status.HTTP_400_BAD_REQUEST)

@@ -10,7 +10,9 @@ import EditorFormatter from "./Edit_formatter.js"
 import DeleteFormatter from "./Delete_formater.js"
 
 import { API_URL } from "../constants";
+import { find_error_message_in_response } from "../constants/utils"
 import BuildDetailFormatter from "./Detail_formatter";
+import { toast } from "react-toastify";
 
 ReactModal.setAppElement('#root')
 
@@ -20,6 +22,7 @@ class BookDataGrid extends React.Component {
         this.state = {
             showModal: false,
             showDeleteModal: false,
+            filterUnowned: false,
             viewing_book: {}
         };
 
@@ -29,6 +32,7 @@ class BookDataGrid extends React.Component {
         this.on_book_change = this.on_book_change.bind(this);
         this.on_delete_book_change = this.on_delete_book_change.bind(this);
         this.sort_books = this.sort_books.bind(this);
+        this.on_change_owned_filter = this.on_change_owned_filter.bind(this);
     }
 
     on_book_change() {
@@ -40,7 +44,13 @@ class BookDataGrid extends React.Component {
         axios.delete(API_URL + 'books/' + this.state.viewing_book.id).then(() => {
             this.handleCloseModal()
             this.props.on_change()
+        }).catch((thrown) => {
+            toast.error(JSON.stringify(find_error_message_in_response(thrown.response)))
         });
+    }
+
+    on_change_owned_filter(e) {
+        this.setState({ filterUnowned: e.target.checked })
     }
 
     handleOpenModal(row) {
@@ -99,15 +109,19 @@ class BookDataGrid extends React.Component {
             { dataField: 'edit', resizable: false, text: 'Edit', style: { width: 55 }, formatter: EditorFormatter },
             { dataField: 'delete', resizable: false, text: 'Delete', style: { width: 60 }, formatter: DeleteFormatter }
         ]
+        let displayed_books = []
         this.props.books.forEach((item) => {
             item.author_name = this.find_author(item)
             item.genre_name = this.find_genre(item)
             item.series_name = this.find_series(item)
             item.edit = { id: item.id, on_click: this.handleOpenModal }
             item.delete = { id: item.id, on_click: this.handleOpenDeleteModal }
+            if(!this.state.filterUnowned || item.owned) {
+                displayed_books.push(item)
+            }
         })
         if(this.props.sort_field) {
-            this.props.books.sort(this.sort_books);
+            displayed_books.sort(this.sort_books);
         }
         return (
             <div>
@@ -133,11 +147,15 @@ class BookDataGrid extends React.Component {
                     item_desc={this.state.viewing_book.title}
                     on_change={this.on_delete_book_change}
                 />
+                <div style={{float: "right"}}>
+                    <input type="checkbox" onChange={this.on_change_owned_filter} checked={this.state.filterUnowned}/>
+                    <span>Filter Unowned</span>
+                </div>
                 <BootstrapTable
                     keyField={"wut"}
                     filter={filterFactory()}
                     columns={columns}
-                    data={this.props.books}
+                    data={displayed_books}
                     rowStyle={this.find_owned}
                 />
             </div>

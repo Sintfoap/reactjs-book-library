@@ -46,11 +46,11 @@ class Books extends React.Component {
           contentLabel="Book Modal"
           new={true}
           close_modal={this.handleCloseModal}
-          open_modal={this.handleOpenModal}
           on_change={this.on_book_change}
           authors={Database.authors}
           genres={Database.genres}
           series={Database.series}
+          showCreateButtons={true}
         />
         <Button outline color="success" className="Add_button" onClick={() => {
           this.setState({

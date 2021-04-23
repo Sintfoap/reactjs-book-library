@@ -2,6 +2,8 @@ import { Component } from "react";
 import axios from "axios";
 
 import { API_URL } from "../constants";
+import { find_error_message_in_response } from "../constants/utils"
+import { toast } from "react-toastify";
 
 
 class Database extends Component {
@@ -31,7 +33,9 @@ class Database extends Component {
             Database.authors = res.data;
             Database.author_confirmation = true;
             callback()
-            });
+            }).catch((thrown) => {
+                toast.error(JSON.stringify(find_error_message_in_response(thrown.response)))
+              });
     }
 
     static getGenres = (callback) => {

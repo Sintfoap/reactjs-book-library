@@ -11,6 +11,8 @@ import Database from "./Database";
 import SeriesModal from "./series_modal";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEdit } from "@fortawesome/free-solid-svg-icons";
+import { toast } from "react-toastify";
+import { find_error_message_in_response } from "../constants/utils";
 
 class SeriesDetail extends React.Component {
     constructor() {

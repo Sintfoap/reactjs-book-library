@@ -52,7 +52,10 @@ class BookDetail extends React.Component {
     }
 
     getBook = () => {
-        axios.get(API_URL + 'books/' + this.props.match.params.id).then(res => this.setState({ book: res.data, book_confirmation: true }));
+        axios.get(API_URL + 'books/' + this.props.match.params.id).then(res => this.setState({ book: res.data, book_confirmation: true })).catch((thrown) => {
+            console.log(thrown)
+            toast.error(JSON.stringify(find_error_message_in_response(thrown.response)))
+          });
     }
 
     render() {
@@ -71,7 +74,7 @@ class BookDetail extends React.Component {
                             viewing_book={this.state.book}
                         />
                     <div>
-                        <div className="row"><h1>{this.state.book.title}</h1><Button href="#" outline color="primary" className="btn-sm edit-delete-button" onClick={() => this.handleOpenModal(this.state.book)} style={{marginLeft: 13}}><FontAwesomeIcon icon={faEdit}/></Button></div>
+                        <div className="row" style={{marginTop: 60}}><h1>{this.state.book.title}</h1><Button href="#" outline color="primary" className="btn-sm edit-delete-button" onClick={() => this.handleOpenModal(this.state.book)} style={{marginLeft: 13, marginTop: 13}}><FontAwesomeIcon icon={faEdit}/></Button></div>
                         {this.state.book.notes.length > 0 &&
                             <p className="card-body card" style={{ maxWidth: "75%", float: "right" }}>{this.state.book.notes}</p>
                         }

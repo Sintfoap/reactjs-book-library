@@ -98,7 +98,7 @@ class Series extends React.Component {
           item_desc={this.state.viewing_series.name}
           on_change={this.on_delete_series_change}
         />
-        <Button outline color="success" className="Add_button" onClick={() => {
+        <Button style={{ float: "right" }} outline color="success" className="Add_button" onClick={() => {
           this.setState({
             showModal: true,
             creating_new_series: true

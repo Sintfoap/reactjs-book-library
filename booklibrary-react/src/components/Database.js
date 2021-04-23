@@ -25,6 +25,8 @@ class Database extends Component {
             Database.books = res.data;
             Database.book_confirmation = true;
             callback()
+            }).catch((thrown) => {
+                toast.error(JSON.stringify(find_error_message_in_response(thrown.response)))
             });
     };
 
@@ -43,7 +45,10 @@ class Database extends Component {
             Database.genres = res.data;
             Database.genre_confirmation = true;
             callback()
-            });
+            }).catch((thrown) => {
+                console.log(thrown)
+                toast.error(JSON.stringify(find_error_message_in_response(thrown.response)))
+              });
     }
 
     static getSeries = (callback) => {
@@ -51,7 +56,10 @@ class Database extends Component {
             Database.series = res.data;
             Database.series_confirmation = true;
             callback()
-            });
+            }).catch((thrown) => {
+                console.log(thrown)
+                toast.error(JSON.stringify(find_error_message_in_response(thrown.response)))
+              });
     }
 
     static resetBooks = (callback) => {

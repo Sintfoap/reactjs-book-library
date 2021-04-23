@@ -54,20 +54,25 @@ class AuthorDetail extends React.Component {
     }
 
     getAuthor = () => {
-        axios.get(API_URL + 'authors/' + this.props.match.params.id).then(res => this.setState({ author: res.data, author_confirmation: true }));
+        axios.get(API_URL + 'authors/' + this.props.match.params.id).then(res => this.setState({ author: res.data, author_confirmation: true })).catch((thrown) => {
+          console.log(thrown)
+          toast.error(JSON.stringify(find_error_message_in_response(thrown.response)))
+        });
     }
 
     render() {
         if(this.state.author_confirmation){
             return (<div className="container">
-                <div className="row"><h1>{this.state.author.last_name + ', ' + this.state.author.first_name}</h1><Button href="#" outline color="primary" className="btn-sm edit-delete-button" onClick={() => this.handleOpenModal(this.state.author)} style={{marginLeft: 13}}><FontAwesomeIcon icon={faEdit}/></Button></div>
-                <BookDataGrid
-                books={this.state.author.books}
-                on_change={() => {Database.resetBooks(this.check_if_ready_to_render)}}
-                authors={Database.authors}
-                genres={Database.genres}
-                series={Database.series}
-                />
+                <div className="row" style={{ marginTop: 60, marginLeft: 0 }}><h1>{this.state.author.last_name + ', ' + this.state.author.first_name}</h1><Button href="#" outline color="primary" className="btn-sm edit-delete-button" onClick={() => this.handleOpenModal(this.state.author)} style={{marginLeft: 13, marginTop: 13}}><FontAwesomeIcon icon={faEdit}/></Button>
+                  <BookDataGrid
+                  books={this.state.author.books}
+                  on_change={() => {Database.resetBooks(this.check_if_ready_to_render)}}
+                  authors={Database.authors}
+                  genres={Database.genres}
+                  series={Database.series}
+                  filter_unowned={true}
+                  />
+                </div>
                 <AuthorModal
                   isOpen={this.state.showModal}
                   contentLabel="Author Modal"

@@ -53,13 +53,16 @@ class GenreDetail extends React.Component {
     }
 
     getGenre = () => {
-        axios.get(API_URL + 'genres/' + this.props.match.params.id).then(res => this.setState({ genre: res.data, genre_confirmation: true }));
+        axios.get(API_URL + 'genres/' + this.props.match.params.id).then(res => this.setState({ genre: res.data, genre_confirmation: true })).catch((thrown) => {
+          console.log(thrown)
+          toast.error(JSON.stringify(find_error_message_in_response(thrown.response)))
+        });
     }
 
     render() {
         if (this.state.genre_confirmation) {
             return (<div className="container">
-                <div className="row"><h1>{this.state.genre.category}</h1><Button href="#" outline color="primary" className="btn-sm edit-delete-button" onClick={() => this.handleOpenModal(this.state.genre)} style={{marginLeft: 13}}><FontAwesomeIcon icon={faEdit}/></Button></div>
+                <div className="row" style={{marginTop: 60, marginLeft: 0}}><h1>{this.state.genre.category}</h1><Button href="#" outline color="primary" className="btn-sm edit-delete-button" onClick={() => this.handleOpenModal(this.state.genre)} style={{marginLeft: 13, marginTop: 13}}><FontAwesomeIcon icon={faEdit}/></Button></div>
                 <GenreModal 
                   isOpen={this.state.showModal}
                   contentLabel="Genre Modal"
@@ -74,6 +77,7 @@ class GenreDetail extends React.Component {
                 authors={Database.authors}
                 genres={Database.genres}
                 series={Database.series}
+                filter_unowned={true}
                 />
             </div>)
         } else {

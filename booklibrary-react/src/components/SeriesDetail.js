@@ -55,13 +55,16 @@ class SeriesDetail extends React.Component {
 
 
     getSeries = () => {
-        axios.get(API_URL + 'series/' + this.props.match.params.id).then(res => this.setState({ series: res.data, series_confirmation: true }));
+        axios.get(API_URL + 'series/' + this.props.match.params.id).then(res => this.setState({ series: res.data, series_confirmation: true })).catch((thrown) => {
+          console.log(thrown)
+          toast.error(JSON.stringify(find_error_message_in_response(thrown.response)))
+        });
     }
 
     render() {
         if(this.state.series_confirmation){
             return (<div className="container">
-                <div className="row"><h1>{this.state.series.name}</h1><Button href="#" outline color="primary" className="btn-sm edit-delete-button" onClick={() => this.handleOpenModal(this.state.series)} style={{marginLeft: 13}}><FontAwesomeIcon icon={faEdit}/></Button></div>
+                <div className="row" style={{marginTop: 60, marginLeft: 0}}><h1>{this.state.series.name}</h1><Button href="#" outline color="primary" className="btn-sm edit-delete-button" onClick={() => this.handleOpenModal(this.state.series)} style={{marginLeft: 13, marginTop: 13}}><FontAwesomeIcon icon={faEdit}/></Button></div>
                 <BookDataGrid
                 books={this.state.series.books}
                 on_change={() => {Database.resetBooks(this.check_if_ready_to_render)}}
@@ -69,6 +72,7 @@ class SeriesDetail extends React.Component {
                 genres={Database.genres}
                 series={Database.series}
                 sort_field={"number_in_series"}
+                filter_unowned={false}
                 />
                 <SeriesModal
                 isOpen={this.state.showModal}

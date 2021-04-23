@@ -103,7 +103,7 @@ class Authors extends React.Component {
           on_change={this.on_delete_author_change}
         />
         <div className="container">
-          <Button outline color="success" className="Add_button" onClick={() => {
+          <Button style={{ float: "right" }} outline color="success" className="Add_button" onClick={() => {
             this.setState({
               showModal: true,
               creating_new_author: true

@@ -5,6 +5,8 @@ import { Button, Form, FormGroup, Input, Label } from "reactstrap";
 import axios from "axios";
 
 import { API_URL } from "../constants";
+import { toast } from "react-toastify";
+import { find_error_message_in_response } from "../constants/utils";
 
 class GenreModal extends React.Component  {
   constructor (props) {
@@ -41,6 +43,9 @@ class GenreModal extends React.Component  {
     e.preventDefault();
     axios.post(API_URL + 'genres', this.state).then(() => {
       this.props.on_change()
+    }).catch((thrown) => {
+      console.log(thrown)
+      toast.error(JSON.stringify(find_error_message_in_response(thrown.response)))
     });
   };
 
@@ -48,6 +53,9 @@ class GenreModal extends React.Component  {
     e.preventDefault();
     axios.put(API_URL + 'genres/' + this.state.id, this.state).then(() => {
       this.props.on_change()
+    }).catch((thrown) => {
+      console.log(thrown)
+      toast.error(JSON.stringify(find_error_message_in_response(thrown.response)))
     });
   };
   render(){

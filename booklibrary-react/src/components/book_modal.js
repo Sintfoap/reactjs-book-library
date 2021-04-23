@@ -82,7 +82,6 @@ class BookModal extends React.Component {
     }
 
     handleOpenGenreModal() {
-        // this.props.close_modal()
         this.setState({ showGenreModal: true });
     }
 
@@ -96,7 +95,6 @@ class BookModal extends React.Component {
     }
 
     handleOpenSeriesModal() {
-        // this.props.close_modal()
         this.setState({ showSeriesModal: true });
     }
 
@@ -111,7 +109,6 @@ class BookModal extends React.Component {
 
     check_if_ready_to_render() {
         console.log("check_if_ready_to_render")
-        console.log(this.state)
         if (Database.everything_loaded()) {
             this.setState({})
         }
@@ -155,6 +152,7 @@ class BookModal extends React.Component {
         axios.post(API_URL + 'books', this.state).then(() => {
             this.props.on_change()
         }).catch((thrown) => {
+            console.log(thrown)
             toast.error(JSON.stringify(find_error_message_in_response(thrown.response)))
         });
     };

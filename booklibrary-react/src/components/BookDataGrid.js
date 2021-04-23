@@ -22,10 +22,9 @@ class BookDataGrid extends React.Component {
         this.state = {
             showModal: false,
             showDeleteModal: false,
-            filterUnowned: false,
+            filterUnowned: true,
             viewing_book: {}
         };
-
         this.handleOpenDeleteModal = this.handleOpenDeleteModal.bind(this);
         this.handleOpenModal = this.handleOpenModal.bind(this);
         this.handleCloseModal = this.handleCloseModal.bind(this);
@@ -35,6 +34,10 @@ class BookDataGrid extends React.Component {
         this.on_change_owned_filter = this.on_change_owned_filter.bind(this);
     }
 
+    componentDidMount() {
+        this.setState({filterUnowned: this.props.filter_unowned})
+    }
+    
     on_book_change() {
         this.handleCloseModal()
         this.props.on_change();
@@ -147,9 +150,9 @@ class BookDataGrid extends React.Component {
                     item_desc={this.state.viewing_book.title}
                     on_change={this.on_delete_book_change}
                 />
-                <div style={{float: "right"}}>
+                <div style={{float:"right", marginRight: 10, paddingTop:7, marginBottom: 7}}>
                     <input type="checkbox" onChange={this.on_change_owned_filter} checked={this.state.filterUnowned}/>
-                    <span>Filter Unowned</span>
+                    <span> Owned</span>
                 </div>
                 <BootstrapTable
                     keyField={"wut"}

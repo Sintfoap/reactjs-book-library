@@ -17,12 +17,13 @@ import { toast } from "react-toastify";
 ReactModal.setAppElement('#root')
 
 class BookDataGrid extends React.Component {
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
+        console.log(this.props)
         this.state = {
             showModal: false,
             showDeleteModal: false,
-            filterUnowned: true,
+            filterUnowned: this.props.filter_unowned === undefined ? true : this.props.filter_unowned,
             viewing_book: {}
         };
         this.handleOpenDeleteModal = this.handleOpenDeleteModal.bind(this);
@@ -32,10 +33,6 @@ class BookDataGrid extends React.Component {
         this.on_delete_book_change = this.on_delete_book_change.bind(this);
         this.sort_books = this.sort_books.bind(this);
         this.on_change_owned_filter = this.on_change_owned_filter.bind(this);
-    }
-
-    componentDidMount() {
-        this.setState({filterUnowned: this.props.filter_unowned})
     }
     
     on_book_change() {
@@ -104,11 +101,11 @@ class BookDataGrid extends React.Component {
     render() {
         const columns = [
             // { key: 'id', name: 'ID' },
-            { dataField: 'title', text: 'Title', filter: textFilter({ delay: 0 }), formatter: BuildDetailFormatter('/books/') },
+            { dataField: 'title', text: 'Title', filter: textFilter({ delay: 0 }), formatter: BuildDetailFormatter('/booklibrary/books/') },
             { dataField: 'notes', text: 'Notes', style: { width: 250, "fontStyle": "italic"}, filter: textFilter({ delay: 0 })},
-            { dataField: 'author_name', text: 'Author', filter: textFilter({ delay: 0 }), formatter: BuildDetailFormatter('/authors/', 'author') },
-            { dataField: 'genre_name', text: 'Genre', filter: textFilter({ delay: 0 }), formatter: BuildDetailFormatter('/genres/', 'genre') },
-            { dataField: 'series_name', text: 'Series', filter: textFilter({ delay: 0 }), formatter: BuildDetailFormatter('/series/', 'series') },
+            { dataField: 'author_name', text: 'Author', filter: textFilter({ delay: 0 }), formatter: BuildDetailFormatter('/booklibrary/authors/', 'author') },
+            { dataField: 'genre_name', text: 'Genre', filter: textFilter({ delay: 0 }), formatter: BuildDetailFormatter('/booklibrary/genres/', 'genre') },
+            { dataField: 'series_name', text: 'Series', filter: textFilter({ delay: 0 }), formatter: BuildDetailFormatter('/booklibrary/series/', 'series') },
             { dataField: 'edit', resizable: false, text: 'Edit', style: { width: 55 }, formatter: EditorFormatter },
             { dataField: 'delete', resizable: false, text: 'Delete', style: { width: 60 }, formatter: DeleteFormatter }
         ]

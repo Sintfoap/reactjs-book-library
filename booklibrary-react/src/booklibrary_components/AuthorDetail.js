@@ -5,9 +5,9 @@ import axios from "axios";
 
 import { API_URL } from "../constants";
 import Database from "./Database";
-import loading_screen from "./Loading_screen";
+import loading_screen from '../components/Loading_screen'
 import BookDataGrid from "./BookDataGrid";
-import AuthorModal from "./author_modal";
+import AuthorModal from "./AuthorModal";
 import { Button } from "reactstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEdit } from "@fortawesome/free-solid-svg-icons";

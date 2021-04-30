@@ -1,6 +1,6 @@
 import React from "react";
 import { withRouter } from "react-router";
-import loading_screen from './Loading_screen.js'
+import loading_screen from '../components/Loading_screen'
 
 import axios from "axios";
 

@@ -4,10 +4,9 @@ import Books from "./Books"
 import Authors from "./Authors"
 import Genres from "./Genres"
 import Series from "./Series"
-import loading_screen from './Loading_screen'
+import loading_screen from '../components/Loading_screen'
 
 import Database from './Database'
-import Menu from "./Menu";
 
 class Home extends Component {
   constructor(props) {
@@ -42,52 +41,31 @@ class Home extends Component {
   getpage = () => {
     // console.log(this)
     if(Database.everything_loaded()){
-      switch (this.state.current_page) {        
-        default: case "menu":
-          return (
-            <Menu />
-          )
+      switch (this.state.current_page) {
         case "books":
           return (
-            <Books 
-            books={this.state.books}
-            authors={this.state.authors}
-            genres={this.state.genres}
-            series={this.state.series}
+            <Books
             on_change={() => {Database.resetBooks(this.check_if_ready_to_render)}}
             />
           )
         case "authors":
           return (
-            <Authors 
-            books={this.state.books}
-            authors={this.state.authors}
-            genres={this.state.genres}
-            series={this.state.series}
+            <Authors
             on_change={() => {Database.resetAuthors(this.check_if_ready_to_render)}}
             />
           )
         case "genres":
           return (
-            <Genres 
-            books={this.state.books}
-            authors={this.state.authors}
-            genres={this.state.genres}
-            series={this.state.series}
+            <Genres
             on_change={() => {Database.resetGenres(this.check_if_ready_to_render)}}
             />
           )
         case "series":
           return (
-            <Series 
-            books={this.state.books}
-            authors={this.state.authors}
-            genres={this.state.genres}
-            series={this.state.series}
+            <Series
             on_change={() => {Database.resetSeries(this.check_if_ready_to_render)}}
             />
           )
-
       }
     } else {
       return loading_screen()

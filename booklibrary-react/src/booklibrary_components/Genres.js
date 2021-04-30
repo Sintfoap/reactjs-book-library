@@ -76,7 +76,7 @@ class Genres extends React.Component {
   render() {
     const columns = [
       // { key: 'id', name: 'ID' },
-      { dataField: 'category', text: 'Genre ',filter: textFilter({delay: 0}), formatter: BuildDetailFormatter('/genres/') },
+      { dataField: 'category', text: 'Genre ',filter: textFilter({delay: 0}), formatter: BuildDetailFormatter('/booklibrary/genres/') },
       // { dataField: 'book_title', text: 'Book ',filter: textFilter({delay: 0})},
       { dataField: 'edit', text: 'Edit', style: { width: 55 }, formatter: EditorFormatter },
       { dataField: 'delete', text : 'Delete', style: { width: 60 }, formatter: DeleteFormatter },

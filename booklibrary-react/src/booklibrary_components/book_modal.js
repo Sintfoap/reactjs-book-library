@@ -13,7 +13,7 @@ import Database from "./Database";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlusSquare } from "@fortawesome/free-solid-svg-icons";
 import GenreModal from "./genre_modal";
-import AuthorModal from "./author_modal";
+import AuthorModal from "./AuthorModal";
 import SeriesModal from "./series_modal";
 import { toast } from "react-toastify";
 

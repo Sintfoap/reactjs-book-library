@@ -34,13 +34,17 @@ class Header extends React.Component {
                   alt="Logo"
                 />
               </NavLink>
-              <i><h5><Link style={{ color: 'black' }} to="/books">- Library -</Link></h5></i>
+              <div>
+                <i><h5 style={{ display: 'inline' }}><Link style={{ color: 'black' }} to="/booklibrary/books">Library</Link></h5></i>
+                <h5 style={{ display: 'inline' }}> | </h5>
+                <i><h5 style={{ display: 'inline' }}><Link style={{ color: 'black' }} to="/musiclibrary/music">Music</Link></h5></i>
+              </div>
           </div>
           <Navbar style={{ marginLeft: 10 }} className="row" bg="dark" variant="dark">
-            <NavLink className="btn btn-outline-secondary Nav_button" to="/books">Books</NavLink>
-            <NavLink className="btn btn-outline-secondary Nav_button" to="/authors">Authors</NavLink>
-            <NavLink className="btn btn-outline-secondary Nav_button" to="/genres">Genres</NavLink>
-            <NavLink className="btn btn-outline-secondary Nav_button" to="/series">Series</NavLink>
+            <NavLink className="btn btn-outline-secondary Nav_button" to="/musiclibrary/music">Music</NavLink>
+            <NavLink className="btn btn-outline-secondary Nav_button" to="/musiclibrary/composers">Composers</NavLink>
+            <NavLink className="btn btn-outline-secondary Nav_button" to="/musiclibrary/publishers">Publishers</NavLink>
+            <NavLink className="btn btn-outline-secondary Nav_button" to="/musiclibrary/tags">Tags</NavLink>
           </Navbar>
         </div>
       </Container>

@@ -13,6 +13,12 @@ import BookDetail from "./components/BookDetail";
 import { ToastContainer } from "react-toastify"
 
 class App extends Component {
+  constructor () {
+    super();
+    this.state={
+      app: ""
+    }
+  }
   render() {
     return (
       <Fragment>
@@ -40,11 +46,11 @@ class App extends Component {
               <Home current_page="series"/>
             </Route>
             <Route path="/">
-              <Home current_page="books"/>
+              <Home current_page="menu"/>
             </Route>
           </Switch>
           <ToastContainer
-          position="top-right"
+          position="bottom-right"
           autoClose={5000}
           hideProgressBar={false}
           newestOnTop={false}
@@ -58,5 +64,4 @@ class App extends Component {
     );
   }
 }
-
 export default App;

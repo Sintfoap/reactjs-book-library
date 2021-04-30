@@ -150,6 +150,7 @@ class BookModal extends React.Component {
         }
         console.log(this.state)
         axios.post(API_URL + 'books', this.state).then(() => {
+            toast.success("Successfully created Book: " + book_obj.title)
             this.props.on_change()
         }).catch((thrown) => {
             console.log(thrown)
@@ -166,6 +167,7 @@ class BookModal extends React.Component {
         book_obj.number_in_series = book_obj.number_in_series === " " ? "" : parseInt(book_obj.number_in_series)
         axios.put(API_URL + 'books/' + book_obj.id, book_obj).then(() => {
             this.props.on_change()
+            toast.success("Successfully edited Book: " + book_obj.title)
         }).catch((thrown) => {
             toast.error(JSON.stringify(find_error_message_in_response(thrown.response)))
         });

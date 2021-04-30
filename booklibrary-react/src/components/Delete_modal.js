@@ -1,5 +1,6 @@
 import React from "react";
 import ReactModal from 'react-modal';
+import { toast } from "react-toastify";
 import { Button, Form, FormGroup, Input, Label } from "reactstrap";
 
 class DeleteModal extends React.Component  {
@@ -27,6 +28,7 @@ class DeleteModal extends React.Component  {
         e.preventDefault();
         if(this.state.text.toLowerCase() === "delete"){
             // console.log("TADA YOU SAID DELETE")
+            toast.success("Successfully deleted " + this.props.item_type + ": " + this.props.item_desc)
             this.props.on_change()
         }else{
             // console.log("Did not type delete")

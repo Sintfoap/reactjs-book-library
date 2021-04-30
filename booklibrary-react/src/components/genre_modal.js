@@ -42,6 +42,7 @@ class GenreModal extends React.Component  {
   createGenre = e => {
     e.preventDefault();
     axios.post(API_URL + 'genres', this.state).then(() => {
+      toast.success("Successfully created Genre: " + this.state.category)
       this.props.on_change()
     }).catch((thrown) => {
       console.log(thrown)
@@ -52,6 +53,7 @@ class GenreModal extends React.Component  {
   editGenre = e => {
     e.preventDefault();
     axios.put(API_URL + 'genres/' + this.state.id, this.state).then(() => {
+      toast.success("Successfully edited Genre: " + this.state.category)
       this.props.on_change()
     }).catch((thrown) => {
       console.log(thrown)

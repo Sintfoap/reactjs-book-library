@@ -43,6 +43,7 @@ class SeriesModal extends React.Component  {
     createSeries = e => {
       e.preventDefault();
       axios.post(API_URL + 'series', this.state).then(() => {
+        toast.success("Successfully created Series: " + this.state.name)
         this.props.on_change()
       }).catch((thrown) => {
         console.log(thrown)
@@ -53,6 +54,7 @@ class SeriesModal extends React.Component  {
     editSeries = e => {
       e.preventDefault();
       axios.put(API_URL + 'series/' + this.state.id, this.state).then(() => {
+        toast.success("Successfully edited Series: " + this.state.name)
         this.props.on_change()
       }).catch((thrown) => {
         console.log(thrown)

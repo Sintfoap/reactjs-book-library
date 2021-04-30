@@ -7,6 +7,7 @@ import Series from "./Series"
 import loading_screen from './Loading_screen'
 
 import Database from './Database'
+import Menu from "./Menu";
 
 class Home extends Component {
   constructor(props) {
@@ -42,7 +43,11 @@ class Home extends Component {
     // console.log(this)
     if(Database.everything_loaded()){
       switch (this.state.current_page) {        
-        default: case "books":
+        default: case "menu":
+          return (
+            <Menu />
+          )
+        case "books":
           return (
             <Books 
             books={this.state.books}

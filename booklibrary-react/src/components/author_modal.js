@@ -45,6 +45,7 @@ class AuthorModal extends React.Component  {
     createAuthor = e => {
       e.preventDefault();
       axios.post(API_URL + 'authors', this.state).then(() => {
+        toast.success("Successfully created " + this.state.first_name + ", " + this.state.last_name)
         this.props.on_change()
       }).catch((thrown) => {
         console.log(thrown)
@@ -55,6 +56,7 @@ class AuthorModal extends React.Component  {
     editAuthor = e => {
       e.preventDefault();
       axios.put(API_URL + 'authors/' + this.state.id, this.state).then(() => {
+        toast.success("Successfully edited " + this.state.first_name + ", " + this.state.last_name)
         this.props.on_change()
       }).catch((thrown) => {
         console.log(thrown)

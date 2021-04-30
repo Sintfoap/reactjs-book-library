@@ -103,7 +103,7 @@ class Genres extends React.Component {
           viewing_genre={this.state.viewing_genre}
           close_modal={this.handleCloseModal}
           item_type={"Genre"}
-          item_desc={this.state.viewing_genre.catagory}
+          item_desc={this.state.viewing_genre.category}
           on_change={this.on_delete_genre_change}
         />
         <Button style={{ float: "right" }} outline color="success" className="Add_button" onClick={() => {
@@ -111,6 +111,7 @@ class Genres extends React.Component {
             showModal:  true,
             creating_new_genre: true
           })}}><FontAwesomeIcon icon={ faPlusSquare }/> New Genre </Button>
+
         <BootstrapTable
           keyField={"wut"}
           filter={ filterFactory() }

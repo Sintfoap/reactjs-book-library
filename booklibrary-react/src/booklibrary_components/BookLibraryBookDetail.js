@@ -6,15 +6,15 @@ import axios from "axios";
 
 import { API_URL } from "../constants";
 import { Link } from "react-router-dom";
-import Database from "./Database";
-import BookModal from "./book_modal";
+import BookLibraryDatabase from "./BookLibraryDatabase";
+import BookLibraryBookModal from "./BookLibraryBookModal";
 import { Button } from "reactstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEdit } from "@fortawesome/free-solid-svg-icons";
 import { toast } from "react-toastify";
 import { find_error_message_in_response } from "../constants/utils.js";
 
-class BookDetail extends React.Component {
+class BookLibraryBookDetail extends React.Component {
     constructor() {
         super();
         this.state = {
@@ -40,11 +40,11 @@ class BookDetail extends React.Component {
 
     on_book_change() {
         this.handleCloseModal()
-        Database.resetState(this.check_if_ready_to_render)
+        BookLibraryDatabase.resetState(this.check_if_ready_to_render)
     }
     
     check_if_ready_to_render() {
-        if(Database.everything_loaded()) {
+        if(BookLibraryDatabase.everything_loaded()) {
             this.getBook();
     }
     }
@@ -55,7 +55,6 @@ class BookDetail extends React.Component {
 
     getBook = () => {
         axios.get(API_URL + 'books/' + this.props.match.params.id).then(res => this.setState({ book: res.data, book_confirmation: true })).catch((thrown) => {
-            console.log(thrown)
             toast.error(JSON.stringify(find_error_message_in_response(thrown.response)))
           });
     }
@@ -64,15 +63,15 @@ class BookDetail extends React.Component {
         if (this.state.book_confirmation) {
             return (<div>
                 <div className="container">
-                        <BookModal
+                        <BookLibraryBookModal
                             isOpen={this.state.showModal}
                             contentLabel="Book Modal"
                             new={false}
                             close_modal={this.handleCloseModal}
                             on_change={this.on_book_change}
-                            authors={Database.authors}
-                            genres={Database.genres}
-                            series={Database.series}
+                            authors={BookLibraryDatabase.authors}
+                            genres={BookLibraryDatabase.genres}
+                            series={BookLibraryDatabase.series}
                             viewing_book={this.state.book}
                         />
                     <div>
@@ -100,4 +99,4 @@ class BookDetail extends React.Component {
 
     }
 }
-export default withRouter(BookDetail)
+export default withRouter(BookLibraryBookDetail)

@@ -4,12 +4,12 @@ import {
   Switch,
   Route
 } from "react-router-dom";
-import Header from "./booklibrary_components/Header";
-import Home from "./booklibrary_components/home"
-import GenreDetail from "./booklibrary_components/GenreDetail"
-import AuthorDetail from "./booklibrary_components/AuthorDetail";
-import SeriesDetail from "./booklibrary_components/SeriesDetail";
-import BookDetail from "./booklibrary_components/BookDetail";
+import BookLibraryHeader from "./booklibrary_components/BookLibraryHeader";
+import BookLibraryHome from "./booklibrary_components/BookLibraryHome"
+import BookLibraryGenreDetail from "./booklibrary_components/BookLibraryGenreDetail"
+import BookLibraryAuthorDetail from "./booklibrary_components/BookLibraryAuthorDetail";
+import BookLibrarySeriesDetail from "./booklibrary_components/BookLibrarySeriesDetail";
+import BookLibraryBookDetail from "./booklibrary_components/BookLibraryBookDetail";
 import { ToastContainer } from "react-toastify"
 import Menu from "./components/Menu";
 import MusicLibraryHome from "./musiclibrary_components/MusicLibraryHome";
@@ -30,33 +30,33 @@ class App extends Component {
             <Route path="/musiclibrary">
               <MusicLibraryHeader/>
             </Route>
-            <Route path="/">
-              <Header/>
+            <Route path="/booklibrary">
+              <BookLibraryHeader/>
             </Route>
           </Switch>
           <Switch>
-            <Route path="/booklibrary/books/:id" children={<BookDetail />}>
+            <Route path="/booklibrary/books/:id" children={<BookLibraryBookDetail />}>
             </Route>
-            <Route path="/booklibrary/authors/:id" children={<AuthorDetail />}>
+            <Route path="/booklibrary/authors/:id" children={<BookLibraryAuthorDetail />}>
             </Route>
-            <Route path="/booklibrary/genres/:id" children={<GenreDetail />}>
+            <Route path="/booklibrary/genres/:id" children={<BookLibraryGenreDetail />}>
             </Route>
-            <Route path="/booklibrary/series/:id" children={<SeriesDetail />}>
+            <Route path="/booklibrary/series/:id" children={<BookLibrarySeriesDetail />}>
             </Route>
             <Route path="/booklibrary/books">
-              <Home current_page="books"/>
+              <BookLibraryHome current_page="books"/>
             </Route>
             <Route path="/booklibrary/authors">
-              <Home current_page="authors"/>
+              <BookLibraryHome current_page="authors"/>
             </Route>
             <Route path="/booklibrary/genres">
-              <Home current_page="genres"/>
+              <BookLibraryHome current_page="genres"/>
             </Route>
             <Route path="/booklibrary/series">
-              <Home current_page="series"/>
+              <BookLibraryHome current_page="series"/>
             </Route>
             <Route path="/musiclibrary/music">
-              <MusicLibraryHome current_page="music"/>
+              <MusicLibraryHome current_page="songs"/>
             </Route>
             <Route path="/musiclibrary/composers">
               <MusicLibraryHome current_page="composers"/>
@@ -64,8 +64,11 @@ class App extends Component {
             <Route path="/musiclibrary/publishers">
               <MusicLibraryHome current_page="publishers"/>
             </Route>
-            <Route path="/musiclibrary/tags">
-              <MusicLibraryHome current_page="tags"/>
+            <Route path="/musiclibrary/arrangers">
+              <MusicLibraryHome current_page="arrangers"/>
+            </Route>
+            <Route path="/musiclibrary/lyracists">
+              <MusicLibraryHome current_page="lyracists"/>
             </Route>
             <Route path="/">
               <Menu />

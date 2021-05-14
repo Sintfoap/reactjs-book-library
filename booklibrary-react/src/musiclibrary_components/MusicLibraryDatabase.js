@@ -7,24 +7,28 @@ import { toast } from "react-toastify";
 
 
 export default class MusicLibraryDatabase extends Component {
-    static music = [];
+    static songs = [];
     static composers = [];
     static publishers = [];
-    static tags = [];
-    static music_confirmation = undefined;
+    static arrangers = [];
+    static lyracists = [];
+    static song_confirmation = undefined;
     static composer_confirmation = undefined;
     static publisher_confirmation = undefined;
-    static tag_confirmation = undefined;
+    static arranger_confirmation = undefined;
+    static lyracist_confirmation = undefined;
 
     static everything_loaded() {
-        return MusicLibraryDatabase.music_confirmation === MusicLibraryDatabase.composer_confirmation === MusicLibraryDatabase.publisher_confirmation === MusicLibraryDatabase.tag_confirmation === true
+        return MusicLibraryDatabase.song_confirmation === MusicLibraryDatabase.composer_confirmation === MusicLibraryDatabase.publisher_confirmation === MusicLibraryDatabase.arranger_confirmation === true
     }
 
-    static getMusic = (callback) => {
-        MusicLibraryDatabase.music = [
-            {id: 1, name: 'blue (cus I feel blue)'}
+    static getSongs = (callback) => {
+        MusicLibraryDatabase.songs = [
+            {id: 1, name: 'Blue (cus I feel blue)', notes: "Austin's song."},
+            {id: 2, name: 'Come Thou Fount', notes: "Original."},
+            {id: 3, name: 'Take My Life and Let it Be', notes: "Alternate tune."}
         ]
-        MusicLibraryDatabase.music_confirmation = true;
+        MusicLibraryDatabase.song_confirmation = true;
         callback()
         // axios.get(API_URL + 'music').then(res => {
         //     MusicLibraryDatabase.music = res.data;
@@ -36,39 +40,73 @@ export default class MusicLibraryDatabase extends Component {
     };
 
     static getComposers = (callback) => {
-        axios.get(API_URL + 'composers').then(res => {
-            MusicLibraryDatabase.composers = res.data;
-            MusicLibraryDatabase.composer_confirmation = true;
-            callback()
-            }).catch((thrown) => {
-                toast.error(JSON.stringify(find_error_message_in_response(thrown.response)))
-              });
+        MusicLibraryDatabase.composers = [
+            {id: 1, first_name: 'John', last_name: 'Williams'},
+            {id: 2, first_name: 'Phillip', last_name: 'Bliss'},
+            {id: 3, first_name: 'Fanny', last_name: 'Crosby'},
+            {id: 3, first_name: 'Thomas', last_name: 'Keesecker'}
+        ]
+        MusicLibraryDatabase.composer_confirmation = true;
+        callback()
+        // axios.get(API_URL + 'composers').then(res => {
+        //     MusicLibraryDatabase.composers = res.data;
+        //     MusicLibraryDatabase.composer_confirmation = true;
+        //     callback()
+        //     }).catch((thrown) => {
+        //         toast.error(JSON.stringify(find_error_message_in_response(thrown.response)))
+        //       });
     }
 
     static getPublishers = (callback) => {
-        axios.get(API_URL + 'publishers').then(res => {
-            MusicLibraryDatabase.publishers = res.data;
-            MusicLibraryDatabase.publisher_confirmation = true;
-            callback()
-            }).catch((thrown) => {
-                console.log(thrown)
-                toast.error(JSON.stringify(find_error_message_in_response(thrown.response)))
-              });
+        MusicLibraryDatabase.publishers = [
+            {id: 1, name: 'Hope Publishing'},
+            {id: 2, name: 'Penguin Publishing'},
+            {id: 3, name: 'JW Pepper'},
+            {id: 4, name: 'Birnamwood Publications'}
+
+        ]
+        MusicLibraryDatabase.publisher_confirmation = true;
+        callback()
+        // axios.get(API_URL + 'publishers').then(res => {
+        //     MusicLibraryDatabase.publishers = res.data;
+        //     MusicLibraryDatabase.publisher_confirmation = true;
+        //     callback()
+        //     }).catch((thrown) => {
+        //         console.log(thrown)
+        //         toast.error(JSON.stringify(find_error_message_in_response(thrown.response)))
+        //       });
     }
 
-    static getTags = (callback) => {
-        axios.get(API_URL + 'tags').then(res => {
-            MusicLibraryDatabase.tags = res.data;
-            MusicLibraryDatabase.tag_confirmation = true;
-            callback()
-            }).catch((thrown) => {
-                console.log(thrown)
-                toast.error(JSON.stringify(find_error_message_in_response(thrown.response)))
-              });
+    static getArrangers = (callback) => {
+        MusicLibraryDatabase.arrangers = [
+            {id: 1, first_name: 'Leroy', last_name: 'Anderson'},
+            {id: 2, first_name: 'Amber', last_name: 'Moffitt'},
+            {id: 2, first_name: 'Thomas', last_name: 'Keesecker'}
+        ]
+        MusicLibraryDatabase.arranger_confirmation = true;
+        callback()
+        // axios.get(API_URL + 'tags').then(res => {
+        //     MusicLibraryDatabase.tags = res.data;
+        //     MusicLibraryDatabase.tag_confirmation = true;
+        //     callback()
+        //     }).catch((thrown) => {
+        //         console.log(thrown)
+        //         toast.error(JSON.stringify(find_error_message_in_response(thrown.response)))
+        //       });
+    }
+    
+    static getLyracists = (callback) => {
+        MusicLibraryDatabase.lyracists = [
+            {id: 1, first_name: 'Francis Ridley', last_name: 'Havergal'},
+            {id: 2, first_name: 'Horatio', last_name: 'Bonar'},
+            {id: 3, first_name: 'Cathrine', last_name: 'Winkworth'},
+            {id: 4, first_name: 'Chris', last_name: 'Anderson'}
+        ]
+        MusicLibraryDatabase.lyracist_confirmation = true;
     }
 
-    static resetMusic = (callback) => {
-        MusicLibraryDatabase.getMusic(callback)
+    static resetSongs = (callback) => {
+        MusicLibraryDatabase.getSongs(callback)
     }
     static resetComposers = (callback) => {
         MusicLibraryDatabase.getComposers(callback)
@@ -76,18 +114,23 @@ export default class MusicLibraryDatabase extends Component {
     static resetPublishers = (callback) => {
         MusicLibraryDatabase.getPublishers(callback)
     }
-    static resetTags = (callback) => {
-        MusicLibraryDatabase.getTags(callback)
+    static resetArrangers = (callback) => {
+        MusicLibraryDatabase.getArrangers(callback)
+    }
+    static resetLyracists = (callback) => {
+        MusicLibraryDatabase.getLyracists(callback)
     }
 
     static resetState = (callback) => {
-        MusicLibraryDatabase.music_confirmation = false;
+        MusicLibraryDatabase.song_confirmation = false;
         MusicLibraryDatabase.composer_confirmation = false;
         MusicLibraryDatabase.publisher_confirmation = false;
-        MusicLibraryDatabase.tag_confirmation = false;
-        MusicLibraryDatabase.getMusic(callback);
+        MusicLibraryDatabase.arranger_confirmation = false;
+        MusicLibraryDatabase.lyracist_confirmation = false;
+        MusicLibraryDatabase.getSongs(callback);
         MusicLibraryDatabase.getComposers(callback);
         MusicLibraryDatabase.getPublishers(callback);
-        MusicLibraryDatabase.getTags(callback);
+        MusicLibraryDatabase.getArrangers(callback);
+        MusicLibraryDatabase.getLyracists(callback);
     };
 }

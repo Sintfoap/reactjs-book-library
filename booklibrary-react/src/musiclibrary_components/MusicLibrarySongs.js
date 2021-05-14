@@ -5,6 +5,7 @@ import { Button } from "reactstrap";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPlusSquare } from '@fortawesome/free-solid-svg-icons'
 import MusicLibraryDatabase from "./MusicLibraryDatabase";
+import BootstrapTable from "react-bootstrap-table-next";
 
 ReactModal.setAppElement('#root')
 
@@ -18,7 +19,7 @@ export default class MusicLibraryMusic extends React.Component {
     this.check_if_ready_to_render = this.check_if_ready_to_render.bind(this);
     this.handleOpenModal = this.handleOpenModal.bind(this);
     this.handleCloseModal = this.handleCloseModal.bind(this);
-    this.on_book_change = this.on_book_change.bind(this);
+    this.on_song_change = this.on_song_change.bind(this);
   }
 
   check_if_ready_to_render() {
@@ -35,41 +36,22 @@ export default class MusicLibraryMusic extends React.Component {
     this.setState({ showModal: false });
   }
 
-  on_book_change() {
+  on_song_change() {
     this.handleCloseModal()
     this.props.on_change();
   }
-
   render() {
+    const columns = [
+      {dataField: 'name', text: 'Name '},
+      {dataField: 'notes', text: 'Notes '}
+    ]
     return (
       <div>
-        {/* <BookModal
-          isOpen={this.state.showModal}
-          contentLabel="Book Modal"
-          new={true}
-          close_modal={this.handleCloseModal}
-          on_change={this.on_book_change}
-          authors={Database.authors}
-          genres={Database.genres}
-          series={Database.series}
-          showCreateButtons={true}
-        />
-        <div>
-          <Button style={{float: "right"}} outline color="success" className="Add_button" onClick={() => {
-            this.setState({
-              showModal: true,
-              creating_new_book: true
-            })}}><FontAwesomeIcon icon={ faPlusSquare }/> New Book </Button>
-          <BookDataGrid
-            books={Database.books}
-            on_change={this.props.on_change}
-            authors={Database.authors}
-            genres={Database.genres}
-            series={Database.series}
-            filter_unowned={true}
+        <BootstrapTable
+          keyField={"wut"}
+          columns={columns}
+          data={MusicLibraryDatabase.songs}
           />
-        </div> */}
-        <h1>WE RENDERED A PAAAGE</h1>
       </div>
       );
   }

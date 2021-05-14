@@ -6,7 +6,7 @@ import {
 import {
   Link, NavLink
 } from "react-router-dom";
-import logo from '../constants/images/logo_cropped.png';
+import logo from '../constants/images/Musiclibrary_logo.png';
 
 class Header extends React.Component {
   constructor() {
@@ -35,16 +35,17 @@ class Header extends React.Component {
                 />
               </NavLink>
               <div>
-                <i><h5 style={{ display: 'inline' }}><Link style={{ color: 'black' }} to="/booklibrary/books">Library</Link></h5></i>
-                <h5 style={{ display: 'inline' }}> | </h5>
-                <i><h5 style={{ display: 'inline' }}><Link style={{ color: 'black' }} to="/musiclibrary/music">Music</Link></h5></i>
+                <i><h5 style={{ display: 'inline' }}><Link style={{ color:"#17a2b8" }} to="/booklibrary/books">Library</Link></h5></i>
+                <h5 style={{ display: 'inline', color:"#17a2b8" }}> | </h5>
+                <i><h5 style={{ display: 'inline' }}><Link style={{ color:"#17a2b8" }} to="/musiclibrary/music">Music</Link></h5></i>
               </div>
           </div>
           <Navbar style={{ marginLeft: 10 }} className="row" bg="dark" variant="dark">
-            <NavLink className="btn btn-outline-secondary Nav_button" to="/musiclibrary/music">Music</NavLink>
-            <NavLink className="btn btn-outline-secondary Nav_button" to="/musiclibrary/composers">Composers</NavLink>
-            <NavLink className="btn btn-outline-secondary Nav_button" to="/musiclibrary/publishers">Publishers</NavLink>
-            <NavLink className="btn btn-outline-secondary Nav_button" to="/musiclibrary/tags">Tags</NavLink>
+            <NavLink className="btn btn-outline-info Nav_button" to="/musiclibrary/music">Music</NavLink>
+            <NavLink className="btn btn-outline-info Nav_button" to="/musiclibrary/composers">Composers</NavLink>
+            <NavLink className="btn btn-outline-info Nav_button" to="/musiclibrary/publishers">Publishers</NavLink>
+            <NavLink className="btn btn-outline-info Nav_button" to="/musiclibrary/arrangers">Arrangers</NavLink>
+            <NavLink className="btn btn-outline-info Nav_button" to="/musiclibrary/lyracists">Lyracists</NavLink>
           </Navbar>
         </div>
       </Container>

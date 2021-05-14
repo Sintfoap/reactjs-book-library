@@ -1,9 +1,14 @@
 import React, { Component } from "react";
 import { Container } from "reactstrap";
-import MusicLibraryMusic from "./MusicLibraryMusic"
+import MusicLibrarySongs from "./MusicLibrarySongs"
+import MusicLibraryComposers from "./MusicLibraryComposers"
+
 import loading_screen from '../components/Loading_screen'
 
 import MusicLibraryDatabase from './MusicLibraryDatabase'
+import MusicLibraryPublishers from "./MusicLibraryPublishers";
+import MusicLibraryArrangers from "./MusicLibraryArrangers";
+import MusicLibraryLyracists from "./MusicLibraryLyracists";
 
 export default class MusicLibraryHome extends Component {
   constructor(props) {
@@ -38,10 +43,34 @@ export default class MusicLibraryHome extends Component {
   getpage = () => {
     if(MusicLibraryDatabase.everything_loaded()){
       switch (this.state.current_page) {
-        case "music":
+        case "songs":
           return (
-            <MusicLibraryMusic 
-            on_change={() => {MusicLibraryDatabase.resetMusic(this.check_if_ready_to_render)}}
+            <MusicLibrarySongs 
+            on_change={() => {MusicLibraryDatabase.resetSongs(this.check_if_ready_to_render)}}
+            />
+          )
+        case "composers":
+          return (
+            <MusicLibraryComposers
+            on_change={() => {MusicLibraryDatabase.resetComposers(this.check_if_ready_to_render)}}
+            />
+          )
+        case "publishers":
+          return(
+            <MusicLibraryPublishers
+            on_change={() => {MusicLibraryDatabase.resetPublishers(this.check_if_ready_to_render)}}
+            />
+          )
+        case "arrangers":
+          return(
+            <MusicLibraryArrangers
+            on_change={() => {MusicLibraryDatabase.resetArrangers(this.check_if_ready_to_render)}}
+            />
+          )
+        case "lyracists":
+          return(
+            <MusicLibraryLyracists
+            on_change={() => {MusicLibraryDatabase.resetLyracists(this.check_if_ready_to_render)}}
             />
           )
       }

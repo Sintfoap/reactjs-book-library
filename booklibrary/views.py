@@ -11,6 +11,11 @@ import logging
 logging.basicConfig(level=logging.DEBUG if settings.DEBUG else logging.INFO)
 logging.debug("PRINTING DEBUG LOGS")
 logging.info("PRINTING INFO LOGS")
+################################################################################################################################################################################
+#|)    |         ###############################################################################################################################################################
+#|)OOK |__IBRARY ###############################################################################################################################################################
+################################################################################################################################################################################
+
 #################################################################################################################################################################################################
 ###############################     BOOKS     ###################################################################################################################################################
 #################################################################################################################################################################################################
@@ -197,3 +202,188 @@ def series_detail(request, id):
 @api_view(['PUT','POST','DELETE', 'GET'])
 def throw_error(request):
     return Response("RECEIVED " + request.method + " REQUEST", status=status.HTTP_400_BAD_REQUEST)
+
+################################################################################################################################################################################
+# /\  /\      |         ########################################################################################################################################################
+#/  \/  \USIC |__IBRARY ########################################################################################################################################################
+################################################################################################################################################################################
+
+################################################################################################################################################################################
+###############################     Songs     ##################################################################################################################################
+################################################################################################################################################################################
+
+@api_view(['GET', 'POST'])
+def songs_list(request):
+    if request.method == 'GET':
+        data = Song.objects.all()
+
+        serializer = SongGetSerializer(data, context={'request': request}, many=True)
+
+        return Response(serializer.data)
+
+    elif request.method == 'POST':
+        serializer = SongEditSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(status=status.HTTP_201_CREATED)
+            
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['PUT','DELETE', 'GET'])
+def song_detail(request, id):
+    try:
+        song = Song.objects.get(id=id)
+    except Song.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+    if request.method == 'GET':
+        serializer = SongGetSerializer(song, context={'request': request})
+
+        return Response(serializer.data)
+
+    if request.method == 'PUT':
+        serializer = SongEditSerializer(song, data=request.data,context={'request': request})
+        if serializer.is_valid():
+            serializer.save()
+            return Response(status=status.HTTP_204_NO_CONTENT)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    elif request.method == 'DELETE':
+        song.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+#################################################################################################################################################################################################
+###############################     COMPOSERS     #################################################################################################################################################
+#################################################################################################################################################################################################
+
+@api_view(['GET', 'POST'])
+def composers_list(request):
+    if request.method == 'GET':
+        data = Composer.objects.all()
+
+        serializer = ComposerGetSerializer(data, context={'request': request}, many=True)
+
+        return Response(serializer.data)
+
+    elif request.method == 'POST':
+        serializer = ComposerEditSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(status=status.HTTP_201_CREATED)
+            
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['PUT','DELETE', 'GET'])
+def composer_detail(request, id):
+    try:
+        composer = Composer.objects.get(id=id)
+    except Composer.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+    if request.method == 'GET':
+        serializer = ComposerGetSerializer(composer, context={'request': request})
+
+        return Response(serializer.data)
+
+
+    if request.method == 'PUT':
+        serializer = ComposerEditSerializer(composer, data=request.data,context={'request': request})
+        if serializer.is_valid():
+            serializer.save()
+            return Response(status=status.HTTP_204_NO_CONTENT)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    elif request.method == 'DELETE':
+        if len(composer.songs.all()) > 0:
+            return Response("Cannot delete composer " + str(composer) + " because it has associated songs", status=status.HTTP_400_BAD_REQUEST)
+        composer.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+#################################################################################################################################################################################################
+###############################     PUBLISHERS     ##################################################################################################################################################
+#################################################################################################################################################################################################
+
+@api_view(['GET', 'POST'])
+def publisher_list(request):
+    if request.method == 'GET':
+        data = Publisher.objects.all()
+
+        serializer = PublisherGetSerializer(data, context={'request': request}, many=True)
+
+        return Response(serializer.data)
+
+    elif request.method == 'POST':
+        serializer = PublisherEditSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(status=status.HTTP_201_CREATED)
+        
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['PUT','DELETE', 'GET'])
+def publisher_detail(request, id):
+    try:
+        publisher = Publisher.objects.get(id=id)
+    except Publisher.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+    if request.method == 'GET':
+        serializer = PublisherGetSerializer(publisher, context={'request': request})
+
+        return Response(serializer.data)
+
+    if request.method == 'PUT':
+        serializer = PublisherEditSerializer(publisher, data=request.data,context={'request': request})
+        if serializer.is_valid():
+            serializer.save()
+            return Response(status=status.HTTP_204_NO_CONTENT)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    elif request.method == 'DELETE':
+        if len(publisher.songs.all()) > 0:
+            return Response("Cannot delete publisher " + str(publisher) + " because it has associated songs", status=status.HTTP_400_BAD_REQUEST)
+        publisher.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+#################################################################################################################################################################################################
+###############################     ARRANGERS     ##################################################################################################################################################
+#################################################################################################################################################################################################
+
+@api_view(['GET', 'POST'])
+def arrangers_list(request):
+    if request.method == 'GET':
+        data = Series.objects.all()
+
+        serializer = ArrangerGetSerializer(data, context={'request': request}, many=True)
+
+        return Response(serializer.data)
+
+    elif request.method == 'POST':
+        serializer = ArrangerEditSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(status=status.HTTP_201_CREATED)
+            
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['PUT','DELETE', 'GET'])
+def arranger_detail(request, id):
+    try:
+        arranger = Arranger.objects.get(id=id)
+    except Arranger.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+    if request.method == 'GET':
+        serializer = ArrangerGetSerializer(arranger, context={'request': request})
+
+        return Response(serializer.data)
+    if request.method == 'PUT':
+        serializer = ArrangerEditSerializer(arranger, data=request.data,context={'request': request})
+        if serializer.is_valid():
+            serializer.save()
+            return Response(status=status.HTTP_204_NO_CONTENT)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    elif request.method == 'DELETE':
+        if len(arranger.songs.all()) > 0:
+            return Response("Cannot delete arranger " + str(arranger) + " because it has associated songs", status=status.HTTP_400_BAD_REQUEST)
+        arranger.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)

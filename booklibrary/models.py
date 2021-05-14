@@ -32,3 +32,52 @@ class Book(models.Model):
 
     def __str__(self):
         return str(self.title)
+
+
+#********************************************************************************************************
+#******************************************* MUSIC LIBRARY **********************************************
+#********************************************************************************************************
+
+class Composer(models.Model):
+    first_name = models.CharField(max_length=200)
+    last_name = models.CharField(max_length=200)
+
+    def __str__(self):
+        return "{} {}".format(self.first_name, self.last_name)
+
+class Arranger(models.Model):
+    first_name = models.CharField(max_length=200)
+    last_name = models.CharField(max_length=200)
+
+    def __str__(self):
+        return "{} {}".format(self.first_name, self.last_name)
+
+class Lyracist(models.Model):
+    first_name = models.CharField(max_length=200)
+    last_name = models.CharField(max_length=200)
+
+    def __str__(self):
+        return "{} {}".format(self.first_name, self.last_name)
+
+class Publisher(models.Model):
+    name = models.CharField(max_length=200)
+
+    def __str__(self):
+        return "{}".format(self.name)
+
+class Song(models.Model):
+    title = models.CharField(max_length=200)
+    composer = models.ManyToManyField(Composer)
+    publisher = models.ForeignKey(Publisher, on_delete=models.PROTECT, related_name='songs')
+    arranger = models.ForeignKey(Arranger, on_delete=models.PROTECT, related_name='songs', null=True, blank=True)
+    lyracists = models.ManyToManyField(Lyracist)
+
+    def __str__(self):
+        return str(self.title)
+
+class DateSung(models.Model):
+    date = models.DateField()
+    song = models.ForeignKey(Song, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return str("Song {} Sung on {}".format(self.song.title, self.date))

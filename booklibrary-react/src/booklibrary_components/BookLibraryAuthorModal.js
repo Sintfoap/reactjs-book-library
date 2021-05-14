@@ -6,7 +6,8 @@ import { API_URL } from "../constants";
 import { toast } from "react-toastify";
 import { find_error_message_in_response } from "../constants/utils";
 
-export default class AuthorModal extends React.Component {
+
+export default class BookLibraryAuthorModal extends React.Component {
   constructor(props) {
     super(props);
     // console.log(props)
@@ -71,7 +72,6 @@ export default class AuthorModal extends React.Component {
         width: "50%"
       }
     };
-    // console.log(this.props)
     return (
       <div>
         <ReactModal

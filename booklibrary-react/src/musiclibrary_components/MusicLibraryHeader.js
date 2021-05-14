@@ -44,7 +44,6 @@ class Header extends React.Component {
             <NavLink className="btn btn-outline-info Nav_button" to="/musiclibrary/music">Music</NavLink>
             <NavLink className="btn btn-outline-info Nav_button" to="/musiclibrary/composers">Composers</NavLink>
             <NavLink className="btn btn-outline-info Nav_button" to="/musiclibrary/publishers">Publishers</NavLink>
-            <NavLink className="btn btn-outline-info Nav_button" to="/musiclibrary/arrangers">Arrangers</NavLink>
             <NavLink className="btn btn-outline-info Nav_button" to="/musiclibrary/lyracists">Lyracists</NavLink>
           </Navbar>
         </div>

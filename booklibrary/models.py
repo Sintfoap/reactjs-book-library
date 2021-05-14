@@ -27,7 +27,7 @@ class Book(models.Model):
     author = models.ForeignKey(Author, on_delete=models.CASCADE, related_name='books')
     genre = models.ForeignKey(Genre, on_delete=models.PROTECT, related_name='books')
     series = models.ForeignKey(Series, on_delete=models.PROTECT, blank=True, null=True, related_name='books')
-    number_in_series = models.CharField(max_length=200, null=True)
+    number_in_series = models.IntegerField(null=True)
     owned = models.BooleanField(default=True)
 
     def __str__(self):
@@ -39,13 +39,6 @@ class Book(models.Model):
 #********************************************************************************************************
 
 class Composer(models.Model):
-    first_name = models.CharField(max_length=200)
-    last_name = models.CharField(max_length=200)
-
-    def __str__(self):
-        return "{} {}".format(self.first_name, self.last_name)
-
-class Arranger(models.Model):
     first_name = models.CharField(max_length=200)
     last_name = models.CharField(max_length=200)
 
@@ -67,10 +60,11 @@ class Publisher(models.Model):
 
 class Song(models.Model):
     title = models.CharField(max_length=200)
-    composer = models.ManyToManyField(Composer)
+    composers = models.ManyToManyField(Composer)
     publisher = models.ForeignKey(Publisher, on_delete=models.PROTECT, related_name='songs')
-    arranger = models.ForeignKey(Arranger, on_delete=models.PROTECT, related_name='songs', null=True, blank=True)
+    arranger = models.ForeignKey(Composer, on_delete=models.PROTECT, related_name='songs', null=True, blank=True)
     lyracists = models.ManyToManyField(Lyracist)
+    notes = models.CharField(max_length=5000, blank=True, null=True)
 
     def __str__(self):
         return str(self.title)

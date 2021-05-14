@@ -1,7 +1,7 @@
 import { Component } from "react";
 import axios from "axios";
 
-import { API_URL } from "../constants";
+import { MUSIC_API_URL } from "../constants";
 import { find_error_message_in_response } from "../constants/utils"
 import { toast } from "react-toastify";
 
@@ -10,16 +10,14 @@ export default class MusicLibraryDatabase extends Component {
     static songs = [];
     static composers = [];
     static publishers = [];
-    static arrangers = [];
     static lyracists = [];
     static song_confirmation = undefined;
     static composer_confirmation = undefined;
     static publisher_confirmation = undefined;
-    static arranger_confirmation = undefined;
     static lyracist_confirmation = undefined;
 
     static everything_loaded() {
-        return MusicLibraryDatabase.song_confirmation === MusicLibraryDatabase.composer_confirmation === MusicLibraryDatabase.publisher_confirmation === MusicLibraryDatabase.arranger_confirmation === true
+        return MusicLibraryDatabase.song_confirmation === MusicLibraryDatabase.composer_confirmation === MusicLibraryDatabase.publisher_confirmation === MusicLibraryDatabase.lyracist_confirmation === true
     }
 
     static getSongs = (callback) => {
@@ -40,69 +38,59 @@ export default class MusicLibraryDatabase extends Component {
     };
 
     static getComposers = (callback) => {
-        MusicLibraryDatabase.composers = [
-            {id: 1, first_name: 'John', last_name: 'Williams'},
-            {id: 2, first_name: 'Phillip', last_name: 'Bliss'},
-            {id: 3, first_name: 'Fanny', last_name: 'Crosby'},
-            {id: 3, first_name: 'Thomas', last_name: 'Keesecker'}
-        ]
-        MusicLibraryDatabase.composer_confirmation = true;
-        callback()
-        // axios.get(API_URL + 'composers').then(res => {
-        //     MusicLibraryDatabase.composers = res.data;
-        //     MusicLibraryDatabase.composer_confirmation = true;
-        //     callback()
-        //     }).catch((thrown) => {
-        //         toast.error(JSON.stringify(find_error_message_in_response(thrown.response)))
-        //       });
+        // MusicLibraryDatabase.composers = [
+        //     {id: 1, first_name: 'John', last_name: 'Williams'},
+        //     {id: 2, first_name: 'Phillip', last_name: 'Bliss'},
+        //     {id: 3, first_name: 'Fanny', last_name: 'Crosby'},
+        //     {id: 3, first_name: 'Thomas', last_name: 'Keesecker'}
+        // ]
+        // MusicLibraryDatabase.composer_confirmation = true;
+        // callback()
+        axios.get(MUSIC_API_URL + 'composers').then(res => {
+            MusicLibraryDatabase.composers = res.data;
+            MusicLibraryDatabase.composer_confirmation = true;
+            callback()
+            }).catch((thrown) => {
+                toast.error(JSON.stringify(find_error_message_in_response(thrown.response)))
+              });
     }
 
     static getPublishers = (callback) => {
-        MusicLibraryDatabase.publishers = [
-            {id: 1, name: 'Hope Publishing'},
-            {id: 2, name: 'Penguin Publishing'},
-            {id: 3, name: 'JW Pepper'},
-            {id: 4, name: 'Birnamwood Publications'}
+        // MusicLibraryDatabase.publishers = [
+        //     {id: 1, name: 'Hope Publishing'},
+        //     {id: 2, name: 'Penguin Publishing'},
+        //     {id: 3, name: 'JW Pepper'},
+        //     {id: 4, name: 'Birnamwood Publications'}
 
-        ]
-        MusicLibraryDatabase.publisher_confirmation = true;
-        callback()
-        // axios.get(API_URL + 'publishers').then(res => {
-        //     MusicLibraryDatabase.publishers = res.data;
-        //     MusicLibraryDatabase.publisher_confirmation = true;
-        //     callback()
-        //     }).catch((thrown) => {
-        //         console.log(thrown)
-        //         toast.error(JSON.stringify(find_error_message_in_response(thrown.response)))
-        //       });
-    }
-
-    static getArrangers = (callback) => {
-        MusicLibraryDatabase.arrangers = [
-            {id: 1, first_name: 'Leroy', last_name: 'Anderson'},
-            {id: 2, first_name: 'Amber', last_name: 'Moffitt'},
-            {id: 2, first_name: 'Thomas', last_name: 'Keesecker'}
-        ]
-        MusicLibraryDatabase.arranger_confirmation = true;
-        callback()
-        // axios.get(API_URL + 'tags').then(res => {
-        //     MusicLibraryDatabase.tags = res.data;
-        //     MusicLibraryDatabase.tag_confirmation = true;
-        //     callback()
-        //     }).catch((thrown) => {
-        //         console.log(thrown)
-        //         toast.error(JSON.stringify(find_error_message_in_response(thrown.response)))
-        //       });
+        // ]
+        // MusicLibraryDatabase.publisher_confirmation = true;
+        // callback()
+        axios.get(MUSIC_API_URL + 'publishers').then(res => {
+            MusicLibraryDatabase.publishers = res.data;
+            MusicLibraryDatabase.publisher_confirmation = true;
+            callback()
+            }).catch((thrown) => {
+                console.log(thrown)
+                toast.error(JSON.stringify(find_error_message_in_response(thrown.response)))
+              });
     }
     
     static getLyracists = (callback) => {
-        MusicLibraryDatabase.lyracists = [
-            {id: 1, first_name: 'Francis Ridley', last_name: 'Havergal'},
-            {id: 2, first_name: 'Horatio', last_name: 'Bonar'},
-            {id: 3, first_name: 'Cathrine', last_name: 'Winkworth'},
-            {id: 4, first_name: 'Chris', last_name: 'Anderson'}
-        ]
-        MusicLibraryDatabase.lyracist_confirmation = true;
+        // MusicLibraryDatabase.lyracists = [
+        //     {id: 1, first_name: 'Francis Ridley', last_name: 'Havergal'},
+        //     {id: 2, first_name: 'Horatio', last_name: 'Bonar'},
+        //     {id: 3, first_name: 'Cathrine', last_name: 'Winkworth'},
+        //     {id: 4, first_name: 'Chris', last_name: 'Anderson'}
+        // ]
+        // MusicLibraryDatabase.lyracist_confirmation = true;
+        axios.get(MUSIC_API_URL + 'lyracists').then(res => {
+            MusicLibraryDatabase.lyracists = res.data;
+            MusicLibraryDatabase.lyracist_confirmation = true;
+            callback()
+            }).catch((thrown) => {
+                console.log(thrown)
+                toast.error(JSON.stringify(find_error_message_in_response(thrown.response)))
+              });
     }
 
     static resetSongs = (callback) => {
@@ -114,9 +102,6 @@ export default class MusicLibraryDatabase extends Component {
     static resetPublishers = (callback) => {
         MusicLibraryDatabase.getPublishers(callback)
     }
-    static resetArrangers = (callback) => {
-        MusicLibraryDatabase.getArrangers(callback)
-    }
     static resetLyracists = (callback) => {
         MusicLibraryDatabase.getLyracists(callback)
     }
@@ -125,12 +110,10 @@ export default class MusicLibraryDatabase extends Component {
         MusicLibraryDatabase.song_confirmation = false;
         MusicLibraryDatabase.composer_confirmation = false;
         MusicLibraryDatabase.publisher_confirmation = false;
-        MusicLibraryDatabase.arranger_confirmation = false;
         MusicLibraryDatabase.lyracist_confirmation = false;
         MusicLibraryDatabase.getSongs(callback);
         MusicLibraryDatabase.getComposers(callback);
         MusicLibraryDatabase.getPublishers(callback);
-        MusicLibraryDatabase.getArrangers(callback);
         MusicLibraryDatabase.getLyracists(callback);
     };
 }

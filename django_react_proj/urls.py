@@ -19,6 +19,7 @@ from booklibrary import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    ##### BOOKLIBRARY
     #BOOKS
     re_path(r'^api/booklibrary/books$', views.books_list),
     path(r'api/booklibrary/books/<int:id>', views.book_detail),
@@ -31,6 +32,21 @@ urlpatterns = [
     #SERIES
     re_path(r'^api/booklibrary/series$', views.series_list),
     path(r'api/booklibrary/series/<int:id>', views.series_detail),
+    ##### MUSICLIBRARY
+    #SONGS
+    re_path(r'^api/musiclibrary/songs$', views.songs_list),
+    path(r'api/musiclibrary/songs/<int:id>', views.song_detail),
+    path(r'api/musiclibrary/songs/<int:id>/composers/<int:composer_id>', views.song_detail),
+    path(r'api/musiclibrary/songs/<int:id>/lyracists/<int:lyracist_id>', views.song_detail),
+    #COMPOSERS
+    re_path(r'^api/musiclibrary/composers$', views.composers_list),
+    path(r'api/musiclibrary/composers/<int:id>', views.composer_detail),
+    #PUBLISHERS
+    re_path(r'^api/musiclibrary/publishers$', views.publishers_list),
+    path(r'api/musiclibrary/publishers/<int:id>', views.publisher_detail),
+    #LYRACISTS
+    re_path(r'^api/musiclibrary/lyracists$', views.lyracists_list),
+    path(r'api/musiclibrary/lyracists/<int:id>', views.lyracist_detail),
     #TESTERROR
     re_path(r'^api/booklibrary/throwerror$', views.throw_error),
 ]

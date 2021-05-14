@@ -303,7 +303,7 @@ def composer_detail(request, id):
 #################################################################################################################################################################################################
 
 @api_view(['GET', 'POST'])
-def publisher_list(request):
+def publishers_list(request):
     if request.method == 'GET':
         data = Publisher.objects.all()
 
@@ -344,20 +344,20 @@ def publisher_detail(request, id):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 #################################################################################################################################################################################################
-###############################     ARRANGERS     ##################################################################################################################################################
+###############################     LYRACISTS     ##################################################################################################################################################
 #################################################################################################################################################################################################
 
 @api_view(['GET', 'POST'])
-def arrangers_list(request):
+def lyracists_list(request):
     if request.method == 'GET':
-        data = Series.objects.all()
+        data = Lyracist.objects.all()
 
-        serializer = ArrangerGetSerializer(data, context={'request': request}, many=True)
+        serializer = LyracistGetSerializer(data, context={'request': request}, many=True)
 
         return Response(serializer.data)
 
     elif request.method == 'POST':
-        serializer = ArrangerEditSerializer(data=request.data)
+        serializer = LyracistEditSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(status=status.HTTP_201_CREATED)
@@ -365,25 +365,25 @@ def arrangers_list(request):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['PUT','DELETE', 'GET'])
-def arranger_detail(request, id):
+def lyracist_detail(request, id):
     try:
-        arranger = Arranger.objects.get(id=id)
-    except Arranger.DoesNotExist:
+        lyracist = Lyracist.objects.get(id=id)
+    except Lyracist.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
 
     if request.method == 'GET':
-        serializer = ArrangerGetSerializer(arranger, context={'request': request})
+        serializer = LyracistGetSerializer(lyracist, context={'request': request})
 
         return Response(serializer.data)
     if request.method == 'PUT':
-        serializer = ArrangerEditSerializer(arranger, data=request.data,context={'request': request})
+        serializer = LyracistEditSerializer(lyracist, data=request.data,context={'request': request})
         if serializer.is_valid():
             serializer.save()
             return Response(status=status.HTTP_204_NO_CONTENT)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     elif request.method == 'DELETE':
-        if len(arranger.songs.all()) > 0:
-            return Response("Cannot delete arranger " + str(arranger) + " because it has associated songs", status=status.HTTP_400_BAD_REQUEST)
-        arranger.delete()
+        if len(lyracist.songs.all()) > 0:
+            return Response("Cannot delete lyracist " + str(lyracist) + " because it has associated songs", status=status.HTTP_400_BAD_REQUEST)
+        lyracist.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)

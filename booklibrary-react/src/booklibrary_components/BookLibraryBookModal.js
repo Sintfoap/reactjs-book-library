@@ -1,6 +1,7 @@
 import React from "react";
 import ReactModal from 'react-modal';
 import SelectSearch from 'react-select-search';
+import 'react-select-search/style.css'
 import { Button, Form, FormGroup, Input, Label } from "reactstrap";
 import axios from "axios";
 import { API_URL } from "../constants";

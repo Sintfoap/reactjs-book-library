@@ -7,7 +7,6 @@ import loading_screen from '../components/Loading_screen'
 
 import MusicLibraryDatabase from './MusicLibraryDatabase'
 import MusicLibraryPublishers from "./MusicLibraryPublishers";
-import MusicLibraryArrangers from "./MusicLibraryArrangers";
 import MusicLibraryLyracists from "./MusicLibraryLyracists";
 
 export default class MusicLibraryHome extends Component {
@@ -59,12 +58,6 @@ export default class MusicLibraryHome extends Component {
           return(
             <MusicLibraryPublishers
             on_change={() => {MusicLibraryDatabase.resetPublishers(this.check_if_ready_to_render)}}
-            />
-          )
-        case "arrangers":
-          return(
-            <MusicLibraryArrangers
-            on_change={() => {MusicLibraryDatabase.resetArrangers(this.check_if_ready_to_render)}}
             />
           )
         case "lyracists":

@@ -64,9 +64,6 @@ class App extends Component {
             <Route path="/musiclibrary/publishers">
               <MusicLibraryHome current_page="publishers"/>
             </Route>
-            <Route path="/musiclibrary/arrangers">
-              <MusicLibraryHome current_page="arrangers"/>
-            </Route>
             <Route path="/musiclibrary/lyracists">
               <MusicLibraryHome current_page="lyracists"/>
             </Route>

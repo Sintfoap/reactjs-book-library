@@ -10,9 +10,4 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.AlterField(
-            model_name='book',
-            name='number_in_series',
-            field=models.CharField(max_length=200, null=True),
-        ),
     ]

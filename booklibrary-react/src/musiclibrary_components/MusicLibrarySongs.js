@@ -5,8 +5,8 @@ import { Button } from "reactstrap";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPlusSquare } from '@fortawesome/free-solid-svg-icons'
 import MusicLibraryDatabase from "./MusicLibraryDatabase";
-import BootstrapTable from "react-bootstrap-table-next";
-
+import MusicLibrarySongModal from "./MusicLibrarySongModal"
+import MusicLibrarySongDataGrid from  "./MusicLibrarySongDataGrid"
 ReactModal.setAppElement('#root')
 
 export default class MusicLibraryMusic extends React.Component {
@@ -41,18 +41,39 @@ export default class MusicLibraryMusic extends React.Component {
     this.props.on_change();
   }
   render() {
-    const columns = [
-      {dataField: 'name', text: 'Name '},
-      {dataField: 'notes', text: 'Notes '}
-    ]
+    // const columns = [
+    //   {dataField: 'name', text: 'Name '},
+    //   {dataField: 'notes', text: 'Notes '}
+    // ]
     return (
       <div>
-        <BootstrapTable
-          keyField={"wut"}
-          columns={columns}
-          data={MusicLibraryDatabase.songs}
-          />
+        <MusicLibrarySongModal
+          isOpen={this.state.showModal}
+          contentLabel="Song Modal"
+          new={true}
+          close_modal={this.handleCloseModal}
+          on_change={this.on_song_change}
+          composers={MusicLibraryDatabase.composers}
+          publishers={MusicLibraryDatabase.publishers}
+          // series={MusicLibraryDatabase.series}
+          showCreateButtons={true} />
+        <div>
+          <Button style={{ float: "right" }} outline color="success" className="Add_button" onClick={() => {
+            this.setState({
+              showModal: true,
+              creating_new_song: true
+            });
+          }}><FontAwesomeIcon icon={faPlusSquare} /> New Book </Button>
+          <MusicLibrarySongDataGrid
+            songs={MusicLibraryDatabase.songs}
+            on_change={this.props.on_change}
+            composers={MusicLibraryDatabase.composers}
+            publishers={MusicLibraryDatabase.publishers}
+            // series={MusicLibraryDatabase.series}
+            />
+        </div>
       </div>
-      );
+    );
   }
 }
+// filter_unowned={true} 

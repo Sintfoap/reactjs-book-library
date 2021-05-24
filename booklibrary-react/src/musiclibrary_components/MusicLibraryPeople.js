@@ -2,7 +2,7 @@ import React from "react";
 import ReactModal from 'react-modal';
 import { Button } from "reactstrap";
 import filterFactory, { textFilter } from 'react-bootstrap-table2-filter';
-import MusicLibraryComposerModal from "./MusicLibraryComposerModal"
+import MusicLibraryPersonModal from "./MusicLibraryPersonModal"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPlusSquare } from '@fortawesome/free-solid-svg-icons'
 import MusicLibraryDatabase from "./MusicLibraryDatabase";
@@ -18,21 +18,21 @@ import BuildDetailFormatter from "../components/Detail_formatter";
 
 ReactModal.setAppElement('#root')
 
-export default class MusicLibraryComposers extends React.Component {
+export default class MusicLibraryPeople extends React.Component {
   constructor() {
     super();
     this.state = {
       showModal: false,
       showDeleteModal: false,
-      creating_new_composer: false,
-      viewing_composer: {}
+      creating_new_person: false,
+      viewing_person: {}
     };
     this.check_if_ready_to_render = this.check_if_ready_to_render.bind(this);
     this.handleOpenModal = this.handleOpenModal.bind(this);
     this.handleCloseModal = this.handleCloseModal.bind(this);
     this.handleDeleteModal = this.handleDeleteModal.bind(this);
-    this.on_composer_change = this.on_composer_change.bind(this);
-    this.on_delete_composer_change = this.on_delete_composer_change.bind(this);
+    this.on_person_change = this.on_person_change.bind(this);
+    this.on_delete_person_change = this.on_delete_person_change.bind(this);
   }
 
   check_if_ready_to_render() {
@@ -42,7 +42,7 @@ export default class MusicLibraryComposers extends React.Component {
   }
   handleOpenModal(row) {
     MusicLibraryDatabase.resetState(this.check_if_ready_to_render)
-    this.setState({ viewing_composer: row, showModal: true, creating_new_composer: false });
+    this.setState({ viewing_person: row, showModal: true, creating_new_person: false });
   }
 
   handleCloseModal() {
@@ -50,17 +50,17 @@ export default class MusicLibraryComposers extends React.Component {
   }
 
   handleDeleteModal(row) {
-    this.setState({ viewing_composer: row, showDeleteModal: true });
+    this.setState({ viewing_person: row, showDeleteModal: true });
   }
 
 
-  on_composer_change() {
+  on_person_change() {
     this.handleCloseModal()
     this.props.on_change();
   }
 
-  on_delete_composer_change() {
-    axios.delete(MUSIC_API_URL + 'composers/' + this.state.viewing_composer.id).then(() => {
+  on_delete_person_change() {
+    axios.delete(MUSIC_API_URL + 'people/' + this.state.viewing_person.id).then(() => {
       this.handleCloseModal();
       this.props.on_change();
     }).catch((thrown) => {
@@ -70,45 +70,45 @@ export default class MusicLibraryComposers extends React.Component {
 
   render() {
     const columns = [
-      { dataField: 'full_name', text: 'Name ', filter: textFilter({ delay: 0 }), formatter: BuildDetailFormatter('/musiclibrary/composers/') },
+      { dataField: 'full_name', text: 'Name ', filter: textFilter({ delay: 0 }), formatter: BuildDetailFormatter('/musiclibrary/people/') },
       { dataField: 'edit', text: 'Edit', style: { width: 55 }, formatter: EditorFormatter },
       { dataField: 'delete', text: 'Delete', style: { width: 60 }, formatter: DeleteFormatter }
     ]
-    let displayed_composer = MusicLibraryDatabase.composers.slice();
-    displayed_composer.forEach((item) => {
+    let displayed_person = MusicLibraryDatabase.people.slice();
+    displayed_person.forEach((item) => {
       item.full_name = item.last_name + ", " + item.first_name;
       item.edit = { id: item.id, on_click: this.handleOpenModal };
       item.delete = { id: item.id, on_click: this.handleDeleteModal };
     });
     return (
       <div>
-        <MusicLibraryComposerModal
+        <MusicLibraryPersonModal
           isOpen={this.state.showModal}
-          contentLabel="Composer Modal"
-          viewing_composer={this.state.viewing_composer}
-          new={this.state.creating_new_composer}
+          contentLabel="Person Modal"
+          viewing_person={this.state.viewing_person}
+          new={this.state.creating_new_person}
           close_modal={this.handleCloseModal}
-          on_change={this.on_composer_change} />
+          on_change={this.on_person_change} />
         <DeleteModal
           isOpen={this.state.showDeleteModal}
-          contentLabel="Delete Composer"
-          viewing_composer={this.state.viewing_composer}
+          contentLabel="Delete Person"
+          viewing_person={this.state.viewing_person}
           close_modal={this.handleCloseModal}
-          item_type={"Composer"}
-          item_desc={this.state.viewing_composer.name}
-          on_change={this.on_delete_composer_change} />
+          item_type={"Person"}
+          item_desc={this.state.viewing_person.name}
+          on_change={this.on_delete_person_change} />
         <Button style={{ float: "right" }} outline color="success" className="Add_button" onClick={() => {
           this.setState({
             showModal: true,
-            creating_new_composer: true
+            creating_new_person: true
           });
-        }}><FontAwesomeIcon icon={faPlusSquare} /> New Composer </Button>
-        {/* <BootstrapTable
+        }}><FontAwesomeIcon icon={faPlusSquare} /> New Person </Button>
+        <BootstrapTable
           keyField={"wut"}
           filter={filterFactory()}
           columns={columns}
-          data={MusicLibraryDatabase.composers}
-        /> */}
+          data={MusicLibraryDatabase.people}
+        />
       </div>
 
     );

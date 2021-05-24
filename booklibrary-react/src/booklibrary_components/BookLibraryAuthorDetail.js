@@ -1,6 +1,6 @@
 import React from "react";
 import axios from "axios";
-import { API_URL } from "../constants";
+import { BOOK_API_URL } from "../constants";
 import BookLibraryDatabase from "./BookLibraryDatabase";
 import loading_screen from '../components/Loading_screen';
 import BookLibraryBookDataGrid from "./BookLibraryBookDataGrid";
@@ -54,7 +54,7 @@ import BookLibraryAuthorModal from "./BookLibraryAuthorModal";
   }
 
   getAuthor = () => {
-    axios.get(API_URL + 'authors/' + this.props.match.params.id).then(res => this.setState({ author: res.data, author_confirmation: true })).catch((thrown) => {
+    axios.get(BOOK_API_URL + 'authors/' + this.props.match.params.id).then(res => this.setState({ author: res.data, author_confirmation: true })).catch((thrown) => {
       console.log(thrown);
       toast.error(JSON.stringify(find_error_message_in_response(thrown.response)));
     });

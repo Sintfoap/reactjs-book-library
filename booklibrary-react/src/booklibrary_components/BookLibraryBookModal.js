@@ -4,7 +4,7 @@ import SelectSearch from 'react-select-search';
 import 'react-select-search/style.css'
 import { Button, Form, FormGroup, Input, Label } from "reactstrap";
 import axios from "axios";
-import { API_URL } from "../constants";
+import { BOOK_API_URL } from "../constants";
 import { find_error_message_in_response } from "../constants/utils";
 import BookLibraryDatabase from "./BookLibraryDatabase";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -45,7 +45,7 @@ export default class BookLibraryBookModal extends React.Component {
                 showAuthorModal: false,
                 showGenreModal: false,
                 showSeriesModal: false,
-                owned: this.props.viewing_book.owned
+                owned: this.props.viewing_book.owned,
             };
         } else {
             return {
@@ -59,7 +59,7 @@ export default class BookLibraryBookModal extends React.Component {
                 showAuthorModal: false,
                 showGenreModal: false,
                 showSeriesModal: false,
-                owned: true
+                owned: true,
             };
         }
     }
@@ -146,7 +146,7 @@ export default class BookLibraryBookModal extends React.Component {
             delete book_obj.number_in_series;
         }
         console.log(this.state);
-        axios.post(API_URL + 'books', this.state).then(() => {
+        axios.post(BOOK_API_URL + 'books', this.state).then(() => {
             toast.success("Successfully created Book: " + book_obj.title);
             this.props.on_change();
         }).catch((thrown) => {
@@ -162,7 +162,7 @@ export default class BookLibraryBookModal extends React.Component {
         book_obj.author = parseInt(book_obj.author);
         book_obj.series = book_obj.series === " " ? "" : parseInt(book_obj.series);
         book_obj.number_in_series = book_obj.number_in_series === " " ? "" : parseInt(book_obj.number_in_series);
-        axios.put(API_URL + 'books/' + book_obj.id, book_obj).then(() => {
+        axios.put(BOOK_API_URL + 'books/' + book_obj.id, book_obj).then(() => {
             this.props.on_change();
             toast.success("Successfully edited Book: " + book_obj.title);
         }).catch((thrown) => {
@@ -266,19 +266,19 @@ export default class BookLibraryBookModal extends React.Component {
                                     type="textarea"
                                     name="notes"
                                     onChange={this.onChange}
-                                    value={this.state.notes || ""} 
+                                    value={this.state.notes || ""}
                                 />
                             </FormGroup>
                             <FormGroup>
                                 <Label className="col-11" for="author">Author:
                                 <SelectSearch
-                                    name="author"
-                                    search
-                                    placeholder="Select an Author"
-                                    value={this.state.author || ""}
-                                    options={this.authors_dropdown_list()}
-                                    onChange={this.onDropdownChange} 
-                                />
+                                        name="author"
+                                        search
+                                        placeholder="Select an Author"
+                                        value={this.state.author || ""}
+                                        options={this.authors_dropdown_list()}
+                                        onChange={this.onDropdownChange}
+                                    />
                                 </Label>
                                 {this.props.showCreateButtons &&
                                     <Button href="#" outline color="success" className="btn-sm edit-delete-button" onClick={() => this.handleOpenAuthorModal()} style={{ marginTop: 30, float: "right" }}><FontAwesomeIcon icon={faPlusSquare}></FontAwesomeIcon></Button>}
@@ -286,13 +286,13 @@ export default class BookLibraryBookModal extends React.Component {
                             <FormGroup>
                                 <Label className="col-11" for="genre">Genre:
                                 <SelectSearch
-                                    name="genre"
-                                    search
-                                    placeholder="Select a Genre"
-                                    value={this.state.genre || ""}
-                                    options={this.genres_dropdown_list()}
-                                    onChange={this.onDropdownChange} 
-                                />
+                                        name="genre"
+                                        search
+                                        placeholder="Select a Genre"
+                                        value={this.state.genre || ""}
+                                        options={this.genres_dropdown_list()}
+                                        onChange={this.onDropdownChange}
+                                    />
                                 </Label>
                                 {this.props.showCreateButtons &&
                                     <Button href="#" outline color="success" className="btn-sm edit-delete-button" onClick={() => this.handleOpenGenreModal()} style={{ marginTop: 30, float: "right" }}><FontAwesomeIcon icon={faPlusSquare}></FontAwesomeIcon></Button>}
@@ -300,14 +300,14 @@ export default class BookLibraryBookModal extends React.Component {
                             <FormGroup>
                                 <Label className="col-11" for="series">Series:
                                 <SelectSearch
-                                    className="select-search"
-                                    name="series"
-                                    search
-                                    placeholder="Select a Series"
-                                    value={this.state.series || ""}
-                                    options={this.series_dropdown_list()}
-                                    onChange={this.onDropdownChange} 
-                                />
+                                        className="select-search"
+                                        name="series"
+                                        search
+                                        placeholder="Select a Series"
+                                        value={this.state.series || ""}
+                                        options={this.series_dropdown_list()}
+                                        onChange={this.onDropdownChange}
+                                    />
                                 </Label>
                                 {this.props.showCreateButtons &&
                                     <Button href="#" outline color="success" className="btn-sm edit-delete-button" onClick={() => this.handleOpenSeriesModal()} style={{ marginTop: 30, float: "right" }}><FontAwesomeIcon icon={faPlusSquare}></FontAwesomeIcon></Button>}
@@ -327,7 +327,7 @@ export default class BookLibraryBookModal extends React.Component {
                                     type="checkbox"
                                     name="owned"
                                     onChange={this.onChange}
-                                    checked={this.state.owned || false} 
+                                    checked={this.state.owned || false}
                                 />Owned
                             </FormGroup>
                             <form onSubmit={e => { e.preventDefault(); }}><Button>Submit</Button>

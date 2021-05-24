@@ -1,6 +1,6 @@
 import { Component } from "react";
 import axios from "axios";
-import { API_URL } from "../constants";
+import { BOOK_API_URL } from "../constants";
 import { find_error_message_in_response } from "../constants/utils";
 import { toast } from "react-toastify";
 
@@ -19,7 +19,7 @@ export default class BookLibraryDatabase extends Component {
     }
 
     static getBooks = (callback) => {
-        axios.get(API_URL + 'books').then(res => {
+        axios.get(BOOK_API_URL + 'books').then(res => {
             BookLibraryDatabase.books = res.data;
             BookLibraryDatabase.book_confirmation = true;
             callback();
@@ -29,7 +29,7 @@ export default class BookLibraryDatabase extends Component {
     };
 
     static getAuthors = (callback) => {
-        axios.get(API_URL + 'authors').then(res => {
+        axios.get(BOOK_API_URL + 'authors').then(res => {
             BookLibraryDatabase.authors = res.data;
             BookLibraryDatabase.author_confirmation = true;
             callback();
@@ -39,7 +39,7 @@ export default class BookLibraryDatabase extends Component {
     };
 
     static getGenres = (callback) => {
-        axios.get(API_URL + 'genres').then(res => {
+        axios.get(BOOK_API_URL + 'genres').then(res => {
             BookLibraryDatabase.genres = res.data;
             BookLibraryDatabase.genre_confirmation = true;
             callback();
@@ -50,7 +50,7 @@ export default class BookLibraryDatabase extends Component {
     };
 
     static getSeries = (callback) => {
-        axios.get(API_URL + 'series').then(res => {
+        axios.get(BOOK_API_URL + 'series').then(res => {
             BookLibraryDatabase.series = res.data;
             BookLibraryDatabase.series_confirmation = true;
             callback();

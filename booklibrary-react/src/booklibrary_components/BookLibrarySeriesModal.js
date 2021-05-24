@@ -2,7 +2,7 @@ import React from "react";
 import ReactModal from 'react-modal';
 import { Button, Form, FormGroup, Input, Label } from "reactstrap";
 import axios from "axios";
-import { API_URL } from "../constants";
+import { BOOK_API_URL } from "../constants";
 import { toast } from "react-toastify";
 import { find_error_message_in_response } from "../constants/utils";
 
@@ -40,7 +40,7 @@ export default class BookLibrarySeriesModal extends React.Component {
 
   createSeries = e => {
     e.preventDefault();
-    axios.post(API_URL + 'series', this.state).then(() => {
+    axios.post(BOOK_API_URL + 'series', this.state).then(() => {
       toast.success("Successfully created Series: " + this.state.name);
       this.props.on_change();
     }).catch((thrown) => {
@@ -51,7 +51,7 @@ export default class BookLibrarySeriesModal extends React.Component {
 
   editSeries = e => {
     e.preventDefault();
-    axios.put(API_URL + 'series/' + this.state.id, this.state).then(() => {
+    axios.put(BOOK_API_URL + 'series/' + this.state.id, this.state).then(() => {
       toast.success("Successfully edited Series: " + this.state.name);
       this.props.on_change();
     }).catch((thrown) => {

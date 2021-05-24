@@ -9,7 +9,7 @@ import BookLibrarySeriesModal from "./BookLibrarySeriesModal";
 import DeleteModal from "../components/Delete_modal";
 import EditorFormatter from "../components/Edit_formatter.js";
 import DeleteFormatter from "../components/Delete_formater.js";
-import { API_URL } from "../constants";
+import { BOOK_API_URL } from "../constants";
 import { find_error_message_in_response } from "../constants/utils";
 import BuildDetailFormatter from "../components/Detail_formatter";
 import BookLibraryDatabase from "./BookLibraryDatabase";
@@ -53,7 +53,7 @@ export default class BookLibrarySeries extends React.Component {
   }
 
   on_delete_series_change() {
-    axios.delete(API_URL + 'series/' + this.state.viewing_series.id).then(() => {
+    axios.delete(BOOK_API_URL + 'series/' + this.state.viewing_series.id).then(() => {
       this.handleCloseModal();
       this.props.on_change();
     }).catch((thrown) => {
@@ -73,6 +73,10 @@ export default class BookLibrarySeries extends React.Component {
       item.edit = { id: item.id, on_click: this.handleOpenModal };
       item.delete = { id: item.id, on_click: this.handleDeleteModal };
     });
+    function indication() {
+      toast.error("I'm a Teapot!")
+      return "Table got nothing"
+    }
     return (
       <div>
         <BookLibrarySeriesModal
@@ -100,7 +104,8 @@ export default class BookLibrarySeries extends React.Component {
           keyField={"wut"}
           filter={filterFactory()}
           columns={columns}
-          data={BookLibraryDatabase.series} />
+          data={BookLibraryDatabase.series}
+          noDataIndication={ indication } />
       </div>
     );
   }

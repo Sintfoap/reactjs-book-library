@@ -2,70 +2,75 @@ import React, { Component } from "react";
 import { Container } from "reactstrap";
 import MusicLibrarySongs from "./MusicLibrarySongs"
 import MusicLibraryComposers from "./MusicLibraryComposers"
-
 import loading_screen from '../components/Loading_screen'
-
 import MusicLibraryDatabase from './MusicLibraryDatabase'
 import MusicLibraryPublishers from "./MusicLibraryPublishers";
 import MusicLibraryLyracists from "./MusicLibraryLyracists";
+import MusicLibraryPeople from "./MusicLibraryPeople";
 
 export default class MusicLibraryHome extends Component {
   constructor(props) {
     super(props);
-    this.state = { 
+    this.state = {
       current_page: this.props.current_page,
       load_page: false
     };
-    
+
     this.check_if_ready_to_render = this.check_if_ready_to_render.bind(this);
-  }  
+  }
 
   componentDidUpdate(prevProps) {
     // comparison to avoid infinite loop
     if (this.props.current_page !== prevProps.current_page) {
-      this.setState({current_page: this.props.current_page})
+      this.setState({ current_page: this.props.current_page })
     }
   }
 
   check_if_ready_to_render() {
-    if(MusicLibraryDatabase.everything_loaded()) {
-      this.setState({load_page: true})
+    if (MusicLibraryDatabase.everything_loaded()) {
+      this.setState({ load_page: true })
     }
   }
 
   componentDidMount() {
-    if(!MusicLibraryDatabase.everything_loaded()) {
+    if (!MusicLibraryDatabase.everything_loaded()) {
       MusicLibraryDatabase.resetState(this.check_if_ready_to_render);
     }
   }
 
   getpage = () => {
-    if(MusicLibraryDatabase.everything_loaded()){
+    if (MusicLibraryDatabase.everything_loaded()) {
       switch (this.state.current_page) {
         case "songs":
           return (
-            <MusicLibrarySongs 
-            on_change={() => {MusicLibraryDatabase.resetSongs(this.check_if_ready_to_render)}}
+            <MusicLibrarySongs
+              on_change={() => { MusicLibraryDatabase.resetSongs(this.check_if_ready_to_render) }}
             />
           )
-        case "composers":
-          return (
-            <MusicLibraryComposers
-            on_change={() => {MusicLibraryDatabase.resetComposers(this.check_if_ready_to_render)}}
-            />
-          )
+          case "people":
+            return (
+              <MusicLibraryPeople
+                on_change={() => { MusicLibraryDatabase.resetPeople(this.check_if_ready_to_render) }}
+              />
+            )
+        // case "composers":
+        //   return (
+        //     <MusicLibraryComposers
+        //       on_change={() => { MusicLibraryDatabase.resetComposers(this.check_if_ready_to_render) }}
+        //     />
+        //   )
         case "publishers":
-          return(
+          return (
             <MusicLibraryPublishers
-            on_change={() => {MusicLibraryDatabase.resetPublishers(this.check_if_ready_to_render)}}
+              on_change={() => { MusicLibraryDatabase.resetPublishers(this.check_if_ready_to_render) }}
             />
           )
-        case "lyracists":
-          return(
-            <MusicLibraryLyracists
-            on_change={() => {MusicLibraryDatabase.resetLyracists(this.check_if_ready_to_render)}}
-            />
-          )
+        // case "lyracists":
+        //   return (
+        //     <MusicLibraryLyracists
+        //       on_change={() => { MusicLibraryDatabase.resetLyracists(this.check_if_ready_to_render) }}
+        //     />
+        //   )
       }
     } else {
       return loading_screen()

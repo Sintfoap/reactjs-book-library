@@ -38,14 +38,7 @@ class Book(models.Model):
 #******************************************* MUSIC LIBRARY **********************************************
 #********************************************************************************************************
 
-class Composer(models.Model):
-    first_name = models.CharField(max_length=200)
-    last_name = models.CharField(max_length=200)
-
-    def __str__(self):
-        return "{} {}".format(self.first_name, self.last_name)
-
-class Lyracist(models.Model):
+class People(models.Model):
     first_name = models.CharField(max_length=200)
     last_name = models.CharField(max_length=200)
 
@@ -60,10 +53,10 @@ class Publisher(models.Model):
 
 class Song(models.Model):
     title = models.CharField(max_length=200)
-    composers = models.ManyToManyField(Composer)
+    composers = models.ManyToManyField(People, related_name="songs_composed")
+    arrangers = models.ManyToManyField(People, related_name="songs_arranged")
+    lyricists = models.ManyToManyField(People, related_name="songs_lirisized")
     publisher = models.ForeignKey(Publisher, on_delete=models.PROTECT, related_name='songs')
-    arranger = models.ForeignKey(Composer, on_delete=models.PROTECT, related_name='songs', null=True, blank=True)
-    lyracists = models.ManyToManyField(Lyracist)
     notes = models.CharField(max_length=5000, blank=True, null=True)
 
     def __str__(self):

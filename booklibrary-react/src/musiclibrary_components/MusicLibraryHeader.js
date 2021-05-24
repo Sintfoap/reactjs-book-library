@@ -42,9 +42,10 @@ class Header extends React.Component {
           </div>
           <Navbar style={{ marginLeft: 10 }} className="row" bg="dark" variant="dark">
             <NavLink className="btn btn-outline-info Nav_button" to="/musiclibrary/music">Music</NavLink>
-            <NavLink className="btn btn-outline-info Nav_button" to="/musiclibrary/composers">Composers</NavLink>
+            <NavLink className="btn btn-outline-info Nav_button" to="/musiclibrary/people">People</NavLink>
+            {/* <NavLink className="btn btn-outline-info Nav_button" to="/musiclibrary/composers">Composers</NavLink> */}
             <NavLink className="btn btn-outline-info Nav_button" to="/musiclibrary/publishers">Publishers</NavLink>
-            <NavLink className="btn btn-outline-info Nav_button" to="/musiclibrary/lyracists">Lyracists</NavLink>
+            {/* <NavLink className="btn btn-outline-info Nav_button" to="/musiclibrary/lyracists">Lyracists</NavLink> */}
           </Navbar>
         </div>
       </Container>

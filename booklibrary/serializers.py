@@ -63,50 +63,45 @@ class SeriesGetSerializer(serializers.ModelSerializer):
 #******************************************* MUSIC LIBRARY **********************************************
 #********************************************************************************************************
 
-class ComposerEditSerializer(serializers.ModelSerializer):
+class PeopleEditSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Composer
-        fields = ('id','first_name', 'last_name')
+        model = People
+        fields = ('id', 'first_name', 'last_name')
 
 class PublisherEditSerializer(serializers.ModelSerializer):
     class Meta:
         model = Publisher
         fields = ('id','name')
 
-class LyracistEditSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Lyracist
-        fields = ('id', 'first_name', 'last_name')
-
 class SongEditSerializer(serializers.ModelSerializer):
     class Meta:
         model = Song
-        fields = ('id', 'title', 'composers', 'publisher', 'arranger', 'lyracists')
+        fields = ('id', 'title', 'composers', 'arrangers','publisher', 'lyricists')
 
 class SongGetSerializer(serializers.ModelSerializer):
     composers_list = serializers.SerializerMethodField('get_composers')
     publisher_obj = serializers.SerializerMethodField('get_publisher')
-    arranger_obj = serializers.SerializerMethodField('get_arranger')
-    lyracists_list = serializers.SerializerMethodField('get_lyracists')
-
+    arranger_list = serializers.SerializerMethodField('get_arranger')
+    lyricists_list = serializers.SerializerMethodField('get_lyricists')
     def get_composers(self, song):
-        return ComposerEditSerializer(song.composers, many=True).data
+        return PeopleEditSerializer(song.songs_composed, many=True).data
     def get_publisher(self, song):
         return PublisherEditSerializer(song.publisher, many=False).data
     def get_arranger(self, song):
-        return ArrangerEditSerializer(song.arranger, many=False).data  
-    def get_lyracists(self, song):
-        return LyracistEditSerializer(song.lyracists, many=True).data
+        return PeopleEditSerializer(song.songs_arranged, many=False).data  
+    def get_lyricists(self, song):
+        return PeopleEditSerializer(song.songs_lyrisized, many=False).data
     class Meta:
         model = Song
-        fields = ('id', 'title', 'composers', 'publisher', 'arranger', 'lyracists', 'composers_list', 'publisher_obj', 'arranger_obj', 'lyracists_list')
+        fields = ('id', 'title','publisher', 'composers', 'arrangers', 'lyricists', 'publisher_obj', 'composers_list', 'arrangers_list', 'lyricists_list')
+        
 
-class ComposerGetSerializer(serializers.ModelSerializer):
+class PeopleGetSerializer(serializers.ModelSerializer):
     songs = SongEditSerializer(many=True)
-
+    
     class Meta:
-        model = Composer
-        fields = ('id','first_name', 'last_name', 'songs')
+        model = People
+        fields = ('id', 'first_name', 'last_name', 'songs')
 
 class PublisherGetSerializer(serializers.ModelSerializer):
     songs = SongEditSerializer(many=True)
@@ -114,10 +109,3 @@ class PublisherGetSerializer(serializers.ModelSerializer):
     class Meta:
         model = Publisher
         fields = ('id', 'name', 'songs')
-
-class LyracistGetSerializer(serializers.ModelSerializer):
-    songs = SongEditSerializer(many=True, read_only=True)
-
-    class Meta:
-        model = Lyracist
-        fields = ('id', 'first_name', 'last_name', 'songs')

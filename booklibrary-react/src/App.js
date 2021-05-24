@@ -14,11 +14,13 @@ import { ToastContainer } from "react-toastify"
 import Menu from "./components/Menu";
 import MusicLibraryHome from "./musiclibrary_components/MusicLibraryHome";
 import MusicLibraryHeader from "./musiclibrary_components/MusicLibraryHeader"
+import MusicLibraryComposerDetail from "./musiclibrary_components/MusicLibraryComposerDetail";
+import MusicLibraryPublisherDetail from "./musiclibrary_components/MusicLibraryPublisherDetail";
 
 class App extends Component {
-  constructor () {
+  constructor() {
     super();
-    this.state={
+    this.state = {
       app: ""
     }
   }
@@ -28,10 +30,10 @@ class App extends Component {
         <Router>
           <Switch>
             <Route path="/musiclibrary">
-              <MusicLibraryHeader/>
+              <MusicLibraryHeader />
             </Route>
             <Route path="/booklibrary">
-              <BookLibraryHeader/>
+              <BookLibraryHeader />
             </Route>
           </Switch>
           <Switch>
@@ -44,43 +46,50 @@ class App extends Component {
             <Route path="/booklibrary/series/:id" children={<BookLibrarySeriesDetail />}>
             </Route>
             <Route path="/booklibrary/books">
-              <BookLibraryHome current_page="books"/>
+              <BookLibraryHome current_page="books" />
             </Route>
             <Route path="/booklibrary/authors">
-              <BookLibraryHome current_page="authors"/>
+              <BookLibraryHome current_page="authors" />
             </Route>
             <Route path="/booklibrary/genres">
-              <BookLibraryHome current_page="genres"/>
+              <BookLibraryHome current_page="genres" />
             </Route>
             <Route path="/booklibrary/series">
-              <BookLibraryHome current_page="series"/>
+              <BookLibraryHome current_page="series" />
+            </Route>
+            {/* <Route path="/musiclibrary/composers/:id" children={<MusicLibraryComposerDetail />}>
+            </Route> */}
+            <Route path="/musiclibrary/publishers/:id" children={<MusicLibraryPublisherDetail />}>
             </Route>
             <Route path="/musiclibrary/music">
-              <MusicLibraryHome current_page="songs"/>
+              <MusicLibraryHome current_page="songs" />
             </Route>
-            <Route path="/musiclibrary/composers">
-              <MusicLibraryHome current_page="composers"/>
+            <Route path="/musiclibrary/people">
+              <MusicLibraryHome current_page="people" />
             </Route>
+            {/* <Route path="/musiclibrary/composers">
+              <MusicLibraryHome current_page="composers" />
+            </Route> */}
             <Route path="/musiclibrary/publishers">
-              <MusicLibraryHome current_page="publishers"/>
+              <MusicLibraryHome current_page="publishers" />
             </Route>
-            <Route path="/musiclibrary/lyracists">
-              <MusicLibraryHome current_page="lyracists"/>
-            </Route>
+            {/* <Route path="/musiclibrary/lyracists">
+              <MusicLibraryHome current_page="lyracists" />
+            </Route> */}
             <Route path="/">
               <Menu />
             </Route>
           </Switch>
           <ToastContainer
-          position="bottom-right"
-          autoClose={5000}
-          hideProgressBar={false}
-          newestOnTop={false}
-          closeOnClick
-          rtl={false}
-          pauseOnFocusLoss
-          draggable
-          pauseOnHover></ToastContainer>
+            position="bottom-right"
+            autoClose={5000}
+            hideProgressBar={false}
+            newestOnTop={false}
+            closeOnClick
+            rtl={false}
+            pauseOnFocusLoss
+            draggable
+            pauseOnHover></ToastContainer>
         </Router>
       </Fragment>
     );

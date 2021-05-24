@@ -255,48 +255,48 @@ def song_detail(request, id):
 ###############################     COMPOSERS     #################################################################################################################################################
 #################################################################################################################################################################################################
 
-@api_view(['GET', 'POST'])
-def composers_list(request):
-    if request.method == 'GET':
-        data = Composer.objects.all()
+# @api_view(['GET', 'POST'])
+# def composers_list(request):
+#     if request.method == 'GET':
+#         data = People.objects.all()
 
-        serializer = ComposerGetSerializer(data, context={'request': request}, many=True)
+#         serializer = PeopleGetSerializer(data, context={'request': request}, many=True)
 
-        return Response(serializer.data)
+#         return Response(serializer.data)
 
-    elif request.method == 'POST':
-        serializer = ComposerEditSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(status=status.HTTP_201_CREATED)
+#     elif request.method == 'POST':
+#         serializer = PeopleEditSerializer(data=request.data)
+#         if serializer.is_valid():
+#             serializer.save()
+#             return Response(status=status.HTTP_201_CREATED)
             
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-@api_view(['PUT','DELETE', 'GET'])
-def composer_detail(request, id):
-    try:
-        composer = Composer.objects.get(id=id)
-    except Composer.DoesNotExist:
-        return Response(status=status.HTTP_404_NOT_FOUND)
+# @api_view(['PUT','DELETE', 'GET'])
+# def composer_detail(request, id):
+#     try:
+#         composer = People.objects.get(id=id)
+#     except People.DoesNotExist:
+#         return Response(status=status.HTTP_404_NOT_FOUND)
 
-    if request.method == 'GET':
-        serializer = ComposerGetSerializer(composer, context={'request': request})
+#     if request.method == 'GET':
+#         serializer = PeopleGetSerializer(composer, context={'request': request})
 
-        return Response(serializer.data)
+#         return Response(serializer.data)
 
 
-    if request.method == 'PUT':
-        serializer = ComposerEditSerializer(composer, data=request.data,context={'request': request})
-        if serializer.is_valid():
-            serializer.save()
-            return Response(status=status.HTTP_204_NO_CONTENT)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+#     if request.method == 'PUT':
+#         serializer = PeopleEditSerializer(composer, data=request.data,context={'request': request})
+#         if serializer.is_valid():
+#             serializer.save()
+#             return Response(status=status.HTTP_204_NO_CONTENT)
+#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    elif request.method == 'DELETE':
-        if len(composer.songs.all()) > 0:
-            return Response("Cannot delete composer " + str(composer) + " because it has associated songs", status=status.HTTP_400_BAD_REQUEST)
-        composer.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
+#     elif request.method == 'DELETE':
+#         if len(composer.songs.all()) > 0:
+#             return Response("Cannot delete composer " + str(composer) + " because it has associated songs", status=status.HTTP_400_BAD_REQUEST)
+#         composer.delete()
+#         return Response(status=status.HTTP_204_NO_CONTENT)
 
 #################################################################################################################################################################################################
 ###############################     PUBLISHERS     ##################################################################################################################################################
@@ -347,17 +347,61 @@ def publisher_detail(request, id):
 ###############################     LYRACISTS     ##################################################################################################################################################
 #################################################################################################################################################################################################
 
-@api_view(['GET', 'POST'])
-def lyracists_list(request):
-    if request.method == 'GET':
-        data = Lyracist.objects.all()
+# @api_view(['GET', 'POST'])
+# def lyracists_list(request):
+#     if request.method == 'GET':
+#         data = Lyracist.objects.all()
 
-        serializer = LyracistGetSerializer(data, context={'request': request}, many=True)
+#         serializer = LyracistGetSerializer(data, context={'request': request}, many=True)
+
+#         return Response(serializer.data)
+
+#     elif request.method == 'POST':
+#         serializer = LyracistEditSerializer(data=request.data)
+#         if serializer.is_valid():
+#             serializer.save()
+#             return Response(status=status.HTTP_201_CREATED)
+            
+#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+# @api_view(['PUT','DELETE', 'GET'])
+# def lyracist_detail(request, id):
+#     try:
+#         lyracist = Lyracist.objects.get(id=id)
+#     except Lyracist.DoesNotExist:
+#         return Response(status=status.HTTP_404_NOT_FOUND)
+
+#     if request.method == 'GET':
+#         serializer = LyracistGetSerializer(lyracist, context={'request': request})
+
+#         return Response(serializer.data)
+#     if request.method == 'PUT':
+#         serializer = LyracistEditSerializer(lyracist, data=request.data,context={'request': request})
+#         if serializer.is_valid():
+#             serializer.save()
+#             return Response(status=status.HTTP_204_NO_CONTENT)
+#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+#     elif request.method == 'DELETE':
+#         if len(lyracist.songs.all()) > 0:
+#             return Response("Cannot delete lyracist " + str(lyracist) + " because it has associated songs", status=status.HTTP_400_BAD_REQUEST)
+#         lyracist.delete()
+#         return Response(status=status.HTTP_204_NO_CONTENT)
+#################################################################################################################################################################################################
+###############################     PEOPLE     ##################################################################################################################################################
+#################################################################################################################################################################################################
+
+@api_view(['GET', 'POST'])
+def people_list(request):
+    if request.method == 'GET':
+        data = People.objects.all()
+
+        serializer = PeopleGetSerializer(data, context={'request': request}, many=True)
 
         return Response(serializer.data)
 
     elif request.method == 'POST':
-        serializer = LyracistEditSerializer(data=request.data)
+        serializer = PeopleEditSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(status=status.HTTP_201_CREATED)
@@ -365,25 +409,25 @@ def lyracists_list(request):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['PUT','DELETE', 'GET'])
-def lyracist_detail(request, id):
+def people_detail(request, id):
     try:
-        lyracist = Lyracist.objects.get(id=id)
-    except Lyracist.DoesNotExist:
+        people = People.objects.get(id=id)
+    except People.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
 
     if request.method == 'GET':
-        serializer = LyracistGetSerializer(lyracist, context={'request': request})
+        serializer = PeopleGetSerializer(people, context={'request': request})
 
         return Response(serializer.data)
     if request.method == 'PUT':
-        serializer = LyracistEditSerializer(lyracist, data=request.data,context={'request': request})
+        serializer = PeopleEditSerializer(people, data=request.data,context={'request': request})
         if serializer.is_valid():
             serializer.save()
             return Response(status=status.HTTP_204_NO_CONTENT)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     elif request.method == 'DELETE':
-        if len(lyracist.songs.all()) > 0:
-            return Response("Cannot delete lyracist " + str(lyracist) + " because it has associated songs", status=status.HTTP_400_BAD_REQUEST)
-        lyracist.delete()
+        if len(people.songs.all()) > 0:
+            return Response("Cannot delete " + str(people) + " because it has associated songs", status=status.HTTP_400_BAD_REQUEST)
+        people.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)

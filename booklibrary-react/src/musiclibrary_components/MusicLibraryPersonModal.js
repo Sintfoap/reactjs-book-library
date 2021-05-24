@@ -2,13 +2,14 @@ import React from "react";
 import ReactModal from 'react-modal';
 import { Button, Form, FormGroup, Input, Label } from "reactstrap";
 import axios from "axios";
-import { BOOK_API_URL } from "../constants";
+import { MUSIC_API_URL } from "../constants";
 import { toast } from "react-toastify";
 import { find_error_message_in_response } from "../constants/utils";
 
-export default class BookLibraryGenreModal extends React.Component {
+export default class MusicLibraryPersonModal extends React.Component {
   constructor(props) {
     super(props);
+    // console.log(props)
     let my_state = this.build_state();
     this.state = my_state;
   }
@@ -16,13 +17,15 @@ export default class BookLibraryGenreModal extends React.Component {
   build_state() {
     if (!this.props.new) {
       return {
-        id: this.props.viewing_genre.id,
-        category: this.props.viewing_genre.category
+        id: this.props.viewing_person.id,
+        first_name: this.props.viewing_person.first_name,
+        last_name: this.props.viewing_person.last_name
       };
     } else {
       return {
         id: -1,
-        category: ""
+        first_name: "",
+        last_name: ""
       };
     }
   }
@@ -37,10 +40,10 @@ export default class BookLibraryGenreModal extends React.Component {
     this.setState({ [e.target.name]: e.target.value });
   };
 
-  createGenre = e => {
+  createPerson = e => {
     e.preventDefault();
-    axios.post(BOOK_API_URL + 'genres', this.state).then(() => {
-      toast.success("Successfully created Genre: " + this.state.category);
+    axios.post(MUSIC_API_URL + 'people', this.state).then(() => {
+      toast.success("Successfully created: " + this.state.last_name + ", " + this.state.first_name);
       this.props.on_change();
     }).catch((thrown) => {
       console.log(thrown);
@@ -48,10 +51,10 @@ export default class BookLibraryGenreModal extends React.Component {
     });
   };
 
-  editGenre = e => {
+  editPerson = e => {
     e.preventDefault();
-    axios.put(BOOK_API_URL + 'genres/' + this.state.id, this.state).then(() => {
-      toast.success("Successfully edited Genre: " + this.state.category);
+    axios.put(MUSIC_API_URL + 'people/' + this.state.id, this.state).then(() => {
+      toast.success("Successfully edited: " + this.state.last_name + ", " + this.state.last_name);
       this.props.on_change();
     }).catch((thrown) => {
       console.log(thrown);
@@ -74,14 +77,22 @@ export default class BookLibraryGenreModal extends React.Component {
           isOpen={this.props.isOpen}
           style={customStyles}
         >
-          <Form onSubmit={this.props.new ? this.createGenre : this.editGenre}>
+          <Form onSubmit={this.props.new ? this.createPerson : this.editPerson}>
             <FormGroup>
-              <Label for="category">Category:</Label>
+              <Label for="first_name">First Name:</Label>
               <Input
                 type="text"
-                name="category"
+                name="first_name"
                 onChange={this.onChange}
-                value={this.state.category || ""} />
+                value={this.state.first_name || ""} />
+            </FormGroup>
+            <FormGroup>
+              <Label for="last_name">Last Name:</Label>
+              <Input
+                type="text"
+                name="last_name"
+                onChange={this.onChange}
+                value={this.state.last_name || ""} />
             </FormGroup>
             <Button>Submit</Button>
             <Button onClick={this.props.close_modal} className={"close_modal_button"}>Cancel</Button>

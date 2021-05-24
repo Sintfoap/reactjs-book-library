@@ -2,7 +2,7 @@ import React from "react";
 import ReactModal from 'react-modal';
 import { Button, Form, FormGroup, Input, Label } from "reactstrap";
 import axios from "axios";
-import { API_URL } from "../constants";
+import { BOOK_API_URL } from "../constants";
 import { toast } from "react-toastify";
 import { find_error_message_in_response } from "../constants/utils";
 
@@ -43,8 +43,8 @@ export default class BookLibraryAuthorModal extends React.Component {
 
   createAuthor = e => {
     e.preventDefault();
-    axios.post(API_URL + 'authors', this.state).then(() => {
-      toast.success("Successfully created " + this.state.first_name + ", " + this.state.last_name);
+    axios.post(BOOK_API_URL + 'authors', this.state).then(() => {
+      toast.success("Successfully created Author: " + this.state.first_name + ", " + this.state.last_name);
       this.props.on_change();
     }).catch((thrown) => {
       console.log(thrown);
@@ -54,8 +54,8 @@ export default class BookLibraryAuthorModal extends React.Component {
 
   editAuthor = e => {
     e.preventDefault();
-    axios.put(API_URL + 'authors/' + this.state.id, this.state).then(() => {
-      toast.success("Successfully edited " + this.state.first_name + ", " + this.state.last_name);
+    axios.put(BOOK_API_URL + 'authors/' + this.state.id, this.state).then(() => {
+      toast.success("Successfully edited Author: " + this.state.first_name + ", " + this.state.last_name);
       this.props.on_change();
     }).catch((thrown) => {
       console.log(thrown);

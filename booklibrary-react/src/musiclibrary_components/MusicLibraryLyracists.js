@@ -48,11 +48,11 @@ export default class MusicLibraryLyracists extends React.Component {
         });
         return (
             <div>
-            <BootstrapTable
+            {/* <BootstrapTable
             keyField={"wut"}
             columns={columns}
             data={MusicLibraryDatabase.lyracists}
-            />
+            /> */}
             </div>
         
         );

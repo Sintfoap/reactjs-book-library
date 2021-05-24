@@ -2,7 +2,7 @@ import React from "react";
 import loading_screen from '../components/Loading_screen';
 import axios from "axios";
 import { Button } from "reactstrap";
-import { API_URL } from "../constants";
+import { BOOK_API_URL } from "../constants";
 import BookLibraryBookDataGrid from "./BookLibraryBookDataGrid";
 import BookLibraryDatabase from "./BookLibraryDatabase";
 import BookLibrarySeriesModal from "./BookLibrarySeriesModal";
@@ -55,7 +55,7 @@ export class BookLibrarySeriesDetail extends React.Component {
 
 
   getSeries = () => {
-    axios.get(API_URL + 'series/' + this.props.match.params.id).then(res => this.setState({ series: res.data, series_confirmation: true })).catch((thrown) => {
+    axios.get(BOOK_API_URL + 'series/' + this.props.match.params.id).then(res => this.setState({ series: res.data, series_confirmation: true })).catch((thrown) => {
       console.log(thrown);
       toast.error(JSON.stringify(find_error_message_in_response(thrown.response)));
     });

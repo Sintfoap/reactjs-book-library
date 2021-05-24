@@ -1,12 +1,13 @@
 import React from "react";
 import BootstrapTable from 'react-bootstrap-table-next';
 import filterFactory, { textFilter } from 'react-bootstrap-table2-filter';
+import paginationFactory from 'react-bootstrap-table2-paginator';
 import axios from "axios";
 import BookLibraryBookModal from "./BookLibraryBookModal";
 import DeleteModal from "../components/Delete_modal";
 import EditorFormatter from "../components/Edit_formatter.js";
 import DeleteFormatter from "../components/Delete_formater.js";
-import { API_URL } from "../constants";
+import { BOOK_API_URL } from "../constants";
 import { find_error_message_in_response } from "../constants/utils";
 import BuildDetailFormatter from "../components/Detail_formatter";
 import { toast } from "react-toastify";
@@ -36,7 +37,7 @@ export default class BookLibraryBookDataGrid extends React.Component {
     }
 
     on_delete_book_change() {
-        axios.delete(API_URL + 'books/' + this.state.viewing_book.id).then(() => {
+        axios.delete(BOOK_API_URL + 'books/' + this.state.viewing_book.id).then(() => {
             this.handleCloseModal();
             this.props.on_change();
         }).catch((thrown) => {
@@ -118,6 +119,89 @@ export default class BookLibraryBookDataGrid extends React.Component {
         if (this.props.sort_field) {
             displayed_books.sort(this.sort_books);
         }
+        function indication() {
+            return "Table got nothing"
+        }
+        const pageButtonRenderer = ({
+            page,
+            active,
+            onPageChange,
+        }) => {
+            const handleClick = (e) => {
+                e.preventDefault();
+                onPageChange(page);
+            };
+            const activeStyle = {};
+            if (active) {
+                activeStyle.backgroundColor = 'black';
+                activeStyle.color = 'white';
+            } else {
+                activeStyle.backgroundColor = 'gray';
+                activeStyle.color = 'black';
+            }
+            if (typeof page === 'string') {
+                activeStyle.backgroundColor = 'lightGray';
+                activeStyle.color = 'black';
+            }
+            return (
+                <li className="page-item">
+                    <a href="#" onClick={handleClick} style={activeStyle} className="btn-sm">{page}</a>
+                </li>
+            );
+        };
+        const sizePerPageRenderer = ({
+            options,
+            currSizePerPage,
+            onSizePerPageChange
+          }) => (
+            <div className="btn-group" role="group">
+              {
+                options.map((option) => {
+                  const isSelect = currSizePerPage === `${option.page}`;
+                  return (
+                    <button
+                      key={ option.text }
+                      type="button"
+                      onClick={ () => onSizePerPageChange(option.page) }
+                      className={ `btn ${isSelect ? 'btn-secondary' : 'btn-light'}` }
+                    >
+                      { option.text }
+                    </button>
+                  );
+                })
+              }
+            </div>
+          );
+        const options = {
+            sizePerPageRenderer,
+            pageButtonRenderer,
+            paginationSize: 4,
+            pageStartIndex: 0,
+            // alwaysShowAllBtns: true, // Always show next and previous button
+            // withFirstAndLast: false, // Hide the going to First and Last page button
+            // hideSizePerPage: true, // Hide the sizePerPage dropdown always
+            hidePageListOnlyOnePage: true, // Hide the pagination list when only one page
+            firstPageText: 'First',
+            prePageText: 'Back',
+            nextPageText: 'Next',
+            lastPageText: 'Last',
+            nextPageTitle: 'First page',
+            prePageTitle: 'Pre page',
+            firstPageTitle: 'Next page',
+            lastPageTitle: 'Last page',
+            showTotal: true,
+            disablePageTitle: true,
+            sizePerPageList: [{
+                text: '5', value: 5
+            }, {
+                text: '10', value: 10
+            },{
+                text: '15', value: 15
+            }, {
+                text: 'All', value: this.props.books.length
+            }]
+        };
+
         return (
             <div>
                 <BookLibraryBookModal
@@ -147,9 +231,11 @@ export default class BookLibraryBookDataGrid extends React.Component {
                 <BootstrapTable
                     keyField={"wut"}
                     filter={filterFactory()}
+                    pagination={paginationFactory(options)}
                     columns={columns}
                     data={displayed_books}
-                    rowStyle={this.find_owned} />
+                    rowStyle={this.find_owned}
+                    noDataIndication={indication} />
             </div>
         );
     }

@@ -38,15 +38,18 @@ urlpatterns = [
     path(r'api/musiclibrary/songs/<int:id>', views.song_detail),
     path(r'api/musiclibrary/songs/<int:id>/composers/<int:composer_id>', views.song_detail),
     path(r'api/musiclibrary/songs/<int:id>/lyracists/<int:lyracist_id>', views.song_detail),
-    #COMPOSERS
-    re_path(r'^api/musiclibrary/composers$', views.composers_list),
-    path(r'api/musiclibrary/composers/<int:id>', views.composer_detail),
+    # #COMPOSERS
+    # re_path(r'^api/musiclibrary/composers$', views.composers_list),
+    # path(r'api/musiclibrary/composers/<int:id>', views.composer_detail),
     #PUBLISHERS
     re_path(r'^api/musiclibrary/publishers$', views.publishers_list),
     path(r'api/musiclibrary/publishers/<int:id>', views.publisher_detail),
-    #LYRACISTS
-    re_path(r'^api/musiclibrary/lyracists$', views.lyracists_list),
-    path(r'api/musiclibrary/lyracists/<int:id>', views.lyracist_detail),
+    # #LYRACISTS
+    # re_path(r'^api/musiclibrary/lyracists$', views.lyracists_list),
+    # path(r'api/musiclibrary/lyracists/<int:id>', views.lyracist_detail),
+    # PEOPLE
+    re_path(r'^api/musiclibrary/people$', views.people_list),
+    path(r'api/musiclibrary/people/<int:id>', views.people_detail),
     #TESTERROR
     re_path(r'^api/booklibrary/throwerror$', views.throw_error),
 ]

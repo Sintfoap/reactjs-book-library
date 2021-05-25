@@ -77,7 +77,6 @@ export default class BookLibraryAuthors extends React.Component {
       item.delete = { id: item.id, on_click: this.handleDeleteModal };
     });
     function indication() {
-      toast.error("I'm a Teapot!")
       return "Table got nothing"
     }
     return (

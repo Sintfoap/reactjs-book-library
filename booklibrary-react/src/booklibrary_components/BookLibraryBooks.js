@@ -10,13 +10,15 @@ export default class BookLibraryBooks extends React.Component {
   constructor() {
     super();
     this.state = {
-      showModal: false
+      showModal: false,
+      keep_creating: false
     };
 
     this.check_if_ready_to_render = this.check_if_ready_to_render.bind(this);
     this.handleOpenModal = this.handleOpenModal.bind(this);
     this.handleCloseModal = this.handleCloseModal.bind(this);
     this.on_book_change = this.on_book_change.bind(this);
+    this.re_open = this.re_open.bind(this);
   }
 
   check_if_ready_to_render() {
@@ -24,13 +26,19 @@ export default class BookLibraryBooks extends React.Component {
       this.setState();
     }
   }
+
   handleOpenModal() {
     BookLibraryDatabase.resetState(this.check_if_ready_to_render);
     this.setState({ showModal: true });
   }
 
+  re_open() {
+    this.handleOpenModal();
+    this.setState({keep_creating:true})
+  }
+
   handleCloseModal() {
-    this.setState({ showModal: false });
+    this.setState({ showModal: false, keep_creating: false });
   }
 
   on_book_change() {
@@ -50,7 +58,9 @@ export default class BookLibraryBooks extends React.Component {
           authors={BookLibraryDatabase.authors}
           genres={BookLibraryDatabase.genres}
           series={BookLibraryDatabase.series}
-          showCreateButtons={true} />
+          showCreateButtons={true}
+          re_open={this.re_open}
+          keep_creating={this.state.keep_creating} />
         <div>
           <Button style={{ float: "right" }} outline color="success" className="Add_button" onClick={() => {
             this.setState({

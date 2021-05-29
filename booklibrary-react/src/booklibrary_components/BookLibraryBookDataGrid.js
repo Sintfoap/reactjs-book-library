@@ -117,6 +117,7 @@ export default class BookLibraryBookDataGrid extends React.Component {
             }
         });
         if (this.props.sort_field) {
+            // console.log(this.props.sort_field)
             displayed_books.sort(this.sort_books);
         }
         function indication() {
@@ -133,19 +134,19 @@ export default class BookLibraryBookDataGrid extends React.Component {
             };
             const activeStyle = {};
             if (active) {
-                activeStyle.backgroundColor = 'black';
+                activeStyle.backgroundColor = 'gray';
                 activeStyle.color = 'white';
             } else {
-                activeStyle.backgroundColor = 'gray';
+                activeStyle.backgroundColor = 'white';
                 activeStyle.color = 'black';
             }
             if (typeof page === 'string') {
-                activeStyle.backgroundColor = 'lightGray';
+                activeStyle.backgroundColor = 'white';
                 activeStyle.color = 'black';
             }
             return (
                 <li className="page-item">
-                    <a href="#" onClick={handleClick} style={activeStyle} className="btn-sm">{page}</a>
+                    <a href="#" onClick={handleClick} style={ activeStyle } className="btn-sm">{page}</a>
                 </li>
             );
         };
@@ -175,8 +176,8 @@ export default class BookLibraryBookDataGrid extends React.Component {
         const options = {
             sizePerPageRenderer,
             pageButtonRenderer,
-            paginationSize: 4,
-            pageStartIndex: 0,
+            paginationSize: 6,
+            pageStartIndex: 1,
             // alwaysShowAllBtns: true, // Always show next and previous button
             // withFirstAndLast: false, // Hide the going to First and Last page button
             // hideSizePerPage: true, // Hide the sizePerPage dropdown always
@@ -192,12 +193,12 @@ export default class BookLibraryBookDataGrid extends React.Component {
             showTotal: true,
             disablePageTitle: true,
             sizePerPageList: [{
-                text: '5', value: 5
-            }, {
                 text: '10', value: 10
             },{
                 text: '15', value: 15
-            }, {
+            },{
+                text: '20', value: 20
+            },{
                 text: 'All', value: this.props.books.length
             }]
         };

@@ -13,6 +13,7 @@ import BookLibraryGenreModal from "./BookLibraryGenreModal";
 import BookLibrarySeriesModal from "./BookLibrarySeriesModal";
 import { toast } from "react-toastify";
 import BookLibraryAuthorModal from "./BookLibraryAuthorModal";
+import { get } from "jquery";
 
 export default class BookLibraryBookModal extends React.Component {
     constructor(props) {
@@ -46,6 +47,7 @@ export default class BookLibraryBookModal extends React.Component {
                 showGenreModal: false,
                 showSeriesModal: false,
                 owned: this.props.viewing_book.owned,
+                keep_creating: this.props.keep_creating
             };
         } else {
             return {
@@ -60,6 +62,7 @@ export default class BookLibraryBookModal extends React.Component {
                 showGenreModal: false,
                 showSeriesModal: false,
                 owned: true,
+                keep_creating: this.props.keep_creating
             };
         }
     }
@@ -73,8 +76,9 @@ export default class BookLibraryBookModal extends React.Component {
         this.setState({ showAuthorModal: false });
     }
 
-    on_author_change() {
+    on_author_change(new_author) {
         this.handleCloseAuthorModal();
+        this.setState({ author: new_author }); // setting author to the newly created author
         BookLibraryDatabase.resetState(this.check_if_ready_to_render);
     }
 
@@ -118,6 +122,7 @@ export default class BookLibraryBookModal extends React.Component {
         }
     }
 
+
     onChange = e => {
         // console.log(e)
         if (e.target.name === "owned") {
@@ -125,10 +130,15 @@ export default class BookLibraryBookModal extends React.Component {
         } else {
             this.setState({ [e.target.name]: e.target.value });
         }
+        if (e.target.name === "keep_creating") {
+            this.setState({ [e.target.name]: e.target.checked })
+        } else {
+            this.setState({ [e.target.name]: e.target.value })
+        }
     };
 
     onDropdownChange = (id, item) => {
-        // console.log(id, item)
+        console.log(id, item)
         this.setState({ [item.type]: id });
     };
 
@@ -145,12 +155,18 @@ export default class BookLibraryBookModal extends React.Component {
         if (book_obj.number_in_series === "") {
             delete book_obj.number_in_series;
         }
-        console.log(this.state);
+        // console.log(this.state);
         axios.post(BOOK_API_URL + 'books', this.state).then(() => {
             toast.success("Successfully created Book: " + book_obj.title);
-            this.props.on_change();
+            if (this.state.keep_creating === true) {
+                this.props.on_change();
+                this.props.re_open();
+            } else {
+                this.props.on_change();
+            }
+
         }).catch((thrown) => {
-            console.log(thrown);
+            // console.log(thrown);
             toast.error(JSON.stringify(find_error_message_in_response(thrown.response)));
         });
     };
@@ -177,7 +193,8 @@ export default class BookLibraryBookModal extends React.Component {
                 {
                     value: author.id,
                     name: author.last_name + ", " + author.first_name,
-                    type: 'author'
+                    type: 'author',
+
                 });
         });
         return items;
@@ -330,6 +347,16 @@ export default class BookLibraryBookModal extends React.Component {
                                     checked={this.state.owned || false}
                                 />Owned
                             </FormGroup>
+                            {this.props.showCreateButtons &&
+                                <FormGroup check>
+                                    <Label check for="keep_creating"></Label>
+                                    <Input
+                                        type="checkbox"
+                                        name="keep_creating"
+                                        onChange={this.onChange}
+                                        checked={this.state.keep_creating || false}
+                                    />Keep Creating
+                            </FormGroup>}
                             <form onSubmit={e => { e.preventDefault(); }}><Button>Submit</Button>
                                 <Button onClick={this.props.close_modal} className={"close_modal_button"}>Cancel</Button></form>
                         </Form>

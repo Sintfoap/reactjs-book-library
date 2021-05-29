@@ -45,7 +45,7 @@ export default class BookLibraryAuthorModal extends React.Component {
     e.preventDefault();
     axios.post(BOOK_API_URL + 'authors', this.state).then(() => {
       toast.success("Successfully created Author: " + this.state.first_name + ", " + this.state.last_name);
-      this.props.on_change();
+      this.props.on_change(this.state);
     }).catch((thrown) => {
       console.log(thrown);
       toast.error(JSON.stringify(find_error_message_in_response(thrown.response)));

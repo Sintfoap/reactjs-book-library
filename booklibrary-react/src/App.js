@@ -14,8 +14,9 @@ import { ToastContainer } from "react-toastify"
 import Menu from "./components/Menu";
 import MusicLibraryHome from "./musiclibrary_components/MusicLibraryHome";
 import MusicLibraryHeader from "./musiclibrary_components/MusicLibraryHeader"
-import MusicLibraryComposerDetail from "./musiclibrary_components/MusicLibraryComposerDetail";
 import MusicLibraryPublisherDetail from "./musiclibrary_components/MusicLibraryPublisherDetail";
+import MusicLibraryPersonDetail from "./musiclibrary_components/MusicLibraryPersonDetail";
+import MusicLibraryNewSongPage from "./musiclibrary_components/MusicLibraryNewSongPage";
 
 class App extends Component {
   constructor() {
@@ -57,8 +58,10 @@ class App extends Component {
             <Route path="/booklibrary/series">
               <BookLibraryHome current_page="series" />
             </Route>
-            {/* <Route path="/musiclibrary/composers/:id" children={<MusicLibraryComposerDetail />}>
-            </Route> */}
+            <Route path="/musiclibrary/new/song" children={<MusicLibraryNewSongPage />}>
+            </Route>
+            <Route path="/musiclibrary/people/:id" children={<MusicLibraryPersonDetail />}>
+            </Route>
             <Route path="/musiclibrary/publishers/:id" children={<MusicLibraryPublisherDetail />}>
             </Route>
             <Route path="/musiclibrary/music">
@@ -67,6 +70,7 @@ class App extends Component {
             <Route path="/musiclibrary/people">
               <MusicLibraryHome current_page="people" />
             </Route>
+            
             {/* <Route path="/musiclibrary/composers">
               <MusicLibraryHome current_page="composers" />
             </Route> */}

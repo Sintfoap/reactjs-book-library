@@ -53,9 +53,9 @@ class Publisher(models.Model):
 
 class Song(models.Model):
     title = models.CharField(max_length=200)
-    composers = models.ManyToManyField(People, related_name="songs_composed")
-    arrangers = models.ManyToManyField(People, related_name="songs_arranged")
-    lyricists = models.ManyToManyField(People, related_name="songs_lirisized")
+    composers = models.ManyToManyField(People, related_name="songs_composed", blank=True)
+    arrangers = models.ManyToManyField(People, related_name="songs_arranged", blank=True)
+    lyricists = models.ManyToManyField(People, related_name="songs_lirisized", blank=True)
     publisher = models.ForeignKey(Publisher, on_delete=models.PROTECT, related_name='songs')
     notes = models.CharField(max_length=5000, blank=True, null=True)
 

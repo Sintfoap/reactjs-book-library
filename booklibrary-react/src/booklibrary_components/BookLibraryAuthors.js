@@ -1,6 +1,7 @@
 import React from "react";
 import BootstrapTable from 'react-bootstrap-table-next';
 import filterFactory, { textFilter } from 'react-bootstrap-table2-filter';
+import paginationFactory from 'react-bootstrap-table2-paginator';
 import { Button } from "reactstrap";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlusSquare } from '@fortawesome/free-solid-svg-icons';
@@ -79,6 +80,85 @@ export default class BookLibraryAuthors extends React.Component {
     function indication() {
       return "Table got nothing"
     }
+    const sizePerPageRenderer = ({
+      options,
+      currSizePerPage,
+      onSizePerPageChange
+    }) => (
+      <div className="btn-group" role="group">
+        {
+          options.map((option) => {
+            const isSelect = currSizePerPage === `${option.page}`;
+            return (
+              <button
+                key={option.text}
+                type="button"
+                onClick={() => onSizePerPageChange(option.page)}
+                className={`btn ${isSelect ? 'btn-secondary' : 'btn-light'}`}
+              >
+                { option.text}
+              </button>
+            );
+          })
+        }
+      </div>
+    );
+    const pageButtonRenderer = ({
+      page,
+      active,
+      onPageChange,
+  }) => {
+      const handleClick = (e) => {
+          e.preventDefault();
+          onPageChange(page);
+      };
+      const activeStyle = {};
+      if (active) {
+          activeStyle.backgroundColor = 'gray';
+          activeStyle.color = 'white';
+      } else {
+          activeStyle.backgroundColor = 'white';
+          activeStyle.color = 'black';
+      }
+      if (typeof page === 'string') {
+          activeStyle.backgroundColor = 'white';
+          activeStyle.color = 'black';
+      }
+      return (
+          <li className="page-item">
+              <a href="#" onClick={handleClick} style={ activeStyle } className="btn-sm">{page}</a>
+          </li>
+      );
+  };
+    const options = {
+      sizePerPageRenderer,
+      pageButtonRenderer,
+      paginationSize: 6,
+      pageStartIndex: 1,
+      // alwaysShowAllBtns: true, // Always show next and previous button
+      // withFirstAndLast: false, // Hide the going to First and Last page button
+      // hideSizePerPage: true, // Hide the sizePerPage dropdown always
+      hidePageListOnlyOnePage: true, // Hide the pagination list when only one page
+      firstPageText: 'First',
+      prePageText: 'Back',
+      nextPageText: 'Next',
+      lastPageText: 'Last',
+      nextPageTitle: 'First page',
+      prePageTitle: 'Pre page',
+      firstPageTitle: 'Next page',
+      lastPageTitle: 'Last page',
+      showTotal: true,
+      disablePageTitle: true,
+      sizePerPageList: [{
+        text: '10', value: 10
+      }, {
+        text: '15', value: 15
+      }, {
+        text: '20', value: 20
+      }, {
+        text: 'All', value: BookLibraryDatabase.authors.length
+      }]
+    };
     return (
       <div>
         <BookLibraryAuthorModal
@@ -105,10 +185,11 @@ export default class BookLibraryAuthors extends React.Component {
           }}><FontAwesomeIcon icon={faPlusSquare} /> New Author </Button>
           <BootstrapTable
             keyField={"wut"}
+            pagination={paginationFactory(options)}
             filter={filterFactory()}
             columns={columns}
-            data={BookLibraryDatabase.authors} 
-            noDataIndication={ indication }/>
+            data={BookLibraryDatabase.authors}
+            noDataIndication={indication} />
         </div>
       </div>
     );

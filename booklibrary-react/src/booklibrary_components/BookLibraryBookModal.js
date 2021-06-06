@@ -47,7 +47,7 @@ export default class BookLibraryBookModal extends React.Component {
                 showGenreModal: false,
                 showSeriesModal: false,
                 owned: this.props.viewing_book.owned,
-                keep_creating: this.props.keep_creating
+                keep_creating: false
             };
         } else {
             return {
@@ -62,7 +62,7 @@ export default class BookLibraryBookModal extends React.Component {
                 showGenreModal: false,
                 showSeriesModal: false,
                 owned: true,
-                keep_creating: this.props.keep_creating
+                keep_creating: false
             };
         }
     }
@@ -78,7 +78,7 @@ export default class BookLibraryBookModal extends React.Component {
 
     on_author_change(new_author) {
         this.handleCloseAuthorModal();
-        this.setState({ author: new_author }); // setting author to the newly created author
+        this.setState({ author: new_author.id }); // setting author to the newly created author
         BookLibraryDatabase.resetState(this.check_if_ready_to_render);
     }
 
@@ -118,7 +118,11 @@ export default class BookLibraryBookModal extends React.Component {
     componentDidUpdate(prevProps) {
         // comparison to avoid infinite loop
         if (this.props !== prevProps) {
-            this.setState(this.build_state());
+            console.log(this.props)
+            console.log(prevProps)
+            if(!this.state.keep_creating){
+                this.setState(this.build_state());
+            }
         }
     }
 
@@ -127,10 +131,7 @@ export default class BookLibraryBookModal extends React.Component {
         // console.log(e)
         if (e.target.name === "owned") {
             this.setState({ [e.target.name]: e.target.checked });
-        } else {
-            this.setState({ [e.target.name]: e.target.value });
-        }
-        if (e.target.name === "keep_creating") {
+        } else if (e.target.name === "keep_creating") {
             this.setState({ [e.target.name]: e.target.checked })
         } else {
             this.setState({ [e.target.name]: e.target.value })
@@ -138,7 +139,6 @@ export default class BookLibraryBookModal extends React.Component {
     };
 
     onDropdownChange = (id, item) => {
-        console.log(id, item)
         this.setState({ [item.type]: id });
     };
 
@@ -147,26 +147,25 @@ export default class BookLibraryBookModal extends React.Component {
         let book_obj = this.state;
         book_obj.genre = parseInt(book_obj.genre);
         book_obj.author = parseInt(book_obj.author);
-        book_obj.series = book_obj.series === " " ? "" : parseInt(book_obj.series);
-        book_obj.number_in_series = book_obj.number_in_series === " " ? "" : parseInt(book_obj.number_in_series);
-        if (book_obj.series === "") {
-            delete book_obj.series;
-        }
-        if (book_obj.number_in_series === "") {
-            delete book_obj.number_in_series;
-        }
+        book_obj.series = book_obj.series === " " || book_obj.series === undefined ? "" : parseInt(book_obj.series);
+        book_obj.number_in_series = book_obj.number_in_series === " " || book_obj.number_in_series === undefined ? "" : parseInt(book_obj.number_in_series);
+        // if (book_obj.series === "") {
+        //     delete book_obj.series;
+        // }
+        // if (book_obj.number_in_series === "") {
+        //     delete book_obj.number_in_series;
+        // }
         // console.log(this.state);
         axios.post(BOOK_API_URL + 'books', this.state).then(() => {
             toast.success("Successfully created Book: " + book_obj.title);
-            if (this.state.keep_creating === true) {
-                this.props.on_change();
-                this.props.re_open();
+            this.props.on_change();
+            if (this.state.keep_creating) {
+                this.setState({id: -1, notes: "", title: ""})
             } else {
-                this.props.on_change();
+                this.props.handleCloseModal();
             }
 
         }).catch((thrown) => {
-            // console.log(thrown);
             toast.error(JSON.stringify(find_error_message_in_response(thrown.response)));
         });
     };

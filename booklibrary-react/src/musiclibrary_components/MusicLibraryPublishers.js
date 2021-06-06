@@ -15,6 +15,7 @@ import axios from "axios";
 import BootstrapTable from "react-bootstrap-table-next";
 import { MUSIC_API_URL } from "../constants/index.js";
 import BuildDetailFormatter from "../components/Detail_formatter.js";
+import paginationFactory from "react-bootstrap-table2-paginator";
 
 ReactModal.setAppElement('#root')
 
@@ -78,6 +79,88 @@ export default class MusicLibraryPublishers extends React.Component {
             item.edit = { id: item.id, on_click: this.handleOpenModal };
             item.delete = { id: item.id, on_click: this.handleDeleteModal };
         });
+        function indication() {
+            return "Table got nothing"
+        }
+        const pageButtonRenderer = ({
+            page,
+            active,
+            onPageChange,
+        }) => {
+            const handleClick = (e) => {
+                e.preventDefault();
+                onPageChange(page);
+            };
+            const activeStyle = {};
+            if (active) {
+                activeStyle.backgroundColor = '#17a2b8';
+                activeStyle.color = 'white';
+            } else {
+                activeStyle.backgroundColor = 'white';
+                activeStyle.color = 'black';
+            }
+            if (typeof page === 'string') {
+                activeStyle.backgroundColor = 'white';
+                activeStyle.color = 'black';
+            }
+            return (
+                <li className="page-item">
+                    <a href="#" onClick={handleClick} style={ activeStyle } className="btn-sm">{page}</a>
+                </li>
+            );
+        };
+        const sizePerPageRenderer = ({
+            options,
+            currSizePerPage,
+            onSizePerPageChange
+          }) => (
+            <div className="btn-group" role="group">
+              {
+                options.map((option) => {
+                  const isSelect = currSizePerPage === `${option.page}`;
+                  return (
+                    <button
+                      key={ option.text }
+                      type="button"
+                      onClick={ () => onSizePerPageChange(option.page) }
+                      className={ `btn ${isSelect ? 'btn-info' : 'btn-light'}` }
+                    >
+                      { option.text }
+                    </button>
+                  );
+                })
+              }
+            </div>
+          );
+          const options = {
+            sizePerPageRenderer,
+            pageButtonRenderer,
+            paginationSize: 6,
+            pageStartIndex: 1,
+            // alwaysShowAllBtns: true, // Always show next and previous button
+            // withFirstAndLast: false, // Hide the going to First and Last page button
+            // hideSizePerPage: true, // Hide the sizePerPage dropdown always
+            hidePageListOnlyOnePage: true, // Hide the pagination list when only one page
+            firstPageText: 'First',
+            prePageText: 'Back',
+            nextPageText: 'Next',
+            lastPageText: 'Last',
+            nextPageTitle: 'First page',
+            prePageTitle: 'Pre page',
+            firstPageTitle: 'Next page',
+            lastPageTitle: 'Last page',
+            showTotal: true,
+            disablePageTitle: true,
+            sizePerPageList: [{
+                text: '10', value: 10
+            },{
+                text: '15', value: 15
+            },{
+                text: '20', value: 20
+            },{
+                text: 'All', value: MusicLibraryDatabase.publishers.length
+            }]
+        };
         return (
             <div>
                 <MusicLibraryPublisherModal
@@ -103,9 +186,11 @@ export default class MusicLibraryPublishers extends React.Component {
                 }}><FontAwesomeIcon icon={faPlusSquare} /> New Publisher </Button>
                 <BootstrapTable
                     keyField={"wut"}
+                    pagination={paginationFactory(options)}
                     filter={filterFactory()}
                     columns={columns}
                     data={MusicLibraryDatabase.publishers}
+                    noDataIndication={indication()}
                 />
             </div>
 

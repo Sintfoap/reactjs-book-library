@@ -1,11 +1,9 @@
 import React, { Component } from "react";
 import { Container } from "reactstrap";
 import MusicLibrarySongs from "./MusicLibrarySongs"
-import MusicLibraryComposers from "./MusicLibraryComposers"
 import loading_screen from '../components/Loading_screen'
 import MusicLibraryDatabase from './MusicLibraryDatabase'
 import MusicLibraryPublishers from "./MusicLibraryPublishers";
-import MusicLibraryLyracists from "./MusicLibraryLyracists";
 import MusicLibraryPeople from "./MusicLibraryPeople";
 
 export default class MusicLibraryHome extends Component {
@@ -53,24 +51,12 @@ export default class MusicLibraryHome extends Component {
                 on_change={() => { MusicLibraryDatabase.resetPeople(this.check_if_ready_to_render) }}
               />
             )
-        // case "composers":
-        //   return (
-        //     <MusicLibraryComposers
-        //       on_change={() => { MusicLibraryDatabase.resetComposers(this.check_if_ready_to_render) }}
-        //     />
-        //   )
         case "publishers":
           return (
             <MusicLibraryPublishers
               on_change={() => { MusicLibraryDatabase.resetPublishers(this.check_if_ready_to_render) }}
             />
           )
-        // case "lyracists":
-        //   return (
-        //     <MusicLibraryLyracists
-        //       on_change={() => { MusicLibraryDatabase.resetLyracists(this.check_if_ready_to_render) }}
-        //     />
-        //   )
       }
     } else {
       return loading_screen()

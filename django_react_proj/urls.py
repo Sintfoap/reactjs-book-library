@@ -17,6 +17,8 @@ from django.contrib import admin
 from django.urls import path, re_path
 from booklibrary import views
 
+from functools import partial
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     ##### BOOKLIBRARY
@@ -36,17 +38,12 @@ urlpatterns = [
     #SONGS
     re_path(r'^api/musiclibrary/songs$', views.songs_list),
     path(r'api/musiclibrary/songs/<int:id>', views.song_detail),
-    path(r'api/musiclibrary/songs/<int:id>/composers/<int:composer_id>', views.song_detail),
-    path(r'api/musiclibrary/songs/<int:id>/lyracists/<int:lyracist_id>', views.song_detail),
-    # #COMPOSERS
-    # re_path(r'^api/musiclibrary/composers$', views.composers_list),
-    # path(r'api/musiclibrary/composers/<int:id>', views.composer_detail),
+    path(r'api/musiclibrary/songs/<int:id>/composers/<int:relationship_id>', views.song_relationship_add_composers),
+    path(r'api/musiclibrary/songs/<int:id>/liricists/<int:relationship_id>', views.song_relationship_add_liricists),
+    path(r'api/musiclibrary/songs/<int:id>/arrangers/<int:relationship_id>', views.song_relationship_add_arrangers),
     #PUBLISHERS
     re_path(r'^api/musiclibrary/publishers$', views.publishers_list),
     path(r'api/musiclibrary/publishers/<int:id>', views.publisher_detail),
-    # #LYRACISTS
-    # re_path(r'^api/musiclibrary/lyracists$', views.lyracists_list),
-    # path(r'api/musiclibrary/lyracists/<int:id>', views.lyracist_detail),
     # PEOPLE
     re_path(r'^api/musiclibrary/people$', views.people_list),
     path(r'api/musiclibrary/people/<int:id>', views.people_detail),

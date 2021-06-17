@@ -118,8 +118,6 @@ export default class BookLibraryBookModal extends React.Component {
     componentDidUpdate(prevProps) {
         // comparison to avoid infinite loop
         if (this.props !== prevProps) {
-            console.log(this.props)
-            console.log(prevProps)
             if(!this.state.keep_creating){
                 this.setState(this.build_state());
             }

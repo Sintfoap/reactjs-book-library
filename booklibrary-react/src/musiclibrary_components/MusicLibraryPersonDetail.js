@@ -10,8 +10,9 @@ import { find_error_message_in_response } from "../constants/utils";
 import { toast } from "react-toastify";
 import { withRouter } from "react-router";
 import MusicLibraryPersonModal from "./MusicLibraryPersonModal"
+import MusicLibrarySongDataGrid from "./MusicLibrarySongDataGrid";
 
- class MusicLibraryPersonDetail extends React.Component {
+class MusicLibraryPersonDetail extends React.Component {
   constructor() {
     super();
     this.state = {
@@ -46,7 +47,7 @@ import MusicLibraryPersonModal from "./MusicLibraryPersonModal"
 
   componentDidMount() {
     if (!MusicLibraryDatabase.everything_loaded()) {
-        MusicLibraryDatabase.resetState(this.check_if_ready_to_render);
+      MusicLibraryDatabase.resetState(this.check_if_ready_to_render);
     } else {
       this.getPerson();
     }
@@ -63,14 +64,20 @@ import MusicLibraryPersonModal from "./MusicLibraryPersonModal"
     if (this.state.person_confirmation) {
       return (<div className="container">
         <div className="row" style={{ marginTop: 60, marginLeft: 0 }}><h1>{this.state.person.last_name + ', ' + this.state.person.first_name}</h1><Button href="#" outline color="primary" className="btn-sm edit-delete-button" onClick={() => this.handleOpenModal(this.state.author)} style={{ marginLeft: 13, marginTop: 13 }}><FontAwesomeIcon icon={faEdit} /></Button>
+          <MusicLibraryPersonModal
+            isOpen={this.state.showModal}
+            contentLabel="People Modal"
+            viewing_person={this.state.person}
+            new={false}
+            close_modal={this.handleCloseModal}
+            on_change={this.on_person_change} />
+          <MusicLibrarySongDataGrid
+            songs={MusicLibraryDatabase.songs}
+            on_change={this.props.on_change}
+            people={MusicLibraryDatabase.people}
+            publishers={MusicLibraryDatabase.publishers}
+          />
         </div>
-        <MusicLibraryPersonModal
-          isOpen={this.state.showModal}
-          contentLabel="People Modal"
-          viewing_person={this.state.person}
-          new={false}
-          close_modal={this.handleCloseModal}
-          on_change={this.on_person_change} />
       </div>);
     } else {
       return loading_screen();

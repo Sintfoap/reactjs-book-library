@@ -10,6 +10,7 @@ import { MUSIC_API_URL } from "../constants";
 import { find_error_message_in_response } from "../constants/utils";
 import BuildDetailFormatter from "../components/Detail_formatter";
 import { toast } from "react-toastify";
+import { ButtonGroup, Button } from "reactstrap";
 
 export default class MusicLibrarySongDataGrid extends React.Component {
     constructor(props) {
@@ -17,6 +18,9 @@ export default class MusicLibrarySongDataGrid extends React.Component {
         this.state = {
             showModal: false,
             showDeleteModal: false,
+            showComposerColumn: false,
+            showArrangerColumn: false,
+            showLyricistColumn: false,
             viewing_song: {}
         };
         this.handleOpenDeleteModal = this.handleOpenDeleteModal.bind(this);
@@ -65,20 +69,34 @@ export default class MusicLibrarySongDataGrid extends React.Component {
             return song.publisher_obj.category;
         }
     };
+    onChange = e => {
+        // console.log(e)
+        e.preventDefault();
+        if (e.target.name === "showComposerColumn") {
+            this.setState({ [e.target.name]: e.target.checked });
+        } else if (e.target.name === "showArrangerColumn") {
+            this.setState({ [e.target.name]: e.target.checked })
+        } else if (e.target.name === "showLyricistColumn") {
+            this.setState({ [e.target.name]: e.target.checked })
+        } else {
+            this.setState({ [e.target.name]: e.target.value })
+        }
+    };
 
     sort_songs = (a, b) => {
         return a[this.props.sort_field] - b[this.props.sort_field];
     };
 
     render() {
-
         const columns = [
-            { dataField: 'title', text: 'Title', filter: textFilter({ delay: 0 }), formatter: BuildDetailFormatter('/musiclibrary/songs/') },
-            { dataField: 'notes', text: 'Notes', style: { width: 250, "fontStyle": "italic" }, filter: textFilter({ delay: 0 }) },
-            { dataField: 'composer_name', text: 'Composer', filter: textFilter({ delay: 0 }), formatter: BuildDetailFormatter('/musiclibrary/composer/', 'composer') },
-            { dataField: 'publisher_name', text: 'Publisher', filter: textFilter({ delay: 0 }), formatter: BuildDetailFormatter('/musiclibrary/publisher/', 'publisher') },
-            { dataField: 'edit', resizable: false, text: 'Edit', style: { width: 55 }, formatter: EditorFormatter },
-            { dataField: 'delete', resizable: false, text: 'Delete', style: { width: 60 }, formatter: DeleteFormatter }
+            { dataField: 'title', text: 'Title ', filter: textFilter({ delay: 0 }), formatter: BuildDetailFormatter('/musiclibrary/songs/') },
+            { dataField: 'notes', text: 'Notes ', style: { width: 250, "fontStyle": "italic" }, filter: textFilter({ delay: 0 }) },
+            { dataField: 'composer_name', text: 'Composer ', filter: textFilter({ delay: 0 }), formatter: BuildDetailFormatter('/musiclibrary/composer/', 'composer'), hidden: !this.state.showComposerColumn },
+            { dataField: 'arranger_name', text: 'Arranger ', filter: textFilter({ delay: 0 }), formatter: BuildDetailFormatter('/musiclibrary/arranger/', 'arranger'), hidden: !this.state.showArrangerColumn },
+            { dataField: 'lyricist_name', text: 'Lyricist ', filter: textFilter({ delay: 0 }), formatter: BuildDetailFormatter('/musiclibrary/lyricist/', 'lyricist'), hidden: !this.state.showLyricistColumn },
+            { dataField: 'publisher_name', text: 'Publisher ', filter: textFilter({ delay: 0 }), formatter: BuildDetailFormatter('/musiclibrary/publisher/', 'publisher') },
+            { dataField: 'edit', resizable: false, text: 'Edit ', style: { width: 55 }, formatter: EditorFormatter },
+            { dataField: 'delete', resizable: false, text: 'Delete ', style: { width: 60 }, formatter: DeleteFormatter }
         ];
         let displayed_songs = [];
         this.props.songs.forEach((item) => {
@@ -89,16 +107,13 @@ export default class MusicLibrarySongDataGrid extends React.Component {
         });
         return (
             <div>
-                {/* <MusicLibrarySongModal
-                    isOpen={this.state.showModal}
-                    contentLabel="Song Modal"
-                    viewing_song={this.state.viewing_song}
-                    new={false}
-                    close_modal={this.handleCloseModal}
-                    on_change={this.on_song_change}
-                    composers={this.props.composers}
-                    publishers={this.props.publishers}
-                /> */}
+                <div className="row">
+                    <ButtonGroup style={{marginBottom: "1.5%", marginTop: "1.5%"}} className="col-6">
+                        <Button color="outline-secondary" onClick={() => this.setState({ showComposerColumn: !this.state.showComposerColumn })} active={this.state.showComposerColumn === true}>Show Composers</Button>
+                        <Button color="outline-secondary" onClick={() => this.setState({ showArrangerColumn: !this.state.showArrangerColumn })} active={this.state.showArrangerColumn === true}>Show Arrangers</Button>
+                        <Button color="outline-secondary" onClick={() => this.setState({ showLyricistColumn: !this.state.showLyricistColumn })} active={this.state.showLyricistColumn === true}>Show Lyricists</Button>
+                    </ButtonGroup>
+                </div>
                 <DeleteModal
                     isOpen={this.state.showDeleteModal}
                     contentLabel="Delete Song"

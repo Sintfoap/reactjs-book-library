@@ -11,4 +11,4 @@ function BuildDetailFormatter(prefix, id_attribute="id") {
     }
 }
 
-export default BuildDetailFormatter
+export default BuildDetailFormatter 

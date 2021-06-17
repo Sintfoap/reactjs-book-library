@@ -65,6 +65,7 @@ export default class BookLibraryBooks extends React.Component {
             authors={BookLibraryDatabase.authors}
             genres={BookLibraryDatabase.genres}
             series={BookLibraryDatabase.series}
+            sort_field={"title"}
             filter_unowned={true} />
         </div>
       </div>

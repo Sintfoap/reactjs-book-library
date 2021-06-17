@@ -10,6 +10,7 @@ import { find_error_message_in_response } from "../constants/utils";
 import { withRouter } from "react-router";
 import MusicLibraryPublisherModal from "./MusicLibraryPublisherModal";
 import MusicLibraryDatabase from "./MusicLibraryDatabase";
+import MusicLibrarySongDataGrid from "./MusicLibrarySongDataGrid";
 
 export class MusicLibraryPublisherDetail extends React.Component {
   constructor() {
@@ -46,7 +47,7 @@ export class MusicLibraryPublisherDetail extends React.Component {
 
   componentDidMount() {
     if (!MusicLibraryDatabase.everything_loaded()) {
-        MusicLibraryDatabase.resetState(this.check_if_ready_to_render);
+      MusicLibraryDatabase.resetState(this.check_if_ready_to_render);
     } else {
       this.getPublisher();
     }
@@ -71,6 +72,12 @@ export class MusicLibraryPublisherDetail extends React.Component {
           new={this.state.creating_new_publisher}
           close_modal={this.handleCloseModal}
           on_change={this.on_publisher_change} />
+        <MusicLibrarySongDataGrid
+          songs={MusicLibraryDatabase.songs}
+          on_change={this.props.on_change}
+          people={MusicLibraryDatabase.people}
+          publishers={MusicLibraryDatabase.publishers}
+        />
       </div>);
     } else {
       return loading_screen;

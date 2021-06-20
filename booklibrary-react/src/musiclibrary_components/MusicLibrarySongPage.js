@@ -9,6 +9,7 @@ import { Button, Form, FormGroup, Input, Label } from "reactstrap";
 import BuildDetailFormatter from "../components/Detail_formatter";
 import { MUSIC_API_URL } from "../constants";
 import { find_error_message_in_response } from "../constants/utils";
+import MusicLibrarySongPeopleDataGrid from "./MusicLibrarySongPeopleDatagrid"
 
 import MusicLibraryDatabase from "./MusicLibraryDatabase";
 ReactModal.setAppElement('#root')
@@ -26,6 +27,12 @@ export default class MusicLibrarySongPage extends React.Component {
         // this.handleOpenPublisherModal = this.handleOpenPUblisherModal.bind(this);
         // this.handleClosePublisherModal = this.handleClosePublisherModal.bind(this);
         // this.on_publisher_change = this.on_publisher_change.bind(this);
+        this.add_composer = this.add_composer.bind(this);
+        this.remove_composer = this.remove_composer.bind(this);
+        this.add_arranger = this.add_arranger.bind(this);
+        this.remove_arranger = this.remove_arranger.bind(this);
+        this.add_lyricist = this.add_lyricist.bind(this);
+        this.remove_lyricist = this.remove_lyricist.bind(this);
     }
 
     build_state() {
@@ -49,43 +56,43 @@ export default class MusicLibrarySongPage extends React.Component {
             id: -1,
             title: "",
             notes: "",
-            composers: undefined,
-            arrangers: undefined,
-            lyricists: undefined,
+            composers: new Set(),
+            arrangers: new Set(),
+            lyricists: new Set(),
             publisher: "",
-            showPersonModal: false,
-            showPublisherModal: false,
+            saved: false
             // owned: true,
-            // keep_creating: false
         };
         // } 
+    }
+
+    add_composer(composer){
+        this.setState({ composers: this.state.composers.add(composer)})
+    }
+    remove_composer(composer){
+        this.setState({ composers: this.state.composers.delete(composer)})
+    }
+
+    add_arranger(arranger){
+        this.setState({ arrangers: this.state.arrangers.add(arranger)})
+    }
+    remove_arranger(arranger){
+        this.setState({ arrangers: this.state.arrangers.delete(arranger)})
+    }
+
+    add_lyricist(lyricist){
+        this.setState({ lyricists: this.state.lyricists.add(lyricist)})
+    }
+    remove_lyricist(lyricist){
+        this.setState({ lyricists: this.state.lyricists.delete(lyricist)})
     }
 
     onDropdownChange = (id, item) => {
         this.setState({ [item.type]: id });
     };
 
-    onComposerDropdownChange = (id, item) => {
-        this.setState({ composers: id });
-    };
-
-    onArrangerDropdownChange = (id, item) => {
-        this.setState({ arrangers: id });
-    };
-
-    onLyricistDropdownChange = (id, item) => {
-        this.setState({ lyricists: id });
-    };
-
     onChange = e => {
-        // console.log(e)
-        // if (e.target.name === "owned") {
-        // this.setState({ [e.target.name]: e.target.checked });
-        // } else if (e.target.name === "keep_creating") {
-        // this.setState({ [e.target.name]: e.target.checked })
-        // } else {
         this.setState({ [e.target.name]: e.target.value })
-        // }
     };
 
     publishers_dropdown_list() {
@@ -102,70 +109,31 @@ export default class MusicLibrarySongPage extends React.Component {
         return items;
     }
 
-    people_dropdown_list() {
-        let items = [];
-        MusicLibraryDatabase.people.forEach(person => {
-            items.push(
-                {
-                    value: person.id,
-                    name: person.last_name + ", " + person.first_name,
-                    type: 'person',
-
-                });
-        });
-        return items;
-    }
-
     check_if_ready_to_render() {
         if (MusicLibraryDatabase.everything_loaded()) {
             this.setState();
         }
-    }
-    on_checkbox_select() {
-    }
-
-    checkboxFormatter() {
-        return <div>
-            <input type="checkbox" onClick={this.on_checkbox_select} />
-            <span> Owned</span>
-        </div>
     }
 
     createSong = e => {
         e.preventDefault();
         console.log("here")
         let song_obj = this.state;
-        song_obj.composers = parseInt(song_obj.composers);
-        song_obj.arrangers = parseInt(song_obj.arrangers);
-        song_obj.lyricists = parseInt(song_obj.lyricists);
         song_obj.publisher = parseInt(song_obj.publisher);
-        axios.post(MUSIC_API_URL + 'songs', this.state).then(() => {
+        axios.post(MUSIC_API_URL + 'songs', this.state).then((response) => {
             toast.success("Successfully created Song: " + song_obj.title);
             this.props.on_change();
-            // if (this.state.keep_creating) {
-            // this.setState({id: -1, notes: "", title: ""})
-            // } else {
-            this.props.close_song_page();
-            // }
-
+            this.setState({saved: true, id: response.data.id})
         }).catch((thrown) => {
             toast.error(JSON.stringify(find_error_message_in_response(thrown.response)));
         });
     };
 
     render() {
-        const Columns = [
-            { dataField: 'checkbox', text: 'Select ', formatter: this.checkboxFormatter },
-            { dataField: 'full_name', text: 'Name ', filter: textFilter({ delay: 0 }), formatter: BuildDetailFormatter('/musiclibrary/people/') },
-          ]
-          let displayed_person = MusicLibraryDatabase.people.slice();
-          displayed_person.forEach((item) => {
-            item.full_name = item.last_name + ", " + item.first_name;
-          });
         return (
             <div className="container">
-                <Form onSubmit={this.createSong}>
-                    <FormGroup>
+                <Form onSubmit={this.createSong} className="row">
+                    <FormGroup className="col-12">
                         <Label for="title">Title:</Label>
                         <Input
                             type="text"
@@ -175,55 +143,17 @@ export default class MusicLibrarySongPage extends React.Component {
                             required={true}
                         />
                     </FormGroup>
-
-                    <FormGroup>
-                        <Label className="col-6">
-                            <BootstrapTable
-                                keyField={"wut"}
-                                filter={filterFactory()}
-                                data={displayed_person}
-                                columns={Columns}
-                            // closeOnSelect={false}
-                            // printOptions="on-focus"
-                            // multiple
-                            // placeholder="Select Lyricist(s)"
-                            // value={this.state.lyricists || ""}
-                            // options={this.people_dropdown_list()}
-                            // onChange={this.onLyricistDropdownChange}
-                            />
-                        </Label>
-                        <Label className="col-6">
-                            <BootstrapTable
-                                keyField={"wut"}
-                                filter={filterFactory()}
-                                data={displayed_person}
-                                columns={Columns}
-                            // closeOnSelect={false}
-                            // printOptions="on-focus"
-                            // multiple
-                            // placeholder="Select Composer(s)"
-                            // value={this.state.composers || ""}
-                            // options={this.people_dropdown_list()}
-                            // onChange={this.onComposerDropdownChange}
-                            />
-                        </Label>
+                    <FormGroup className="col-12">
+                        <Label for="notes">Notes:</Label>
+                        <Input
+                            type="textarea"
+                            name="notes"
+                            onChange={this.onChange}
+                            value={this.state.notes || ""}
+                            required={true}
+                        />
                     </FormGroup>
-                    <FormGroup>
-                        <Label className="col-6" for="arrangers" style={{ float: "right" }}>
-                            <BootstrapTable
-                                keyField={"wut"}
-                                filter={filterFactory()}
-                                columns={Columns}
-                                data={displayed_person}
-                            // name="arrangers"
-                            // closeOnSelect={false}
-                            // printOptions="on-focus"
-                            // multiple
-                            // placeholder="Select Arranger(s)"
-                            // value={this.state.arrangers || ""}
-                            // options={this.people_dropdown_list()}
-                            // onChange={this.onArrangerDropdownChange}
-                            /></Label>
+                    <FormGroup className="col-12">
                         <Label className="col-6" for="publisher">
                             <SelectSearch
                                 name="publisher"
@@ -234,17 +164,41 @@ export default class MusicLibrarySongPage extends React.Component {
                                 onChange={this.onDropdownChange}
                             /></Label>
                     </FormGroup>
-                    <FormGroup>
-                        <Label for="notes">Notes:</Label>
-                        <Input
-                            type="textarea"
-                            name="notes"
-                            onChange={this.onChange}
-                            value={this.state.notes || ""}
-                            required={true}
-                        />
-                    </FormGroup>
-                    <form onSubmit={e => { e.preventDefault(); }}><Button>Submit</Button>
+
+                    {this.state.saved == true && 
+                    <FormGroup className="col-12">
+                        <Label className="col-6">
+                            <MusicLibrarySongPeopleDataGrid
+                                song_id={this.state.id}
+                                relationship={"composers"}
+                                related_people={this.state.composers}
+                                add_relationship_function={this.add_composer}
+                                remove_relationship_function={this.remove_composer}
+                            />
+                        </Label>
+                        <Label className="col-6">
+                            <MusicLibrarySongPeopleDataGrid
+                                song_id={this.state.id}
+                                relationship={"arrangers"}
+                                related_people={this.state.arrangers}
+                                add_relationship_function={this.add_arranger}
+                                remove_relationship_function={this.remove_arranger}
+                            />
+                        </Label>
+                    </FormGroup> }
+                    {this.state.saved == true && 
+                    <FormGroup className="col-12">
+                        <Label className="col-6" for="arrangers">
+                            <MusicLibrarySongPeopleDataGrid
+                                song_id={this.state.id}
+                                relationship={"lyricists"}
+                                related_people={this.state.lyricists}
+                                add_relationship_function={this.add_lyricist}
+                                remove_relationship_function={this.remove_lyricist}
+                            /></Label>
+                    </FormGroup> }
+                    <br></br>
+                    <form onSubmit={e => { e.preventDefault(); }} className="col-12"><Button>Submit</Button>
                         <Button onClick={this.props.close_song_page} className={"close_modal_button"}>Cancel</Button></form>
                 </Form>
             </div>

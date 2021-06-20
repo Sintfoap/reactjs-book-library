@@ -39,7 +39,7 @@ urlpatterns = [
     re_path(r'^api/musiclibrary/songs$', views.songs_list),
     path(r'api/musiclibrary/songs/<int:id>', views.song_detail),
     path(r'api/musiclibrary/songs/<int:id>/composers/<int:relationship_id>', views.song_relationship_add_composers),
-    path(r'api/musiclibrary/songs/<int:id>/liricists/<int:relationship_id>', views.song_relationship_add_liricists),
+    path(r'api/musiclibrary/songs/<int:id>/lyricists/<int:relationship_id>', views.song_relationship_add_liricists),
     path(r'api/musiclibrary/songs/<int:id>/arrangers/<int:relationship_id>', views.song_relationship_add_arrangers),
     #PUBLISHERS
     re_path(r'^api/musiclibrary/publishers$', views.publishers_list),

@@ -20,7 +20,6 @@ export default class MusicLibrarySongs extends React.Component {
     this.check_if_ready_to_render = this.check_if_ready_to_render.bind(this);
     this.handleOpenSongPage = this.handleOpenSongPage.bind(this);
     this.handleCloseSongPage = this.handleCloseSongPage.bind(this);
-    this.on_song_change = this.on_song_change.bind(this);
   }
 
   check_if_ready_to_render() {
@@ -38,19 +37,13 @@ export default class MusicLibrarySongs extends React.Component {
     this.setState({ showSongPage: false });
   }
 
-  on_song_change() {
-    this.handleCloseSongPage()
-    this.props.on_change();
-  }
   render() {
     if (this.state.showSongPage) {
       return <div><MusicLibrarySongPage
         contentLabel="Song Modal"
         new={true}
         close_song_page={this.handleCloseSongPage}
-        on_change={this.on_song_change}
-        people={MusicLibraryDatabase.people}
-        publishers={MusicLibraryDatabase.publishers}
+        on_change={this.props.on_change}
         showCreateButtons={true} /></div>
     } else {
       return (

@@ -59,14 +59,26 @@ export default class MusicLibrarySongDataGrid extends React.Component {
 
 
     find_composer = (song) => {
-        if (song.composer_obj) {
-            return song.composer_obj.last_name + ", " + song.composer_obj.first_name;
+        if (song.composers_list) {
+            return song.composers_list.map((a) => a.last_name + ", " + a.first_name).join("; ")
+        }
+    };
+
+    find_arranger = (song) => {
+        if (song.arrangers_list) {
+            return song.arrangers_list.map((a) => a.last_name + ", " + a.first_name).join("; ")
+        }
+    };
+
+    find_lyricist = (song) => {
+        if (song.lyricists_list) {
+            return song.lyricists_list.map((a) => a.last_name + ", " + a.first_name).join("; ")
         }
     };
 
     find_publisher = (song) => {
         if (song.publisher_obj) {
-            return song.publisher_obj.category;
+            return song.publisher_obj.name;
         }
     };
     onChange = e => {
@@ -91,9 +103,9 @@ export default class MusicLibrarySongDataGrid extends React.Component {
         const columns = [
             { dataField: 'title', text: 'Title ', filter: textFilter({ delay: 0 }), formatter: BuildDetailFormatter('/musiclibrary/songs/') },
             { dataField: 'notes', text: 'Notes ', style: { width: 250, "fontStyle": "italic" }, filter: textFilter({ delay: 0 }) },
-            { dataField: 'composer_name', text: 'Composer ', filter: textFilter({ delay: 0 }), formatter: BuildDetailFormatter('/musiclibrary/composer/', 'composer'), hidden: !this.state.showComposerColumn },
-            { dataField: 'arranger_name', text: 'Arranger ', filter: textFilter({ delay: 0 }), formatter: BuildDetailFormatter('/musiclibrary/arranger/', 'arranger'), hidden: !this.state.showArrangerColumn },
-            { dataField: 'lyricist_name', text: 'Lyricist ', filter: textFilter({ delay: 0 }), formatter: BuildDetailFormatter('/musiclibrary/lyricist/', 'lyricist'), hidden: !this.state.showLyricistColumn },
+            { dataField: 'composer_name', text: 'Composer ', filter: textFilter({ delay: 0 }), hidden: !this.state.showComposerColumn },
+            { dataField: 'arranger_name', text: 'Arranger ', filter: textFilter({ delay: 0 }), hidden: !this.state.showArrangerColumn },
+            { dataField: 'lyricist_name', text: 'Lyricist ', filter: textFilter({ delay: 0 }), hidden: !this.state.showLyricistColumn },
             { dataField: 'publisher_name', text: 'Publisher ', filter: textFilter({ delay: 0 }), formatter: BuildDetailFormatter('/musiclibrary/publisher/', 'publisher') },
             { dataField: 'edit', resizable: false, text: 'Edit ', style: { width: 55 }, formatter: EditorFormatter },
             { dataField: 'delete', resizable: false, text: 'Delete ', style: { width: 60 }, formatter: DeleteFormatter }
@@ -101,9 +113,12 @@ export default class MusicLibrarySongDataGrid extends React.Component {
         let displayed_songs = [];
         this.props.songs.forEach((item) => {
             item.composer_name = this.find_composer(item);
+            item.arranger_name = this.find_arranger(item);
+            item.lyricist_name = this.find_lyricist(item);
             item.publisher_name = this.find_publisher(item);
             item.edit = { id: item.id, on_click: this.handleOpenModal };
             item.delete = { id: item.id, on_click: this.handleOpenDeleteModal };
+            displayed_songs.push(item)
         });
         return (
             <div>

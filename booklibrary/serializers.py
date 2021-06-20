@@ -93,8 +93,7 @@ class PublisherEditSerializer(serializers.ModelSerializer):
 class SongEditSerializer(serializers.ModelSerializer):
     class Meta:
         model = Song
-        fields = ('id', 'title', 'composers',
-                  'arrangers', 'publisher', 'lyricists')
+        fields = ('id', 'title', 'notes', 'publisher')
 
 
 class SongGetSerializer(serializers.ModelSerializer):
@@ -117,7 +116,7 @@ class SongGetSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Song
-        fields = ('id', 'title', 'publisher', 'composers', 'arrangers', 'lyricists',
+        fields = ('id', 'title', 'notes', 'publisher', 'composers', 'arrangers', 'lyricists',
                   'publisher_obj', 'composers_list', 'arrangers_list', 'lyricists_list')
 
 

@@ -1,4 +1,4 @@
-.Nav_button  {
+.Nav_button {
     margin-left: 5px;
 }
 
@@ -13,8 +13,7 @@
     width: 31px;
 }
 
-input.delete-modal-error
-{
+input.delete-modal-error {
     border: 1px solid #eb516d;
 }
 
@@ -24,4 +23,22 @@ button.close_modal_button {
 
 div.select-search {
     width: 100%;
+}
+
+.btn-outline-green {
+    background-color: white;
+    border-color: #037d41;
+    color: #037d41;
+}
+
+.btn-green {
+    background-color: #037d41;
+    color: white;
+}
+
+.btn-outline-green:not(:disabled):not(.disabled).active,
+.btn-outline-green:hover {
+    background-color: #037d41;
+    border-color: #037d41;
+    color: #ffff;
 }

@@ -9,7 +9,7 @@ class Menu extends React.Component {
                 src={logo}
                 alt="Logo" />
                 <div className="row" style={{justifyContent:"center", marginTop:"10%", textAlign:"center"}}>
-                    <NavLink className="card btn btn-outline-secondary active" style={{ width:220, height:180, marginRight: "15%", justifyContent:'center'}} to="/booklibrary/books">Book Library</NavLink>
+                    <NavLink className="card btn btn-outline-green active" style={{ width:220, height:180, marginRight: "15%", justifyContent:'center'}} to="/booklibrary/books">Book Library</NavLink>
                     <NavLink className="card btn btn-outline-info active" style={{ width:220, height:180, justifyContent:'center'}} to="/musiclibrary/music">Music Library</NavLink>
                 </div>
             </div>

@@ -4,6 +4,9 @@ import { Link } from "react-router-dom";
 
 function BuildDetailFormatter(prefix, id_attribute="id") {
     return (value, row) => {
+        console.log(row)
+        console.log(id_attribute)
+        console.log(row[id_attribute])
         if(row[id_attribute]){
             return <Link style={{color: 'black'}} to={prefix + row[id_attribute].toString()}>{value}</Link>
         }

@@ -32,16 +32,16 @@ export default class BookLibraryHeader extends React.Component {
                 alt="Logo" />
             </NavLink>
             <div>
-              <i><h5 style={{ display: 'inline' }}><Link style={{ color: 'black' }} to="/booklibrary/books">Library</Link></h5></i>
+              <i><h5 style={{ display: 'inline' }}><Link style={{ color: '#037d41' }} to="/booklibrary/books">Library</Link></h5></i>
               <h5 style={{ display: 'inline' }}> | </h5>
-              <i><h5 style={{ display: 'inline' }}><Link style={{ color: 'black' }} to="/musiclibrary/music">Music</Link></h5></i>
+              <i><h5 style={{ display: 'inline' }}><Link style={{ color: '#037d41' }} to="/musiclibrary/music">Music</Link></h5></i>
             </div>
           </div>
           <Navbar style={{ marginLeft: 10 }} className="row" bg="dark" variant="dark">
-            <NavLink className="btn btn-outline-secondary Nav_button" to="/booklibrary/books">Books</NavLink>
-            <NavLink className="btn btn-outline-secondary Nav_button" to="/booklibrary/authors">Authors</NavLink>
-            <NavLink className="btn btn-outline-secondary Nav_button" to="/booklibrary/genres">Genres</NavLink>
-            <NavLink className="btn btn-outline-secondary Nav_button" to="/booklibrary/series">Series</NavLink>
+            <NavLink className="btn btn-outline-green Nav_button" to="/booklibrary/books">Books</NavLink>
+            <NavLink className="btn btn-outline-green Nav_button" to="/booklibrary/authors">Authors</NavLink>
+            <NavLink className="btn btn-outline-green Nav_button" to="/booklibrary/genres">Genres</NavLink>
+            <NavLink className="btn btn-outline-green Nav_button" to="/booklibrary/series">Series</NavLink>
           </Navbar>
         </div>
       </Container>

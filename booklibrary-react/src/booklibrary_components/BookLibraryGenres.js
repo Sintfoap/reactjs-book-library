@@ -98,7 +98,7 @@ export default class BookLibraryGenres extends React.Component {
                 key={option.text}
                 type="button"
                 onClick={() => onSizePerPageChange(option.page)}
-                className={`btn ${isSelect ? 'btn-secondary' : 'btn-light'}`}
+                className={`btn ${isSelect ? 'btn-green' : 'btn-light'}`}
               >
                 { option.text}
               </button>
@@ -118,7 +118,7 @@ export default class BookLibraryGenres extends React.Component {
       };
       const activeStyle = {};
       if (active) {
-          activeStyle.backgroundColor = 'gray';
+          activeStyle.backgroundColor = 'green';
           activeStyle.color = 'white';
       } else {
           activeStyle.backgroundColor = 'white';
@@ -180,7 +180,7 @@ export default class BookLibraryGenres extends React.Component {
           item_type={"Genre"}
           item_desc={this.state.viewing_genre.category}
           on_change={this.on_delete_genre_change} />
-        <Button style={{ float: "right" }} outline color="success" className="Add_button" onClick={() => {
+        <Button style={{ float: "right" }} outline color="green" className="Add_button" onClick={() => {
           this.setState({
             showModal: true,
             creating_new_genre: true

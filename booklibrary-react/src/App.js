@@ -16,6 +16,7 @@ import MusicLibraryHome from "./musiclibrary_components/MusicLibraryHome";
 import MusicLibraryHeader from "./musiclibrary_components/MusicLibraryHeader"
 import MusicLibraryPublisherDetail from "./musiclibrary_components/MusicLibraryPublisherDetail";
 import MusicLibraryPersonDetail from "./musiclibrary_components/MusicLibraryPersonDetail";
+import MusicLibrarySongDetail from "./musiclibrary_components/MusicLibrarySongDetail";
 
 class App extends Component {
   constructor() {
@@ -60,6 +61,8 @@ class App extends Component {
             <Route path="/musiclibrary/people/:id" children={<MusicLibraryPersonDetail />}>
             </Route>
             <Route path="/musiclibrary/publishers/:id" children={<MusicLibraryPublisherDetail />}>
+            </Route>
+            <Route path="/musiclibrary/songs/:id" children={<MusicLibrarySongDetail />}>
             </Route>
             <Route path="/musiclibrary/music">
               <MusicLibraryHome current_page="songs" />

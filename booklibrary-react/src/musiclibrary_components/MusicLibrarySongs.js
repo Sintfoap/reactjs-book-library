@@ -49,7 +49,7 @@ export default class MusicLibrarySongs extends React.Component {
       return (
         <div>
           <div>
-            <Button style={{ float: "right" }} outline color="success" className="Add_button"
+            <Button style={{ float: "right" }} outline color="info" className="Add_button"
               onClick={() => {
                 this.setState({
                   showSongPage: true,

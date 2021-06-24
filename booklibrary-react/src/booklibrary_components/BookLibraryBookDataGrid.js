@@ -134,7 +134,7 @@ export default class BookLibraryBookDataGrid extends React.Component {
             };
             const activeStyle = {};
             if (active) {
-                activeStyle.backgroundColor = 'gray';
+                activeStyle.backgroundColor = 'green';
                 activeStyle.color = 'white';
             } else {
                 activeStyle.backgroundColor = 'white';
@@ -164,7 +164,7 @@ export default class BookLibraryBookDataGrid extends React.Component {
                       key={ option.text }
                       type="button"
                       onClick={ () => onSizePerPageChange(option.page) }
-                      className={ `btn ${isSelect ? 'btn-secondary' : 'btn-light'}` }
+                      className={ `btn ${isSelect ? 'btn-green' : 'btn-light'}` }
                     >
                       { option.text }
                     </button>

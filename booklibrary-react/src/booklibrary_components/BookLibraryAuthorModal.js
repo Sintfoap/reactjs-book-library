@@ -95,8 +95,8 @@ export default class BookLibraryAuthorModal extends React.Component {
                 onChange={this.onChange}
                 value={this.state.last_name || ""} />
             </FormGroup>
-            <Button>Submit</Button>
-            <Button onClick={this.props.close_modal} className={"close_modal_button"}>Cancel</Button>
+            <Button className={"btn-outline-green"}>Submit</Button>
+            <Button onClick={this.props.close_modal} className={"close_modal_button btn-outline-green"}>Cancel</Button>
           </Form>
         </ReactModal>
       </div>

@@ -4,7 +4,6 @@ import filterFactory, { textFilter } from 'react-bootstrap-table2-filter';
 import axios from "axios";
 // import MusicLibrarySongModal from "./MusicLibrarySongModal";
 import DeleteModal from "../components/Delete_modal";
-import EditorFormatter from "../components/Edit_formatter.js";
 import DeleteFormatter from "../components/Delete_formater.js";
 import { MUSIC_API_URL } from "../constants";
 import { find_error_message_in_response } from "../constants/utils";
@@ -107,16 +106,14 @@ export default class MusicLibrarySongDataGrid extends React.Component {
             { dataField: 'arranger_name', text: 'Arranger ', filter: textFilter({ delay: 0 }), hidden: !this.state.showArrangerColumn },
             { dataField: 'lyricist_name', text: 'Lyricist ', filter: textFilter({ delay: 0 }), hidden: !this.state.showLyricistColumn },
             { dataField: 'publisher_name', text: 'Publisher ', filter: textFilter({ delay: 0 }), formatter: BuildDetailFormatter('/musiclibrary/publisher/', 'publisher') },
-            { dataField: 'edit', resizable: false, text: 'Edit ', style: { width: 55 }, formatter: EditorFormatter },
             { dataField: 'delete', resizable: false, text: 'Delete ', style: { width: 60 }, formatter: DeleteFormatter }
         ];
         let displayed_songs = [];
-        this.props.songs.forEach((item) => {
+        this.props.songs.forEach((item) => { 
             item.composer_name = this.find_composer(item);
             item.arranger_name = this.find_arranger(item);
             item.lyricist_name = this.find_lyricist(item);
             item.publisher_name = this.find_publisher(item);
-            item.edit = { id: item.id, on_click: this.handleOpenModal };
             item.delete = { id: item.id, on_click: this.handleOpenDeleteModal };
             displayed_songs.push(item)
         });
@@ -135,7 +132,7 @@ export default class MusicLibrarySongDataGrid extends React.Component {
                     viewing_song={this.state.viewing_song}
                     close_modal={this.handleCloseModal}
                     item_type={"Song"}
-                    item_desc={this.state.viewing_song.name}
+                    item_desc={this.state.viewing_song.title}
                     on_change={this.on_delete_song_change} />
                 <BootstrapTable
                     keyField={"wut"}

@@ -22,21 +22,22 @@ export default class MusicLibrarySongPeopleDataGrid extends React.Component {
         console.log(this.props)
     }
 
-    add_relationship(id){
+    add_relationship(id, pretty_name){
         console.log("add_relationship")
         console.log(this.props)
         console.log(id)
         axios.put(MUSIC_API_URL + 'songs/'+this.props.song_id.toString()+'/'+this.props.relationship+'/'+id.toString()).then(res => {
-            toast.success("Successfully Added " + this.props.relationship.charAt(0).toUpperCase() + this.props.relationship.slice(1))
+            toast.success("Successfully Added " + this.props.relationship.charAt(0).toUpperCase() + this.props.relationship.slice(1, -1) + " " + pretty_name.toString())
             this.props.add_relationship_function(id)
             }).catch((thrown) => {
+                console.log(thrown)
                 toast.error(JSON.stringify(find_error_message_in_response(thrown.response)))
             });
     }
 
-    remove_relationship(id){
+    remove_relationship(id, pretty_name){
         axios.delete(MUSIC_API_URL + 'songs/'+this.props.song_id.toString()+'/'+this.props.relationship+'/'+id.toString()).then(res => {
-            toast.success("Successfully Removed " + this.props.relationship.charAt(0).toUpperCase() + this.props.relationship.slice(1))
+            toast.success("Successfully Removed " + this.props.relationship.charAt(0).toUpperCase() + this.props.relationship.slice(1, -1) + " " + pretty_name.toString())
             this.props.remove_relationship_function(id)
             }).catch((thrown) => {
                 toast.error(JSON.stringify(find_error_message_in_response(thrown.response)))
@@ -53,18 +54,26 @@ export default class MusicLibrarySongPeopleDataGrid extends React.Component {
             item.name = item.last_name + ", " + item.first_name
             displayed_people.push(item)
         });
+        let non_selectable = [];
+        if(this.props.disabled){
+            MusicLibraryDatabase.people.forEach((item) => {
+                non_selectable.push(item.id)
+            });
+        }
         const selectRow = {
             mode: 'checkbox',
             clickToSelect: true,
             selected: selected,
             hideSelectAll: true,
+            nonSelectable: non_selectable,
+            nonSelectableStyle: { backgroundColor: 'gray' },
             onSelect: (row, isSelect, rowIndex, e) => {
                 console.log(row)
                 console.log(isSelect)
                 if(isSelect){
-                    this.add_relationship(row.id)
+                    this.add_relationship(row.id, row.name)
                 }else {
-                    this.remove_relationship(row.id)
+                    this.remove_relationship(row.id, row.name)
                 }
               }
           };

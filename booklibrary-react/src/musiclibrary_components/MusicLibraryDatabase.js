@@ -10,12 +10,17 @@ export default class MusicLibraryDatabase extends Component {
     static songs = [];
     static people = [];
     static publishers = [];
+    static tags = [];
     static song_confirmation = undefined;
     static people_conformation = undefined;
     static publisher_confirmation = undefined;
+    static tag_confirmation = undefined;
 
     static everything_loaded() {
-        return MusicLibraryDatabase.song_confirmation === MusicLibraryDatabase.people_conformation === MusicLibraryDatabase.publisher_confirmation === true
+        return (MusicLibraryDatabase.song_confirmation === 
+            MusicLibraryDatabase.people_conformation === 
+            MusicLibraryDatabase.publisher_confirmation === 
+            MusicLibraryDatabase.tag_confirmation === true)
     }
 
     static getSongs = (callback) => {
@@ -49,6 +54,17 @@ export default class MusicLibraryDatabase extends Component {
         });
     }
 
+    static getTags = (callback) => {
+        axios.get(MUSIC_API_URL + 'tags').then(res => {
+            MusicLibraryDatabase.tags = res.data;
+            MusicLibraryDatabase.tag_confirmation = true;
+            callback()
+        }).catch((thrown) => {
+            console.log(thrown)
+            toast.error(JSON.stringify(find_error_message_in_response(thrown.response)))
+        });
+    }
+
     static resetSongs = (callback) => {
         MusicLibraryDatabase.getSongs(callback)
     }
@@ -58,13 +74,18 @@ export default class MusicLibraryDatabase extends Component {
     static resetPublishers = (callback) => {
         MusicLibraryDatabase.getPublishers(callback)
     }
+    static resetTags = (callback) => {
+        MusicLibraryDatabase.getTags(callback)
+    }
 
     static resetState = (callback) => {
         MusicLibraryDatabase.song_confirmation = false;
         MusicLibraryDatabase.people_conformation = false;
         MusicLibraryDatabase.publisher_confirmation = false;
+        MusicLibraryDatabase.tag_confirmation = false;
         MusicLibraryDatabase.getSongs(callback);
         MusicLibraryDatabase.getPeople(callback);
         MusicLibraryDatabase.getPublishers(callback);
+        MusicLibraryDatabase.getTags(callback);
     };
 }

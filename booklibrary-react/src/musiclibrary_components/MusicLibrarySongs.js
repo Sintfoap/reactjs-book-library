@@ -7,6 +7,7 @@ import { faPlusSquare } from '@fortawesome/free-solid-svg-icons'
 import MusicLibraryDatabase from "./MusicLibraryDatabase";
 import MusicLibrarySongDataGrid from "./MusicLibrarySongDataGrid"
 import MusicLibrarySongPage from "./MusicLibrarySongPage";
+import MusicLibrarySongDetail from "./MusicLibrarySongDetail";
 ReactModal.setAppElement('#root')
 
 export default class MusicLibrarySongs extends React.Component {
@@ -14,6 +15,7 @@ export default class MusicLibrarySongs extends React.Component {
     super();
     this.state = {
       showSongPage: false,
+      creating_new_song: false,
       hide_page: false
     };
 
@@ -34,17 +36,16 @@ export default class MusicLibrarySongs extends React.Component {
   }
 
   handleCloseSongPage() {
-    this.setState({ showSongPage: false });
+    this.setState({ showSongPage: false, creating_new_song: false });
   }
 
   render() {
     if (this.state.showSongPage) {
-      return <div><MusicLibrarySongPage
-        contentLabel="Song Modal"
-        new={true}
+      return <div><MusicLibrarySongDetail
         close_song_page={this.handleCloseSongPage}
         on_change={this.props.on_change}
-        showCreateButtons={true} /></div>
+        creating_new_song={this.state.creating_new_song}
+        /></div>
     } else {
       return (
         <div>

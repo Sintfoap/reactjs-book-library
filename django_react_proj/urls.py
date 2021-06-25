@@ -41,12 +41,16 @@ urlpatterns = [
     path(r'api/musiclibrary/songs/<int:id>/composers/<int:relationship_id>', views.song_relationship_add_composers),
     path(r'api/musiclibrary/songs/<int:id>/lyricists/<int:relationship_id>', views.song_relationship_add_liricists),
     path(r'api/musiclibrary/songs/<int:id>/arrangers/<int:relationship_id>', views.song_relationship_add_arrangers),
+    path(r'api/musiclibrary/songs/<int:id>/tags/<int:relationship_id>', views.song_relationship_add_tags),
     #PUBLISHERS
     re_path(r'^api/musiclibrary/publishers$', views.publishers_list),
     path(r'api/musiclibrary/publishers/<int:id>', views.publisher_detail),
     # PEOPLE
     re_path(r'^api/musiclibrary/people$', views.people_list),
     path(r'api/musiclibrary/people/<int:id>', views.people_detail),
+    # TAGS
+    re_path(r'^api/musiclibrary/tags$', views.tag_list),
+    path(r'api/musiclibrary/tags/<int:id>', views.tag_detail),
     #TESTERROR
     re_path(r'^api/booklibrary/throwerror$', views.throw_error),
 ]

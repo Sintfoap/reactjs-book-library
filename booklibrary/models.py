@@ -82,7 +82,15 @@ class Song(models.Model):
 
 class DateSung(models.Model):
     date = models.DateField()
+    description = models.CharField(max_length=500, blank=True, null=True)
     song = models.ForeignKey(Song, on_delete=models.CASCADE)
 
     def __str__(self):
         return str("Song {} Sung on {}".format(self.song.title, self.date))
+
+class Tag(models.Model):
+    tag = models.CharField(max_length=200)
+    songs = models.ManyToManyField(Song, related_name="tags")
+
+    def __str__(self):
+        return str(self.tag)

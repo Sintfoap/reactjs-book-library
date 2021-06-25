@@ -80,6 +80,14 @@ export default class MusicLibrarySongDataGrid extends React.Component {
             return song.publisher_obj.name;
         }
     };
+
+    find_tags = (song) => {
+        if (song.tags_list) {
+            return song.tags_list.map((a) => a.tag).join("; ")
+        }
+    };
+
+
     onChange = e => {
         // console.log(e)
         e.preventDefault();
@@ -102,10 +110,11 @@ export default class MusicLibrarySongDataGrid extends React.Component {
         const columns = [
             { dataField: 'title', text: 'Title ', filter: textFilter({ delay: 0 }), formatter: BuildDetailFormatter('/musiclibrary/songs/') },
             { dataField: 'notes', text: 'Notes ', style: { width: 250, "fontStyle": "italic" }, filter: textFilter({ delay: 0 }) },
+            { dataField: 'publisher_name', text: 'Publisher ', filter: textFilter({ delay: 0 }), formatter: BuildDetailFormatter('/musiclibrary/publisher/', 'publisher') },
+            { dataField: 'tags', text: 'Tags ', style: { width: 250, "fontStyle": "italic" }, filter: textFilter({ delay: 0 }) },
             { dataField: 'composer_name', text: 'Composer ', filter: textFilter({ delay: 0 }), hidden: !this.state.showComposerColumn },
             { dataField: 'arranger_name', text: 'Arranger ', filter: textFilter({ delay: 0 }), hidden: !this.state.showArrangerColumn },
             { dataField: 'lyricist_name', text: 'Lyricist ', filter: textFilter({ delay: 0 }), hidden: !this.state.showLyricistColumn },
-            { dataField: 'publisher_name', text: 'Publisher ', filter: textFilter({ delay: 0 }), formatter: BuildDetailFormatter('/musiclibrary/publisher/', 'publisher') },
             { dataField: 'delete', resizable: false, text: 'Delete ', style: { width: 60 }, formatter: DeleteFormatter }
         ];
         let displayed_songs = [];
@@ -114,6 +123,7 @@ export default class MusicLibrarySongDataGrid extends React.Component {
             item.arranger_name = this.find_arranger(item);
             item.lyricist_name = this.find_lyricist(item);
             item.publisher_name = this.find_publisher(item);
+            item.tags = this.find_tags(item);
             item.delete = { id: item.id, on_click: this.handleOpenDeleteModal };
             displayed_songs.push(item)
         });

@@ -272,7 +272,7 @@ def song_relationship_add_composers(request, id, relationship_id):
         return Response(status=status.HTTP_404_NOT_FOUND)
     try:
         composer = People.objects.get(id=relationship_id)
-    except Song.DoesNotExist:
+    except People.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
 
     if request.method == 'PUT':
@@ -290,7 +290,7 @@ def song_relationship_add_arrangers(request, id, relationship_id):
         return Response(status=status.HTTP_404_NOT_FOUND)
     try:
         arranger = People.objects.get(id=relationship_id)
-    except Song.DoesNotExist:
+    except People.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
 
     if request.method == 'PUT':
@@ -308,13 +308,31 @@ def song_relationship_add_liricists(request, id, relationship_id):
         return Response(status=status.HTTP_404_NOT_FOUND)
     try:
         liricist = People.objects.get(id=relationship_id)
-    except Song.DoesNotExist:
+    except People.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
 
     if request.method == 'PUT':
         song.lyricists.add(liricist)
     elif request.method == 'DELETE':
         song.lyricists.remove(liricist)
+
+    return Response(status=status.HTTP_204_NO_CONTENT)
+
+@api_view(['PUT','DELETE'])
+def song_relationship_add_tags(request, id, relationship_id):
+    try:
+        song = Song.objects.get(id=id)
+    except Song.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+    try:
+        tag = Tag.objects.get(id=relationship_id)
+    except Tag.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+    if request.method == 'PUT':
+        song.tags.add(tag)
+    elif request.method == 'DELETE':
+        song.tags.remove(tag)
 
     return Response(status=status.HTTP_204_NO_CONTENT)
 
@@ -407,4 +425,44 @@ def people_detail(request, id):
         if len(people.songs_composed.all()) + len(people.songs_arranged.all()) + len(people.songs_lirisized.all()) > 0:
             return Response("Cannot delete " + str(people) + " because it has associated songs", status=status.HTTP_400_BAD_REQUEST)
         people.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+@api_view(['GET', 'POST'])
+def tag_list(request):
+    if request.method == 'GET':
+        data = Tag.objects.all()
+
+        serializer = TagGetSerializer(data, context={'request': request}, many=True)
+
+        return Response(serializer.data)
+
+    elif request.method == 'POST':
+        serializer = TagEditSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['PUT','DELETE', 'GET'])
+def tag_detail(request, id):
+    try:
+        tag = Tag.objects.get(id=id)
+    except Tag.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+    if request.method == 'GET':
+        serializer = TagGetSerializer(tag, context={'request': request})
+
+        return Response(serializer.data)
+    if request.method == 'PUT':
+        serializer = TagEditSerializer(tag, data=request.data,context={'request': request})
+        if serializer.is_valid():
+            serializer.save()
+            return Response(status=status.HTTP_204_NO_CONTENT)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    elif request.method == 'DELETE':
+        tag.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)

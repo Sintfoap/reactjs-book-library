@@ -11,6 +11,8 @@ import { BOOK_API_URL } from "../constants";
 import { find_error_message_in_response } from "../constants/utils";
 import BuildDetailFormatter from "../components/Detail_formatter";
 import { toast } from "react-toastify";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faSort, faSortDown, faSortUp } from "@fortawesome/free-solid-svg-icons";
 
 export default class BookLibraryBookDataGrid extends React.Component {
     constructor(props) {
@@ -95,16 +97,97 @@ export default class BookLibraryBookDataGrid extends React.Component {
 
 
     render() {
+        function headerFormatter(column, colIndex, { sortElement, filterElement }) {
+            return (
+                <div style={{ display: 'flex', flexDirection: 'column' }}>
+                    {filterElement}
+                    <div>{column.text}{sortElement}</div>
+                </div>
+            );
+        }
+
         const columns = [
             // { key: 'id', name: 'ID' },
-            { dataField: 'title', text: 'Title', filter: textFilter({ delay: 0 }), formatter: BuildDetailFormatter('/booklibrary/books/') },
-            { dataField: 'notes', text: 'Notes', style: { width: 250, "fontStyle": "italic" }, filter: textFilter({ delay: 0 }) },
-            { dataField: 'author_name', text: 'Author', filter: textFilter({ delay: 0 }), formatter: BuildDetailFormatter('/booklibrary/authors/', 'author') },
-            { dataField: 'genre_name', text: 'Genre', filter: textFilter({ delay: 0 }), formatter: BuildDetailFormatter('/booklibrary/genres/', 'genre') },
-            { dataField: 'series_name', text: 'Series', filter: textFilter({ delay: 0 }), formatter: BuildDetailFormatter('/booklibrary/series/', 'series') },
-            { dataField: 'edit', resizable: false, text: 'Edit', style: { width: 55 }, formatter: EditorFormatter },
-            { dataField: 'delete', resizable: false, text: 'Delete', style: { width: 60 }, formatter: DeleteFormatter }
+            {
+                dataField: 'title', text: 'Title',
+                sort: true,
+                sortCaret: (order, column) => {
+                    if (!order) return (<span>&nbsp;&nbsp;<FontAwesomeIcon icon={faSort} /></span>);
+                    else if (order === 'asc') return (<span>&nbsp;&nbsp;<font><FontAwesomeIcon icon={faSortUp} /></font></span>);
+                    else if (order === 'desc') return (<span>&nbsp;&nbsp;<font><FontAwesomeIcon icon={faSortDown} /></font></span>);
+                    return null;
+                },
+                filter: textFilter({ delay: 0 }),
+                formatter: BuildDetailFormatter('/booklibrary/books/'),
+                headerFormatter: headerFormatter
+            },
+            {
+                dataField: 'notes',
+                text: 'Notes',
+                style: { width: 250, "fontStyle": "italic" },
+                filter: textFilter({ delay: 0 }),
+                headerFormatter: headerFormatter
+            },
+            {
+                dataField: 'author_name',
+                text: 'Author', filter: textFilter({ delay: 0 }),
+                sort: true,
+                sortCaret: (order, column) => {
+                    if (!order) return (<span>&nbsp;&nbsp;<FontAwesomeIcon icon={faSort} /></span>);
+                    else if (order === 'asc') return (<span>&nbsp;&nbsp;<font><FontAwesomeIcon icon={faSortUp} /></font></span>);
+                    else if (order === 'desc') return (<span>&nbsp;&nbsp;<font><FontAwesomeIcon icon={faSortDown} /></font></span>);
+                    return null;
+                },
+                formatter: BuildDetailFormatter('/booklibrary/authors/', 'author'),
+                headerFormatter: headerFormatter
+            },
+            {
+                dataField: 'genre_name',
+                text: 'Genre',
+                sort: true,
+                sortCaret: (order, column) => {
+                    if (!order) return (<span>&nbsp;&nbsp;<FontAwesomeIcon icon={faSort} /></span>);
+                    else if (order === 'asc') return (<span>&nbsp;&nbsp;<font><FontAwesomeIcon icon={faSortUp} /></font></span>);
+                    else if (order === 'desc') return (<span>&nbsp;&nbsp;<font><FontAwesomeIcon icon={faSortDown} /></font></span>);
+                    return null;
+                },
+                filter: textFilter({ delay: 0 }),
+                formatter: BuildDetailFormatter('/booklibrary/genres/', 'genre'),
+                headerFormatter: headerFormatter
+            },
+            {
+                dataField: 'series_name',
+                text: 'Series',
+                sort: true,
+                sortCaret: (order, column) => {
+                    if (!order) return (<span>&nbsp;&nbsp;<FontAwesomeIcon icon={faSort} /></span>);
+                    else if (order === 'asc') return (<span>&nbsp;&nbsp;<font><FontAwesomeIcon icon={faSortUp} /></font></span>);
+                    else if (order === 'desc') return (<span>&nbsp;&nbsp;<font><FontAwesomeIcon icon={faSortDown} /></font></span>);
+                    return null;
+                },
+                filter: textFilter({ delay: 0 }),
+                formatter: BuildDetailFormatter('/booklibrary/series/', 'series'),
+                headerFormatter: headerFormatter
+            },
+            {
+                dataField: 'edit',
+                resizable: false,
+                text: 'Edit',
+                style: { width: 55 },
+                formatter: EditorFormatter
+            },
+            {
+                dataField: 'delete',
+                resizable: false,
+                text: 'Delete',
+                style: { width: 60 },
+                formatter: DeleteFormatter
+            }
         ];
+        const defaultSorted = [{
+            dataField: 'author_name',
+            order: 'asc'
+        }]
         let displayed_books = [];
         this.props.books.forEach((item) => {
             item.author_name = this.find_author(item);
@@ -134,7 +217,7 @@ export default class BookLibraryBookDataGrid extends React.Component {
             };
             const activeStyle = {};
             if (active) {
-                activeStyle.backgroundColor = 'green';
+                activeStyle.backgroundColor = '#671210';
                 activeStyle.color = 'white';
             } else {
                 activeStyle.backgroundColor = 'white';
@@ -146,7 +229,7 @@ export default class BookLibraryBookDataGrid extends React.Component {
             }
             return (
                 <li className="page-item">
-                    <a href="#" onClick={handleClick} style={ activeStyle } className="btn-sm">{page}</a>
+                    <a href="#" onClick={handleClick} style={activeStyle} className="btn-sm">{page}</a>
                 </li>
             );
         };
@@ -154,25 +237,25 @@ export default class BookLibraryBookDataGrid extends React.Component {
             options,
             currSizePerPage,
             onSizePerPageChange
-          }) => (
+        }) => (
             <div className="btn-group" role="group">
-              {
-                options.map((option) => {
-                  const isSelect = currSizePerPage === `${option.page}`;
-                  return (
-                    <button
-                      key={ option.text }
-                      type="button"
-                      onClick={ () => onSizePerPageChange(option.page) }
-                      className={ `btn ${isSelect ? 'btn-green' : 'btn-light'}` }
-                    >
-                      { option.text }
-                    </button>
-                  );
-                })
-              }
+                {
+                    options.map((option) => {
+                        const isSelect = currSizePerPage === `${option.page}`;
+                        return (
+                            <button
+                                key={option.text}
+                                type="button"
+                                onClick={() => onSizePerPageChange(option.page)}
+                                className={`btn ${isSelect ? 'btn-maroon' : 'btn-light'}`}
+                            >
+                                {option.text}
+                            </button>
+                        );
+                    })
+                }
             </div>
-          );
+        );
         const options = {
             sizePerPageRenderer,
             pageButtonRenderer,
@@ -194,11 +277,11 @@ export default class BookLibraryBookDataGrid extends React.Component {
             disablePageTitle: true,
             sizePerPageList: [{
                 text: '10', value: 10
-            },{
+            }, {
                 text: '15', value: 15
-            },{
+            }, {
                 text: '20', value: 20
-            },{
+            }, {
                 text: 'All', value: this.props.books.length
             }]
         };
@@ -230,13 +313,15 @@ export default class BookLibraryBookDataGrid extends React.Component {
                     <span> Owned</span>
                 </div>
                 <BootstrapTable
+                    bootstrap4
                     keyField={"wut"}
                     filter={filterFactory()}
                     pagination={paginationFactory(options)}
                     columns={columns}
                     data={displayed_books}
                     rowStyle={this.find_owned}
-                    noDataIndication={indication} />
+                    noDataIndication={indication}
+                    defaultSorted={defaultSorted} />
             </div>
         );
     }

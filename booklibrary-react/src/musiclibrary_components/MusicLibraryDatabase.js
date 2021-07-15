@@ -10,17 +10,23 @@ export default class MusicLibraryDatabase extends Component {
     static songs = [];
     static people = [];
     static publishers = [];
+    static collections = [];
     static tags = [];
+    static dates = [];
     static song_confirmation = undefined;
     static people_conformation = undefined;
     static publisher_confirmation = undefined;
+    static collection_confirmation = undefined;
     static tag_confirmation = undefined;
+    static date_confirmation = undefined;
 
     static everything_loaded() {
         return (MusicLibraryDatabase.song_confirmation === 
             MusicLibraryDatabase.people_conformation === 
             MusicLibraryDatabase.publisher_confirmation === 
-            MusicLibraryDatabase.tag_confirmation === true)
+            MusicLibraryDatabase.collection_confirmation === 
+            MusicLibraryDatabase.tag_confirmation === 
+            MusicLibraryDatabase.date_confirmation === true)
     }
 
     static getSongs = (callback) => {
@@ -54,6 +60,17 @@ export default class MusicLibraryDatabase extends Component {
         });
     }
 
+    static getCollections = (callback) => {
+        axios.get(MUSIC_API_URL + 'collections').then(res => {
+            MusicLibraryDatabase.collections = res.data;
+            MusicLibraryDatabase.collection_confirmation = true;
+            callback()
+        }).catch((thrown) => {
+            console.log(thrown)
+            toast.error(JSON.stringify(find_error_message_in_response(thrown.response)))
+        });
+    }
+
     static getTags = (callback) => {
         axios.get(MUSIC_API_URL + 'tags').then(res => {
             MusicLibraryDatabase.tags = res.data;
@@ -65,6 +82,16 @@ export default class MusicLibraryDatabase extends Component {
         });
     }
 
+    static getDates = (callback) => {
+        axios.get(MUSIC_API_URL + 'dates').then(res => {
+            MusicLibraryDatabase.dates = res.data;
+            MusicLibraryDatabase.date_confirmation = true;
+            callback()
+            }).catch((thrown) => {
+                toast.error(JSON.stringify(find_error_message_in_response(thrown.response)))
+            });
+    };
+
     static resetSongs = (callback) => {
         MusicLibraryDatabase.getSongs(callback)
     }
@@ -74,18 +101,28 @@ export default class MusicLibraryDatabase extends Component {
     static resetPublishers = (callback) => {
         MusicLibraryDatabase.getPublishers(callback)
     }
+    static resetColletions = (callback) => {
+        MusicLibraryDatabase.getCollections(callback)
+    }
     static resetTags = (callback) => {
         MusicLibraryDatabase.getTags(callback)
+    }    
+    static resetDates = (callback) => {
+        MusicLibraryDatabase.getDates(callback)
     }
 
     static resetState = (callback) => {
         MusicLibraryDatabase.song_confirmation = false;
         MusicLibraryDatabase.people_conformation = false;
         MusicLibraryDatabase.publisher_confirmation = false;
+        MusicLibraryDatabase.collection_confirmation = false;
         MusicLibraryDatabase.tag_confirmation = false;
+        MusicLibraryDatabase.date_confirmation = false;
         MusicLibraryDatabase.getSongs(callback);
         MusicLibraryDatabase.getPeople(callback);
         MusicLibraryDatabase.getPublishers(callback);
+        MusicLibraryDatabase.getCollections(callback);
         MusicLibraryDatabase.getTags(callback);
+        MusicLibraryDatabase.getDates(callback);
     };
 }

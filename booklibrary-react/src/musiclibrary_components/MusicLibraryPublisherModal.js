@@ -40,9 +40,9 @@ export default class MusicLibraryPublisherModal extends React.Component {
 
   createPublisher = e => {
     e.preventDefault();
-    axios.post(MUSIC_API_URL + 'publishers', this.state).then(() => {
+    axios.post(MUSIC_API_URL + 'publishers', this.state).then((response) => {
       toast.success("Successfully created Publisher: " + this.state.name);
-      this.props.on_change();
+      this.props.on_change(response.data);
     }).catch((thrown) => {
       console.log(thrown);
       toast.error(JSON.stringify(find_error_message_in_response(thrown.response)));

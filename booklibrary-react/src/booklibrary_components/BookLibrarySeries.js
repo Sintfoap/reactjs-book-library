@@ -3,7 +3,7 @@ import BootstrapTable from 'react-bootstrap-table-next';
 import filterFactory, { textFilter } from 'react-bootstrap-table2-filter';
 import { Button } from "reactstrap";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPlusSquare } from '@fortawesome/free-solid-svg-icons';
+import { faPlusSquare, faSort, faSortDown, faSortUp } from '@fortawesome/free-solid-svg-icons';
 import axios from "axios";
 import BookLibrarySeriesModal from "./BookLibrarySeriesModal";
 import DeleteModal from "../components/Delete_modal";
@@ -63,12 +63,47 @@ export default class BookLibrarySeries extends React.Component {
   }
 
   render() {
+    function headerFormatter(column, colIndex, { sortElement, filterElement }) {
+      return (
+          <div style={{ display: 'flex', flexDirection: 'column' }}>
+              {filterElement}
+              <div>{column.text}{sortElement}</div>
+          </div>
+      );
+  }
     const columns = [
       // { key: 'id', name: 'ID' },
-      { dataField: 'name', text: 'Name ', filter: textFilter({ delay: 0 }), formatter: BuildDetailFormatter('/booklibrary/series/') },
-      { dataField: 'edit', text: 'Edit', style: { width: 55 }, formatter: EditorFormatter },
-      { dataField: 'delete', text: 'Delete', style: { width: 60 }, formatter: DeleteFormatter }
+      {
+        dataField: 'name',
+        text: 'Name ',
+        sort: true,
+        sortCaret: (order, column) => {
+          if (!order) return (<span>&nbsp;&nbsp;<FontAwesomeIcon icon={faSort} /></span>);
+          else if (order === 'asc') return (<span>&nbsp;&nbsp;<font><FontAwesomeIcon icon={faSortUp} /></font></span>);
+          else if (order === 'desc') return (<span>&nbsp;&nbsp;<font><FontAwesomeIcon icon={faSortDown} /></font></span>);
+          return null;
+      },
+        filter: textFilter({ delay: 0 }),
+        formatter: BuildDetailFormatter('/booklibrary/series/'),
+        headerFormatter: headerFormatter
+      },
+      {
+        dataField: 'edit',
+        text: 'Edit',
+        style: { width: 55 },
+        formatter: EditorFormatter
+      },
+      {
+        dataField: 'delete',
+        text: 'Delete',
+        style: { width: 60 },
+        formatter: DeleteFormatter
+      }
     ];
+    const defaultSorted = [{
+      dataField: 'name',
+      order: 'asc'
+    }]
     let displayed_series = BookLibraryDatabase.series.slice();
     displayed_series.forEach((item) => {
       item.edit = { id: item.id, on_click: this.handleOpenModal };
@@ -91,9 +126,9 @@ export default class BookLibrarySeries extends React.Component {
                 key={option.text}
                 type="button"
                 onClick={() => onSizePerPageChange(option.page)}
-                className={`btn ${isSelect ? 'btn-green' : 'btn-light'}`}
+                className={`btn ${isSelect ? 'btn-maroon' : 'btn-light'}`}
               >
-                { option.text}
+                {option.text}
               </button>
             );
           })
@@ -104,29 +139,29 @@ export default class BookLibrarySeries extends React.Component {
       page,
       active,
       onPageChange,
-  }) => {
+    }) => {
       const handleClick = (e) => {
-          e.preventDefault();
-          onPageChange(page);
+        e.preventDefault();
+        onPageChange(page);
       };
       const activeStyle = {};
       if (active) {
-          activeStyle.backgroundColor = 'green';
-          activeStyle.color = 'white';
+        activeStyle.backgroundColor = '#671210';
+        activeStyle.color = 'white';
       } else {
-          activeStyle.backgroundColor = 'white';
-          activeStyle.color = 'black';
+        activeStyle.backgroundColor = 'white';
+        activeStyle.color = 'black';
       }
       if (typeof page === 'string') {
-          activeStyle.backgroundColor = 'white';
-          activeStyle.color = 'black';
+        activeStyle.backgroundColor = 'white';
+        activeStyle.color = 'black';
       }
       return (
-          <li className="page-item">
-              <a href="#" onClick={handleClick} style={ activeStyle } className="btn-sm">{page}</a>
-          </li>
+        <li className="page-item">
+          <a href="#" onClick={handleClick} style={activeStyle} className="btn-sm">{page}</a>
+        </li>
       );
-  };
+    };
     const options = {
       sizePerPageRenderer,
       pageButtonRenderer,
@@ -173,7 +208,7 @@ export default class BookLibrarySeries extends React.Component {
           item_type={"Series"}
           item_desc={this.state.viewing_series.name}
           on_change={this.on_delete_series_change} />
-        <Button style={{ float: "right" }} outline color="green" className="Add_button" onClick={() => {
+        <Button style={{ float: "right" }} outline className="Add_button btn-outline-maroon" onClick={() => {
           this.setState({
             showModal: true,
             creating_new_series: true
@@ -185,7 +220,8 @@ export default class BookLibrarySeries extends React.Component {
           filter={filterFactory()}
           columns={columns}
           data={BookLibraryDatabase.series}
-          noDataIndication={ indication } />
+          noDataIndication={indication}
+          defaultSorted={defaultSorted} />
       </div>
     );
   }

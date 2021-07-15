@@ -42,9 +42,9 @@ export default class MusicLibraryPersonModal extends React.Component {
 
   createPerson = e => {
     e.preventDefault();
-    axios.post(MUSIC_API_URL + 'people', this.state).then(() => {
+    axios.post(MUSIC_API_URL + 'people', this.state).then((response) => {
       toast.success("Successfully created: " + this.state.last_name + ", " + this.state.first_name);
-      this.props.on_change();
+      this.props.on_change(response.data);
     }).catch((thrown) => {
       console.log(thrown);
       toast.error(JSON.stringify(find_error_message_in_response(thrown.response)));

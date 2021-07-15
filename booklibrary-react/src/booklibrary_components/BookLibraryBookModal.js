@@ -295,7 +295,7 @@ export default class BookLibraryBookModal extends React.Component {
                                     />
                                 </Label>
                                 {this.props.showCreateButtons &&
-                                    <Button href="#" outline color="green" className="btn-sm edit-delete-button" onClick={() => this.handleOpenAuthorModal()} style={{ marginTop: 30, float: "right" }}><FontAwesomeIcon icon={faPlusSquare}></FontAwesomeIcon></Button>}
+                                    <Button href="#" outline className="btn-sm edit-delete-button btn-outline-maroon" onClick={() => this.handleOpenAuthorModal()} style={{ marginTop: 30, float: "right" }}><FontAwesomeIcon icon={faPlusSquare}></FontAwesomeIcon></Button>}
                             </FormGroup>
                             <FormGroup>
                                 <Label className="col-11" for="genre">Genre:
@@ -309,7 +309,7 @@ export default class BookLibraryBookModal extends React.Component {
                                     />
                                 </Label>
                                 {this.props.showCreateButtons &&
-                                    <Button href="#" outline color="green" className="btn-sm edit-delete-button" onClick={() => this.handleOpenGenreModal()} style={{ marginTop: 30, float: "right" }}><FontAwesomeIcon icon={faPlusSquare}></FontAwesomeIcon></Button>}
+                                    <Button href="#" outline className="btn-sm edit-delete-button btn-outline-maroon" onClick={() => this.handleOpenGenreModal()} style={{ marginTop: 30, float: "right" }}><FontAwesomeIcon icon={faPlusSquare}></FontAwesomeIcon></Button>}
                             </FormGroup>
                             <FormGroup>
                                 <Label className="col-11" for="series">Series:
@@ -324,7 +324,7 @@ export default class BookLibraryBookModal extends React.Component {
                                     />
                                 </Label>
                                 {this.props.showCreateButtons &&
-                                    <Button href="#" outline color="green" className="btn-sm edit-delete-button" onClick={() => this.handleOpenSeriesModal()} style={{ marginTop: 30, float: "right" }}><FontAwesomeIcon icon={faPlusSquare}></FontAwesomeIcon></Button>}
+                                    <Button href="#" outline className="btn-sm edit-delete-button btn-outline-maroon" onClick={() => this.handleOpenSeriesModal()} style={{ marginTop: 30, float: "right" }}><FontAwesomeIcon icon={faPlusSquare}></FontAwesomeIcon></Button>}
                             </FormGroup>
                             {(this.state.series) !== "" && (this.state.series) !== " " && (this.state.series) !== undefined && (this.state.series) !== null &&
                                 <FormGroup>
@@ -354,8 +354,8 @@ export default class BookLibraryBookModal extends React.Component {
                                         checked={this.state.keep_creating || false}
                                     />Keep Creating
                             </FormGroup>}
-                            <form onSubmit={e => { e.preventDefault(); }}><Button className={"btn-outline-green"}>Submit</Button>
-                                <Button onClick={this.props.close_modal} className={"close_modal_button btn-outline-green"}>Cancel</Button></form>
+                            <form onSubmit={e => { e.preventDefault(); }}><Button className={"btn-outline-maroon"}>Submit</Button>
+                                <Button onClick={this.props.close_modal} className={"close_modal_button btn-outline-maroon"}>Cancel</Button></form>
                         </Form>
                     </ReactModal>}
             </div>

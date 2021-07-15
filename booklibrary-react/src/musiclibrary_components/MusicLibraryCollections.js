@@ -16,24 +16,25 @@ import BootstrapTable from "react-bootstrap-table-next";
 import { MUSIC_API_URL } from "../constants/index.js";
 import BuildDetailFormatter from "../components/Detail_formatter.js";
 import paginationFactory from "react-bootstrap-table2-paginator";
+import MusicLibraryCollectionModal from "./MusicLibraryCollectionModal.js";
 
 ReactModal.setAppElement('#root')
 
-export default class MusicLibraryPublishers extends React.Component {
+export default class MusicLibraryCollections extends React.Component {
     constructor() {
         super();
         this.state = {
             showModal: false,
             showDeleteModal: false,
-            creating_new_publisher: false,
-            viewing_publisher: {}
+            creating_new_collection: false,
+            viewing_collection: {}
         };
         this.check_if_ready_to_render = this.check_if_ready_to_render.bind(this);
         this.handleOpenModal = this.handleOpenModal.bind(this);
         this.handleCloseModal = this.handleCloseModal.bind(this);
         this.handleDeleteModal = this.handleDeleteModal.bind(this);
-        this.on_publishers_change = this.on_publishers_change.bind(this);
-        this.on_delete_publisher_change = this.on_delete_publisher_change.bind(this);
+        this.on_collections_change = this.on_collections_change.bind(this);
+        this.on_delete_collection_change = this.on_delete_collection_change.bind(this);
     }
     check_if_ready_to_render() {
         if (MusicLibraryDatabase.everything_loaded()) {
@@ -43,24 +44,24 @@ export default class MusicLibraryPublishers extends React.Component {
 
     handleOpenModal(row) {
         MusicLibraryDatabase.resetState(this.check_if_ready_to_render)
-        this.setState({ viewing_publisher: row, showModal: true, creating_new_publisher: false });
+        this.setState({ viewing_collection: row, showModal: true, creating_new_collection: false });
     }
 
     handleDeleteModal(row) {
-        this.setState({ viewing_publisher: row, showDeleteModal: true });
+        this.setState({ viewing_collection: row, showDeleteModal: true });
     }
 
     handleCloseModal() {
         this.setState({ showModal: false, showDeleteModal: false });
     }
 
-    on_publishers_change() {
+    on_collections_change() {
         this.handleCloseModal()
         this.props.on_change();
     }
 
-    on_delete_publisher_change() {
-        axios.delete(MUSIC_API_URL + 'publishers/' + this.state.viewing_publisher.id).then(() => {
+    on_delete_collection_change() {
+        axios.delete(MUSIC_API_URL + 'collections/' + this.state.viewing_collection.id).then(() => {
             this.handleCloseModal();
             this.props.on_change();
         }).catch((thrown) => {
@@ -90,7 +91,7 @@ export default class MusicLibraryPublishers extends React.Component {
                     return null;
                 },
                 filter: textFilter({ delay: 0 }),
-                formatter: BuildDetailFormatter('/musiclibrary/publishers/'),
+                formatter: BuildDetailFormatter('/musiclibrary/collections/'),
                 headerFormatter: headerFormatter
             },
             {
@@ -106,14 +107,14 @@ export default class MusicLibraryPublishers extends React.Component {
                 formatter: DeleteFormatter
             }
         ]
-        
+
         const defaultSorted = [{
             dataField: 'name',
             order: 'asc'
         }]
 
-        let displayed_publisher = MusicLibraryDatabase.publishers.slice();
-        displayed_publisher.forEach((item) => {
+        let displayed_collection = MusicLibraryDatabase.collections.slice();
+        displayed_collection.forEach((item) => {
             item.edit = { id: item.id, on_click: this.handleOpenModal };
             item.delete = { id: item.id, on_click: this.handleDeleteModal };
         });
@@ -196,38 +197,38 @@ export default class MusicLibraryPublishers extends React.Component {
             }, {
                 text: '20', value: 20
             }, {
-                text: 'All', value: MusicLibraryDatabase.publishers.length
+                text: 'All', value: MusicLibraryDatabase.collections.length
             }]
         };
         return (
             <div>
-                <MusicLibraryPublisherModal
+                <MusicLibraryCollectionModal
                     isOpen={this.state.showModal}
-                    contentLabel="Publisher Modal"
-                    viewing_publisher={this.state.viewing_publisher}
-                    new={this.state.creating_new_publisher}
+                    contentLabel="Collection Modal"
+                    viewing_collection={this.state.viewing_collection}
+                    new={this.state.creating_new_collection}
                     close_modal={this.handleCloseModal}
-                    on_change={this.on_publishers_change} />
+                    on_change={this.on_collections_change} />
                 <DeleteModal
                     isOpen={this.state.showDeleteModal}
-                    contentLabel="Delete Publisher"
-                    viewing_publisher={this.state.viewing_publisher}
+                    contentLabel="Delete Collection"
+                    viewing_collection={this.state.viewing_collection}
                     close_modal={this.handleCloseModal}
-                    item_type={"Publisher"}
-                    item_desc={this.state.viewing_publisher.name}
-                    on_change={this.on_delete_publisher_change} />
+                    item_type={"Collection"}
+                    item_desc={this.state.viewing_collection.name}
+                    on_change={this.on_delete_collection_change} />
                 <Button style={{ float: "right" }} outline color="info" className="Add_button" onClick={() => {
                     this.setState({
                         showModal: true,
-                        creating_new_publisher: true
+                        creating_new_collection: true
                     });
-                }}><FontAwesomeIcon icon={faPlusSquare} /> New Publisher </Button>
+                }}><FontAwesomeIcon icon={faPlusSquare} /> New Collection </Button>
                 <BootstrapTable
                     keyField={"wut"}
                     pagination={paginationFactory(options)}
                     filter={filterFactory()}
                     columns={columns}
-                    data={MusicLibraryDatabase.publishers}
+                    data={MusicLibraryDatabase.collections}
                     noDataIndication={indication()}
                     defaultSorted={defaultSorted}
                 />

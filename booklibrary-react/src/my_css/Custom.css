@@ -25,20 +25,20 @@ div.select-search {
     width: 100%;
 }
 
-.btn-outline-green {
+.btn-outline-maroon {
     background-color: white;
-    border-color: #037d41;
-    color: #037d41;
+    border-color: #671210;
+    color: #671210;
 }
 
-.btn-green {
-    background-color: #037d41;
+.btn-maroon {
+    background-color: #671210;
     color: white;
 }
 
-.btn-outline-green:not(:disabled):not(.disabled).active,
-.btn-outline-green:hover {
-    background-color: #037d41;
-    border-color: #037d41;
+.btn-outline-maroon:not(:disabled):not(.disabled).active,
+.btn-outline-maroon:hover {
+    background-color: #671210;
+    border-color: #671210;
     color: #ffff;
 }

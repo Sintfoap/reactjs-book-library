@@ -88,12 +88,17 @@ class PublisherEditSerializer(serializers.ModelSerializer):
     class Meta:
         model = Publisher
         fields = ('id', 'name')
-
+        
+class CollectionEditSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Collection
+        fields = ('id', 'name')
 
 class SongEditSerializer(serializers.ModelSerializer):
     class Meta:
         model = Song
-        fields = ('id', 'title', 'notes', 'publisher')
+        fields = ('id', 'title', 'notes', 'publisher', 'collection')
+
 
 class TagEditSerializer(serializers.ModelSerializer):
     class Meta:
@@ -101,18 +106,29 @@ class TagEditSerializer(serializers.ModelSerializer):
         fields = ('id', 'tag')
 
 
+class DateEditSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = DateSung
+        fields = ('id', 'date', 'description', 'song')
+
+
 class SongGetSerializer(serializers.ModelSerializer):
     composers_list = serializers.SerializerMethodField('get_composers')
     publisher_obj = serializers.SerializerMethodField('get_publisher')
+    collection_obj = serializers.SerializerMethodField('get_collection')
     arrangers_list = serializers.SerializerMethodField('get_arrangers')
     lyricists_list = serializers.SerializerMethodField('get_lyricists')
     tags_list = serializers.SerializerMethodField('get_tags')
+    date = serializers.SerializerMethodField('get_date')
 
     def get_composers(self, song):
         return PeopleEditSerializer(song.composers, many=True).data
 
     def get_publisher(self, song):
         return PublisherEditSerializer(song.publisher, many=False).data
+    
+    def get_collection(self, song):
+        return CollectionEditSerializer(song.collection, many=False).data
 
     def get_arrangers(self, song):
         return PeopleEditSerializer(song.arrangers, many=True).data
@@ -123,10 +139,13 @@ class SongGetSerializer(serializers.ModelSerializer):
     def get_tags(self, song):
         return TagEditSerializer(song.tags, many=True).data
 
+    def get_date(self, song):
+        return DateEditSerializer(many=False).data
+
     class Meta:
         model = Song
         fields = ('id', 'title', 'notes', 'publisher', 'composers', 'arrangers', 'tags', 'lyricists',
-                  'publisher_obj', 'composers_list', 'arrangers_list', 'lyricists_list', 'tags_list')
+                  'publisher_obj', 'collection_obj', 'composers_list', 'arrangers_list', 'lyricists_list', 'tags_list', 'date')
 
 
 class PeopleGetSerializer(serializers.ModelSerializer):
@@ -142,7 +161,7 @@ class PeopleGetSerializer(serializers.ModelSerializer):
 
     def get_lirisized(self, person):
         return SongEditSerializer(person.songs_lirisized, many=True).data
-
+    
     class Meta:
         model = People
         fields = ('id', 'first_name', 'last_name', 'songs_composed',
@@ -155,6 +174,13 @@ class PublisherGetSerializer(serializers.ModelSerializer):
     class Meta:
         model = Publisher
         fields = ('id', 'name', 'songs')
+        
+class CollectionGetSerializer(serializers.ModelSerializer):
+    songs = SongEditSerializer(many=True)
+
+    class Meta:
+        model = Collection
+        fields = ('id', 'name', 'songs')
 
 
 class TagGetSerializer(serializers.ModelSerializer):
@@ -166,3 +192,14 @@ class TagGetSerializer(serializers.ModelSerializer):
     class Meta:
         model = Tag
         fields = ('id', 'tag', 'songs')
+
+
+class DateGetSerializer(serializers.ModelSerializer):
+    song_obj = serializers.SerializerMethodField('get_song')
+
+    def get_song(self, date):
+        return SongEditSerializer(date.song, many=False).data
+
+    class Meta:
+        model = DateSung
+        fields = ('id', 'date', 'description', 'song_obj')

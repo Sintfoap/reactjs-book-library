@@ -5,15 +5,22 @@ import filterFactory, { textFilter } from "react-bootstrap-table2-filter";
 import ReactModal from 'react-modal';
 import SelectSearch from "react-select-search";
 import { toast } from "react-toastify";
-import { Button, Form, FormGroup, Input, Label } from "reactstrap";
+import { Button, Form, FormGroup, Input, Label, ButtonGroup } from "reactstrap";
 import BuildDetailFormatter from "../components/Detail_formatter";
 import { MUSIC_API_URL } from "../constants";
 import { find_error_message_in_response } from "../constants/utils";
-import MusicLibrarySongPeopleDataGrid from "./MusicLibrarySongPeopleDatagrid"
+import MusicLibrarySongPeopleDataGrid from "./MusicLibrarySongPeopleDatagrid";
+import MusicLibraryDateModal from "./MusicLibraryDateModal"
 
 import MusicLibraryDatabase from "./MusicLibraryDatabase";
 import loading_screen from "../components/Loading_screen";
 import { withRouter } from "react-router-dom";
+import MusicLibraryDatesDataGrid from "./MusicLibraryDatesDataGrid";
+import MusicLibraryPublisherModal from "./MusicLibraryPublisherModal"
+import MusicLibraryPersonModal from "./MusicLibraryPersonModal";
+import MusicLibraryCollectionModal from "./MusicLibraryCollectionModal";
+import { faPlusSquare } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 ReactModal.setAppElement('#root')
 
 class MusicLibrarySongDetail extends React.Component {
@@ -23,11 +30,17 @@ class MusicLibrarySongDetail extends React.Component {
         let my_state = {
             song_confirmation: false,
             creating_new_song: this.props.creating_new_song,
-            editing: Boolean(this.props.creating_new_song)
+            editing: Boolean(this.props.creating_new_song),
+            showPublishersModal: false,
+            showCollectionsModal: false,
+            showPersonModal: false
         }
         this.state = my_state;
         this.check_if_ready_to_render = this.check_if_ready_to_render.bind(this);
+        this.handleOpenDateModal = this.handleOpenDateModal.bind(this);
+        this.handleCloseDateModal = this.handleCloseDateModal.bind(this);
         this.handle_get_song_data = this.handle_get_song_data.bind(this);
+        this.on_date_change = this.on_date_change.bind(this);
         this.create_song = this.create_song.bind(this);
         this.edit_song = this.edit_song.bind(this);
         this.add_composer = this.add_composer.bind(this);
@@ -36,10 +49,19 @@ class MusicLibrarySongDetail extends React.Component {
         this.remove_arranger = this.remove_arranger.bind(this);
         this.add_lyricist = this.add_lyricist.bind(this);
         this.remove_lyricist = this.remove_lyricist.bind(this);
+        this.handleOpenPublisherModal = this.handleOpenPublisherModal.bind(this);
+        this.handleClosePublisherModal = this.handleClosePublisherModal.bind(this);
+        this.on_publishers_change = this.on_publishers_change.bind(this);
+        this.handleOpenCollectionModal = this.handleOpenCollectionModal.bind(this);
+        this.handleCloseCollectionModal = this.handleCloseCollectionModal.bind(this);
+        this.on_collections_change = this.on_collections_change.bind(this);
+        this.handleOpenPersonModal = this.handleOpenPersonModal.bind(this);
+        this.handleClosePersonModal = this.handleClosePersonModal.bind(this);
+        this.on_person_change = this.on_person_change.bind(this);
     }
 
     componentDidMount() {
-        if(!MusicLibraryDatabase.everything_loaded()) {
+        if (!MusicLibraryDatabase.everything_loaded()) {
             MusicLibraryDatabase.resetState(this.check_if_ready_to_render);
         } else {
             this.check_if_ready_to_render()
@@ -55,6 +77,7 @@ class MusicLibrarySongDetail extends React.Component {
             arrangers: new Set(),
             lyricists: new Set(),
             publisher: "",
+            collection: "",
             creating_new_song: true,
             song_confirmation: true
         })
@@ -63,7 +86,7 @@ class MusicLibrarySongDetail extends React.Component {
     handle_get_song_data(data) {
         let new_state = {
             ...data,
-            song_confirmation: true 
+            song_confirmation: true
         }
         new_state.composers = new Set(new_state.composers)
         new_state.arrangers = new Set(new_state.arrangers)
@@ -79,7 +102,7 @@ class MusicLibrarySongDetail extends React.Component {
 
     check_if_ready_to_render() {
         if (MusicLibraryDatabase.everything_loaded()) {
-            if(this.state.creating_new_song){
+            if (this.state.creating_new_song) {
                 this.create_song_state();
             } else {
                 this.get_song();
@@ -110,6 +133,64 @@ class MusicLibrarySongDetail extends React.Component {
         this.setState({ lyricists: this.state.lyricists })
     }
 
+    handleOpenDateModal() {
+        // this.props.close_modal()
+        this.setState({ showDateModal: true });
+    }
+
+    handleOpenPublisherModal(row) {
+        MusicLibraryDatabase.resetState(this.check_if_ready_to_render)
+        this.setState({ showPublisherModal: true });
+    }
+
+    handleOpenCollectionModal(row) {
+        MusicLibraryDatabase.resetState(this.check_if_ready_to_render)
+        this.setState({ showCollectionModal: true });
+    }
+
+    handleCloseDateModal() {
+        this.setState({ showDateModal: false });
+    }
+
+    handleCloseCollectionModal() {
+        this.setState({ showCollectionModal: false });
+    }
+
+    handleClosePublisherModal() {
+        this.setState({ showPublisherModal: false });
+    }
+
+    handleOpenPersonModal(row) {
+        MusicLibraryDatabase.resetState(this.check_if_ready_to_render)
+        this.setState({ showPersonModal: true });
+    }
+
+    handleClosePersonModal() {
+        this.setState({ showPersonModal: false });
+    }
+
+    on_publishers_change(new_publisher) {
+        this.handleClosePublisherModal();
+        this.setState({ publisher: new_publisher.id });
+        MusicLibraryDatabase.resetState(this.check_if_ready_to_render);
+    }
+
+    on_collections_change(new_collection) {
+        this.handleCloseCollectionModal();
+        this.setState({ collection: new_collection.id });
+        MusicLibraryDatabase.resetState(this.check_if_ready_to_render);
+    }
+
+    on_person_change() {
+        this.handleClosePersonModal();
+        MusicLibraryDatabase.resetState(this.check_if_ready_to_render);
+    }
+
+    on_date_change() {
+        this.handleCloseDateModal()
+        MusicLibraryDatabase.resetState(this.check_if_ready_to_render);
+    }
+
     onDropdownChange = (id, item) => {
         this.setState({ [item.type]: id });
     };
@@ -132,10 +213,28 @@ class MusicLibrarySongDetail extends React.Component {
         return items;
     }
 
+    collections_dropdown_list() {
+        let items = [{
+            value: " ",
+            name: "",
+            type: 'collection'
+        }];
+        MusicLibraryDatabase.collections.forEach(collection => {
+            items.push(
+                {
+                    value: collection.id,
+                    name: collection.name,
+                    type: 'collection',
+
+                });
+        });
+        return items;
+    }
+
 
     create_song = e => {
         e.preventDefault();
-        if(this.state.publisher == ""){
+        if (this.state.publisher == "") {
             toast.warn("Publisher is required")
             return
         }
@@ -144,12 +243,14 @@ class MusicLibrarySongDetail extends React.Component {
             title: this.state.title,
             notes: this.state.notes,
             publisher: parseInt(this.state.publisher),
+            collection: parseInt(this.state.collection),
         }
         axios.post(MUSIC_API_URL + 'songs', song_obj).then((response) => {
             toast.success("Successfully created Song: " + response.data.title);
             this.props.on_change();
-            this.setState({creating_new_song: false, id: response.data.id})
+            this.setState({ creating_new_song: false, id: response.data.id })
         }).catch((thrown) => {
+            console.log(thrown)
             toast.error(JSON.stringify(find_error_message_in_response(thrown.response)));
         });
     };
@@ -161,12 +262,13 @@ class MusicLibrarySongDetail extends React.Component {
             title: this.state.title,
             notes: this.state.notes,
             publisher: parseInt(this.state.publisher),
+            collection: parseInt(this.state.collection),
         }
         axios.put(MUSIC_API_URL + 'songs/' + this.state.id, song_obj).then((response) => {
             toast.success("Successfully edited Song: " + song_obj.title);
-            this.props.on_change();
-            this.setState({ creating_new_song: false })
+            this.setState({ creating_new_song: false, editing: false })
         }).catch((thrown) => {
+            console.log(thrown)
             toast.error(JSON.stringify(find_error_message_in_response(thrown.response)));
         });
     };
@@ -175,6 +277,38 @@ class MusicLibrarySongDetail extends React.Component {
         if (this.state.song_confirmation) {
             return (
                 <div className="container">
+                    <MusicLibraryPersonModal
+                        isOpen={this.state.showPersonModal}
+                        contentLabel="Person Modal"
+                        new={true}
+                        close_modal={this.handleClosePersonModal}
+                        on_change={this.on_person_change} />
+                    <MusicLibraryPublisherModal
+                        isOpen={this.state.showPublisherModal}
+                        contentLabel="Publisher Modal"
+                        new={true}
+                        close_modal={this.handleClosePublisherModal}
+                        on_change={this.on_publishers_change} />
+                    <MusicLibraryCollectionModal
+                        isOpen={this.state.showPublisherModal}
+                        contentLabel="Publisher Modal"
+                        new={true}
+                        close_modal={this.handleClosePublisherModal}
+                        on_change={this.on_publishers_change} />
+                    <MusicLibraryDateModal
+                        song_id={this.state.id}
+                        isOpen={this.state.showDateModal}
+                        contentLabel="Date Modal"
+                        viewing_date={this.state.date}
+                        new={true}
+                        close_modal={this.handleCloseDateModal}
+                        on_change={this.on_date_change} />
+                    {!this.props.creating_new_song &&
+                        <Label style={{ margin: "1% " }}> Editing
+                            <ButtonGroup style={{ marginBottom: "1.5%", marginTop: "1.5%" }} className="col-6">
+                                <Button color="outline-info" onClick={() => this.setState({ editing: false })} active={this.state.editing === false}>Off</Button>
+                                <Button color="outline-info" onClick={() => this.setState({ editing: true })} active={this.state.editing === true}>On</Button>
+                            </ButtonGroup></Label>}
                     <Form onSubmit={this.state.creating_new_song ? this.create_song : this.edit_song} className="row">
                         <FormGroup className="col-12">
                             <Label for="title">Title:</Label>
@@ -187,18 +321,7 @@ class MusicLibrarySongDetail extends React.Component {
                                 disabled={!this.state.editing}
                             />
                         </FormGroup>
-                        <FormGroup className="col-12">
-                            <Label for="notes">Notes:</Label>
-                            <Input
-                                type="textarea"
-                                name="notes"
-                                onChange={this.onChange}
-                                value={this.state.notes || ""}
-                                required={false}
-                                disabled={!this.state.editing}
-                            />
-                        </FormGroup>
-                        <FormGroup className="col-12">
+                        <FormGroup className="col-12">Publisher:
                             <Label className="col-6" for="publisher">
                                 <SelectSearch
                                     name="publisher"
@@ -209,34 +332,42 @@ class MusicLibrarySongDetail extends React.Component {
                                     onChange={this.onDropdownChange}
                                     disabled={!this.state.editing}
                                 /></Label>
+                            {this.state.editing &&
+                                <Button style={{ float: "right" }} outline color="info" className="Add_button" onClick={() => {
+                                    this.setState({
+                                        showPublisherModal: true,
+                                    });
+                                }}><FontAwesomeIcon icon={faPlusSquare} /> New Publisher </Button>
+                            }
                         </FormGroup>
-
+                        <FormGroup className="col-12">Collection:
+                            <Label className="col-6" for="collection">
+                                <SelectSearch
+                                    name="collection"
+                                    search
+                                    placeholder="Select a Collection"
+                                    value={this.state.publisher || ""}
+                                    options={this.collections_dropdown_list()}
+                                    onChange={this.onDropdownChange}
+                                    disabled={!this.state.editing}
+                                /></Label>
+                            {this.state.editing &&
+                                <Button style={{ float: "right" }} outline color="info" className="Add_button" onClick={() => {
+                                    this.setState({
+                                        showCollectionModal: true,
+                                    });
+                                }}><FontAwesomeIcon icon={faPlusSquare} /> New Collection </Button>
+                            }
+                        </FormGroup>
+                        {this.state.editing && !this.state.creating_new_song &&
+                            <div className="col-12" style={{ textAlign: "right" }}><Button outline color="info" className="Add_button btn-sm" onClick={() => {
+                                this.setState({
+                                    showPersonModal: true,
+                                });
+                            }}><FontAwesomeIcon icon={faPlusSquare} /> New Person </Button></div>}
                         {!this.state.creating_new_song &&
                             <FormGroup className="col-12">
-                                <Label className="col-6">
-                                    <MusicLibrarySongPeopleDataGrid
-                                        song_id={this.state.id}
-                                        relationship={"composers"}
-                                        related_people={this.state.composers}
-                                        add_relationship_function={this.add_composer}
-                                        remove_relationship_function={this.remove_composer}
-                                        disabled={!this.state.editing}
-                                    />
-                                </Label>
-                                <Label className="col-6">
-                                    <MusicLibrarySongPeopleDataGrid
-                                        song_id={this.state.id}
-                                        relationship={"arrangers"}
-                                        related_people={this.state.arrangers}
-                                        add_relationship_function={this.add_arranger}
-                                        remove_relationship_function={this.remove_arranger}
-                                        disabled={!this.state.editing}
-                                    />
-                                </Label>
-                            </FormGroup>}
-                        {!this.state.creating_new_song &&
-                            <FormGroup className="col-12">
-                                <Label className="col-6" for="arrangers">
+                                <Label className="col-6" for="lyricists">Lyricists:
                                     <MusicLibrarySongPeopleDataGrid
                                         song_id={this.state.id}
                                         relationship={"lyricists"}
@@ -244,11 +375,67 @@ class MusicLibrarySongDetail extends React.Component {
                                         add_relationship_function={this.add_lyricist}
                                         remove_relationship_function={this.remove_lyricist}
                                         disabled={!this.state.editing}
+                                        placeholder={"Enter Lyricist..."}
+                                    /></Label>
+                                <Label className="col-6"> Composers:
+                                    <MusicLibrarySongPeopleDataGrid
+                                        song_id={this.state.id}
+                                        relationship={"composers"}
+                                        related_people={this.state.composers}
+                                        add_relationship_function={this.add_composer}
+                                        remove_relationship_function={this.remove_composer}
+                                        disabled={!this.state.editing}
+                                        placeholder={"Enter Composer..."}
                                     /></Label>
                             </FormGroup>}
+                        {this.state.editing && !this.state.creating_new_song &&
+                            <div className="col-12" style={{ textAlign: "right" }}><Button outline color="info" className="btn-sm Add_button" onClick={() => {
+                                this.handleOpenDateModal()
+                            }}><FontAwesomeIcon icon={faPlusSquare} /> Add Date</Button></div>
+                        }
+                        {!this.state.creating_new_song &&
+                            <FormGroup className="col-12">
+                                <Label className="col-6"> Arrangers:
+                                    <MusicLibrarySongPeopleDataGrid
+                                        song_id={this.state.id}
+                                        relationship={"arrangers"}
+                                        related_people={this.state.arrangers}
+                                        add_relationship_function={this.add_arranger}
+                                        remove_relationship_function={this.remove_arranger}
+                                        disabled={!this.state.editing}
+                                        placeholder={"Enter Arranger..."}
+                                    />
+                                </Label>
+
+                                <Label className="col-6" for="dates">Dates:
+                                    <MusicLibraryDatesDataGrid
+                                        viewing_song={this.state}
+                                        dates={MusicLibraryDatabase.dates}
+                                        songs={this.state}
+                                        sort_field={"title"}
+                                        disabled={!this.state.editing}
+                                    /></Label>
+                            </FormGroup>}
+                        {!this.state.creating_new_song &&
+                            <FormGroup className="col-12">
+                                <Label for="notes">Notes:</Label>
+                                <Input
+                                    type="textarea"
+                                    name="notes"
+                                    onChange={this.onChange}
+                                    value={this.state.notes || ""}
+                                    required={false}
+                                    disabled={!this.state.editing}
+                                />
+                            </FormGroup>}
                         <br></br>
-                        <Button>Submit</Button>
-                            <Button href="/musiclibrary/music" className={"close_modal_button"} style={{ float:'right'}}>Cancel</Button>
+                        {this.state.editing &&
+                            <div className="col-12">
+                                {this.state.creating_new_song &&
+                                    <Button color="info" outline >Continue</Button>}
+                                {this.state.editing && !this.state.creating_new_song &&
+                                    <Button color="info" outline >Save</Button>}
+                                <Button color="info" outline href="/musiclibrary/music" className={"close_modal_button"} style={{ float: 'right' }}>Cancel</Button></div>}
                     </Form>
                 </div>
             );

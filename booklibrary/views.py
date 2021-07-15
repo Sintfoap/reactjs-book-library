@@ -381,6 +381,51 @@ def publisher_detail(request, id):
             return Response("Cannot delete publisher " + str(publisher) + " because it has associated songs", status=status.HTTP_400_BAD_REQUEST)
         publisher.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+    
+#############################################################################################################################################################
+###############################     COLLECTIONS     ##########################################################################################################
+#############################################################################################################################################################
+
+@api_view(['GET', 'POST'])
+def collections_list(request):
+    if request.method == 'GET':
+        data = Collection.objects.all()
+
+        serializer = CollectionGetSerializer(data, context={'request': request}, many=True)
+
+        return Response(serializer.data)
+
+    elif request.method == 'POST':
+        serializer = CollectionEditSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['PUT','DELETE', 'GET'])
+def collection_detail(request, id):
+    try:
+        collection = Collection.objects.get(id=id)
+    except Collection.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+    if request.method == 'GET':
+        serializer = CollectionGetSerializer(collection, context={'request': request})
+
+        return Response(serializer.data)
+
+    if request.method == 'PUT':
+        serializer = CollectionEditSerializer(collection, data=request.data,context={'request': request})
+        if serializer.is_valid():
+            serializer.save()
+            return Response(status=status.HTTP_204_NO_CONTENT)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    elif request.method == 'DELETE':
+        if len(collection.songs.all()) > 0:
+            return Response("Cannot delete collection " + str(collection) + " because it has associated songs", status=status.HTTP_400_BAD_REQUEST)
+        collection.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 #############################################################################################################################################################
 ###############################     PEOPLE     ##############################################################################################################
@@ -427,6 +472,9 @@ def people_detail(request, id):
         people.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
+#############################################################################################################################################################
+###############################     Tags     ################################################################################################################
+#############################################################################################################################################################
 
 @api_view(['GET', 'POST'])
 def tag_list(request):
@@ -465,4 +513,47 @@ def tag_detail(request, id):
 
     elif request.method == 'DELETE':
         tag.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+    
+#############################################################################################################################################################
+###############################     Date     ################################################################################################################
+#############################################################################################################################################################
+
+@api_view(['GET', 'POST'])
+def date_list(request):
+    if request.method == 'GET':
+        data = DateSung.objects.all()
+
+        serializer = DateGetSerializer(data, context={'request': request}, many=True)
+
+        return Response(serializer.data)
+
+    elif request.method == 'POST':
+        serializer = DateEditSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['PUT','DELETE', 'GET'])
+def date_detail(request, id):
+    try:
+        date = DateSung.objects.get(id=id)
+    except DateSung.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+    if request.method == 'GET':
+        serializer = DateGetSerializer(date, context={'request': request})
+
+        return Response(serializer.data)
+
+    if request.method == 'PUT':
+        serializer = DateEditSerializer(date, data=request.data,context={'request': request})
+        if serializer.is_valid():
+            serializer.save()
+            return Response(status=status.HTTP_204_NO_CONTENT)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    elif request.method == 'DELETE':
+        date.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)

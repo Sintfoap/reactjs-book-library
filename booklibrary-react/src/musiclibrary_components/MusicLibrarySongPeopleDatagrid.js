@@ -3,59 +3,82 @@ import BootstrapTable from 'react-bootstrap-table-next';
 import filterFactory, { textFilter } from 'react-bootstrap-table2-filter';
 import axios from "axios";
 // import MusicLibrarySongModal from "./MusicLibrarySongModal";
-import DeleteModal from "../components/Delete_modal";
-import EditorFormatter from "../components/Edit_formatter.js";
-import DeleteFormatter from "../components/Delete_formater.js";
 import { MUSIC_API_URL } from "../constants";
 import { find_error_message_in_response } from "../constants/utils";
-import BuildDetailFormatter from "../components/Detail_formatter";
 import { toast } from "react-toastify";
-import { ButtonGroup, Button } from "reactstrap";
 import MusicLibraryDatabase from "./MusicLibraryDatabase";
+import MusicLibraryPublisherModal from "./MusicLibraryPublisherModal";
 
 export default class MusicLibrarySongPeopleDataGrid extends React.Component {
     constructor(props) {
         super(props);
         this.state = {};
         this.add_relationship = this.add_relationship.bind(this);
-        console.log("Constructor")
-        console.log(this.props)
     }
 
-    add_relationship(id, pretty_name){
-        console.log("add_relationship")
-        console.log(this.props)
-        console.log(id)
-        axios.put(MUSIC_API_URL + 'songs/'+this.props.song_id.toString()+'/'+this.props.relationship+'/'+id.toString()).then(res => {
+    add_relationship(id, pretty_name) {
+        axios.put(MUSIC_API_URL + 'songs/' + this.props.song_id.toString() + '/' + this.props.relationship + '/' + id.toString()).then(res => {
             toast.success("Successfully Added " + this.props.relationship.charAt(0).toUpperCase() + this.props.relationship.slice(1, -1) + " " + pretty_name.toString())
             this.props.add_relationship_function(id)
-            }).catch((thrown) => {
-                console.log(thrown)
-                toast.error(JSON.stringify(find_error_message_in_response(thrown.response)))
-            });
+        }).catch((thrown) => {
+            console.log(thrown)
+            toast.error(JSON.stringify(find_error_message_in_response(thrown.response)))
+        });
     }
 
-    remove_relationship(id, pretty_name){
-        axios.delete(MUSIC_API_URL + 'songs/'+this.props.song_id.toString()+'/'+this.props.relationship+'/'+id.toString()).then(res => {
+    remove_relationship(id, pretty_name) {
+        axios.delete(MUSIC_API_URL + 'songs/' + this.props.song_id.toString() + '/' + this.props.relationship + '/' + id.toString()).then(res => {
             toast.success("Successfully Removed " + this.props.relationship.charAt(0).toUpperCase() + this.props.relationship.slice(1, -1) + " " + pretty_name.toString())
             this.props.remove_relationship_function(id)
-            }).catch((thrown) => {
-                toast.error(JSON.stringify(find_error_message_in_response(thrown.response)))
-            });
+        }).catch((thrown) => {
+            toast.error(JSON.stringify(find_error_message_in_response(thrown.response)))
+        });
     }
 
     render() {
+        let hiddenRowKeys = []
         const columns = [
-            { dataField: 'name', text: 'Name ', filter: textFilter({ delay: 0 }) }
+            { dataField: 'name', filter: textFilter({ delay: 0, placeholder: this.props.placeholder }) }
         ];
+        function getSongs() {
+            MusicLibraryDatabase.people.forEach((item) => {
+                if (displayed_people.indexOf(item) === -1) {
+                    item.name = item.last_name + ", " + item.first_name
+                    displayed_people.push(item)
+                }
+            })
+        }
         let displayed_people = [];
         let selected = Array.from(this.props.related_people)
-        MusicLibraryDatabase.people.forEach((item) => {
-            item.name = item.last_name + ", " + item.first_name
-            displayed_people.push(item)
-        });
+        if (this.props.disabled) {
+            MusicLibraryDatabase.people.forEach((item) => {
+                let chosen = false
+                selected.forEach(person => {
+                    if (person === item.id) {
+                        if (!chosen) {
+                            item.name = item.last_name + ", " + item.first_name
+                            displayed_people.push(item)
+                        }
+                    }
+                })
+            });
+        } else {
+            MusicLibraryDatabase.people.forEach((item) => {
+                let chosen = false
+                selected.forEach(person => {
+                    if (person === item.id) {
+                        if (!chosen) {
+                            item.name = item.last_name + ", " + item.first_name
+                            displayed_people.push(item)
+                        }
+                    }
+                })
+            });
+            getSongs()
+        }
+
         let non_selectable = [];
-        if(this.props.disabled){
+        if (this.props.disabled) {
             MusicLibraryDatabase.people.forEach((item) => {
                 non_selectable.push(item.id)
             });
@@ -64,19 +87,19 @@ export default class MusicLibrarySongPeopleDataGrid extends React.Component {
             mode: 'checkbox',
             clickToSelect: true,
             selected: selected,
+            hideSelectColumn: true,
             hideSelectAll: true,
             nonSelectable: non_selectable,
-            nonSelectableStyle: { backgroundColor: 'gray' },
+            nonSelectableStyle: { backgroundColor: '#e9ecef' },
+            bgColor: '#17a2b8',
             onSelect: (row, isSelect, rowIndex, e) => {
-                console.log(row)
-                console.log(isSelect)
-                if(isSelect){
+                if (isSelect) {
                     this.add_relationship(row.id, row.name)
-                }else {
+                } else {
                     this.remove_relationship(row.id, row.name)
                 }
-              }
-          };
+            }
+        };
         return (
             <div>
                 <BootstrapTable
@@ -84,7 +107,8 @@ export default class MusicLibrarySongPeopleDataGrid extends React.Component {
                     filter={filterFactory()}
                     columns={columns}
                     data={displayed_people}
-                    selectRow={ selectRow } />
+                    hiddenRows={hiddenRowKeys}
+                    selectRow={selectRow} />
             </div>
         );
     }

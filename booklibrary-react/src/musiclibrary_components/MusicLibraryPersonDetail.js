@@ -17,12 +17,14 @@ class MusicLibraryPersonDetail extends React.Component {
     super();
     this.state = {
       person: undefined,
-      person_confirmation: false
+      person_confirmation: false,
+      songs: []
     };
     this.check_if_ready_to_render = this.check_if_ready_to_render.bind(this);
     this.handleOpenModal = this.handleOpenModal.bind(this);
     this.handleCloseModal = this.handleCloseModal.bind(this);
     this.on_person_change = this.on_person_change.bind(this);
+    this.getSongs = this.getSongs.bind(this);
   }
 
   handleOpenModal(row) {
@@ -60,6 +62,51 @@ class MusicLibraryPersonDetail extends React.Component {
     });
   };
 
+  getSongs = (person) => {
+    let songs = []
+    let id_list = []
+
+    person.songs_arranged.forEach((song) => {
+      if (id_list[0] === undefined) {
+        id_list.push(song.id)
+      } else {
+        if (id_list.indexOf(song.id) === -1) {
+          id_list.push(song.id)
+        }
+      }
+    })
+
+    person.songs_composed.forEach((song) => {
+      if (id_list[0] === undefined) {
+        id_list.push(song.id)
+      } else {
+        if (id_list.indexOf(song.id) === -1) {
+          id_list.push(song.id)
+        }
+      }
+    })
+
+    person.songs_lirisized.forEach((song) => {
+      if (id_list[0] === undefined) {
+        id_list.push(song.id)
+      } else {
+        if (id_list.indexOf(song.id) === -1) {
+          id_list.push(song.id)
+        }
+      }
+    })
+
+    id_list.forEach((id) => {
+      let list = MusicLibraryDatabase.songs
+      list.forEach((song) => {
+        if (song.id === id) {
+          songs.push(song)
+        }
+      })
+    })
+    return songs
+  }
+
   render() {
     if (this.state.person_confirmation) {
       return (<div className="container">
@@ -72,7 +119,7 @@ class MusicLibraryPersonDetail extends React.Component {
             close_modal={this.handleCloseModal}
             on_change={this.on_person_change} />
           <MusicLibrarySongDataGrid
-            songs={MusicLibraryDatabase.songs}
+            songs={this.getSongs(this.state.person)}
             on_change={this.props.on_change}
             people={MusicLibraryDatabase.people}
             publishers={MusicLibraryDatabase.publishers}

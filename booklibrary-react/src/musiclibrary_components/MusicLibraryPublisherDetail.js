@@ -62,6 +62,19 @@ export class MusicLibraryPublisherDetail extends React.Component {
   };
 
   render() {
+    function getSongs(publisher) {
+      let songs = []
+      publisher.songs.forEach((song) => {
+        let list = MusicLibraryDatabase.songs
+        list.forEach((inSong) => {
+          if (inSong.id === song.id) {
+            songs.push(inSong)
+          }
+        })
+      })
+      return songs
+    }
+
     if (this.state.publisher_confirmation) {
       return (<div className="container">
         <div className="row" style={{ marginTop: 60, marginLeft: 0 }}><h1>{this.state.publisher.name}</h1><Button href="#" outline color="primary" className="btn-sm edit-delete-button" onClick={() => this.handleOpenModal(this.state.series)} style={{ marginLeft: 13, marginTop: 13 }}><FontAwesomeIcon icon={faEdit} /></Button></div>
@@ -73,7 +86,7 @@ export class MusicLibraryPublisherDetail extends React.Component {
           close_modal={this.handleCloseModal}
           on_change={this.on_publisher_change} />
         <MusicLibrarySongDataGrid
-          songs={MusicLibraryDatabase.songs}
+          songs={getSongs(this.state.publisher)}
           on_change={this.props.on_change}
           people={MusicLibraryDatabase.people}
           publishers={MusicLibraryDatabase.publishers}

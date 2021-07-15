@@ -63,6 +63,11 @@ class Publisher(models.Model):
     def __str__(self):
         return "{}".format(self.name)
 
+class Collection(models.Model):
+    name = models.CharField(max_length=200)
+
+    def __str__(self):
+        return "{}".format(self.name)
 
 class Song(models.Model):
     title = models.CharField(max_length=200)
@@ -74,6 +79,9 @@ class Song(models.Model):
         People, related_name="songs_lirisized", blank=True)
     publisher = models.ForeignKey(
         Publisher, on_delete=models.PROTECT, related_name='songs')
+    collection = models.ForeignKey(
+        Collection, on_delete=models.PROTECT, related_name='songs', blank=True, null=True
+    )
     notes = models.CharField(max_length=5000, blank=True, null=True)
 
     def __str__(self):
@@ -88,9 +96,13 @@ class DateSung(models.Model):
     def __str__(self):
         return str("Song {} Sung on {}".format(self.song.title, self.date))
 
+
 class Tag(models.Model):
     tag = models.CharField(max_length=200)
     songs = models.ManyToManyField(Song, related_name="tags")
 
     def __str__(self):
         return str(self.tag)
+
+
+

@@ -4,7 +4,7 @@ import { Button } from "reactstrap";
 import filterFactory, { textFilter } from 'react-bootstrap-table2-filter';
 import MusicLibraryPersonModal from "./MusicLibraryPersonModal"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faPlusSquare } from '@fortawesome/free-solid-svg-icons'
+import { faPlusSquare, faSort, faSortDown, faSortUp } from '@fortawesome/free-solid-svg-icons'
 import MusicLibraryDatabase from "./MusicLibraryDatabase";
 import BootstrapTable from "react-bootstrap-table-next";
 import { find_error_message_in_response } from "../constants/utils";
@@ -70,11 +70,47 @@ export default class MusicLibraryPeople extends React.Component {
   }
 
   render() {
+    function headerFormatter(column, colIndex, { sortElement, filterElement }) {
+      return (
+        <div style={{ display: 'flex', flexDirection: 'column' }}>
+          {filterElement}
+          <div>{column.text}{sortElement}</div>
+        </div>
+      );
+    }
+
     const columns = [
-      { dataField: 'full_name', text: 'Name ', filter: textFilter({ delay: 0 }), formatter: BuildDetailFormatter('/musiclibrary/people/') },
-      { dataField: 'edit', text: 'Edit', style: { width: 55 }, formatter: EditorFormatter },
-      { dataField: 'delete', text: 'Delete', style: { width: 60 }, formatter: DeleteFormatter }
+      {
+        dataField: 'full_name',
+        text: 'Name ',
+        sort: true,
+        sortCaret: (order, column) => {
+            if (!order) return (<span>&nbsp;&nbsp;<FontAwesomeIcon icon={faSort} /></span>);
+            else if (order === 'asc') return (<span>&nbsp;&nbsp;<font><FontAwesomeIcon icon={faSortUp} /></font></span>);
+            else if (order === 'desc') return (<span>&nbsp;&nbsp;<font><FontAwesomeIcon icon={faSortDown} /></font></span>);
+            return null;
+        },
+        filter: textFilter({ delay: 0 }),
+        formatter: BuildDetailFormatter('/musiclibrary/people/'),
+        headerFormatter: headerFormatter
+      },
+      {
+        dataField: 'edit',
+        text: 'Edit',
+        style: { width: 55 },
+        formatter: EditorFormatter
+      },
+      {
+        dataField: 'delete',
+        text: 'Delete',
+        style: { width: 60 },
+        formatter: DeleteFormatter
+      }
     ]
+    const defaultSorted = [{
+      dataField: 'full_name',
+      order: 'asc'
+    }]
     let displayed_person = MusicLibraryDatabase.people.slice();
     displayed_person.forEach((item) => {
       item.full_name = item.last_name + ", " + item.first_name;
@@ -83,35 +119,35 @@ export default class MusicLibraryPeople extends React.Component {
     });
     function indication() {
       return "Table got nothing"
-  }
-  const pageButtonRenderer = ({
+    }
+    const pageButtonRenderer = ({
       page,
       active,
       onPageChange,
-  }) => {
+    }) => {
       const handleClick = (e) => {
-          e.preventDefault();
-          onPageChange(page);
+        e.preventDefault();
+        onPageChange(page);
       };
       const activeStyle = {};
       if (active) {
-          activeStyle.backgroundColor = '#17a2b8';
-          activeStyle.color = 'white';
+        activeStyle.backgroundColor = '#17a2b8';
+        activeStyle.color = 'white';
       } else {
-          activeStyle.backgroundColor = 'white';
-          activeStyle.color = 'black';
+        activeStyle.backgroundColor = 'white';
+        activeStyle.color = 'black';
       }
       if (typeof page === 'string') {
-          activeStyle.backgroundColor = 'white';
-          activeStyle.color = 'black';
+        activeStyle.backgroundColor = 'white';
+        activeStyle.color = 'black';
       }
       return (
-          <li className="page-item">
-              <a href="#" onClick={handleClick} style={ activeStyle } className="btn-sm">{page}</a>
-          </li>
+        <li className="page-item">
+          <a href="#" onClick={handleClick} style={activeStyle} className="btn-sm">{page}</a>
+        </li>
       );
-  };
-  const sizePerPageRenderer = ({
+    };
+    const sizePerPageRenderer = ({
       options,
       currSizePerPage,
       onSizePerPageChange
@@ -122,12 +158,12 @@ export default class MusicLibraryPeople extends React.Component {
             const isSelect = currSizePerPage === `${option.page}`;
             return (
               <button
-                key={ option.text }
+                key={option.text}
                 type="button"
-                onClick={ () => onSizePerPageChange(option.page) }
-                className={ `btn ${isSelect ? 'btn-info' : 'btn-light'}` }
+                onClick={() => onSizePerPageChange(option.page)}
+                className={`btn ${isSelect ? 'btn-info' : 'btn-light'}`}
               >
-                { option.text }
+                {option.text}
               </button>
             );
           })
@@ -154,15 +190,15 @@ export default class MusicLibraryPeople extends React.Component {
       showTotal: true,
       disablePageTitle: true,
       sizePerPageList: [{
-          text: '10', value: 10
-      },{
-          text: '15', value: 15
-      },{
-          text: '20', value: 20
-      },{
-          text: 'All', value: MusicLibraryDatabase.people.length
+        text: '10', value: 10
+      }, {
+        text: '15', value: 15
+      }, {
+        text: '20', value: 20
+      }, {
+        text: 'All', value: MusicLibraryDatabase.people.length
       }]
-  };
+    };
     return (
       <div>
         <MusicLibraryPersonModal
@@ -180,7 +216,7 @@ export default class MusicLibraryPeople extends React.Component {
           item_type={"Person"}
           item_desc={this.state.viewing_person.name}
           on_change={this.on_delete_person_change} />
-        <Button style={{ float: "right" }} outline color="success" className="Add_button" onClick={() => {
+        <Button style={{ float: "right" }} outline color="info" className="Add_button" onClick={() => {
           this.setState({
             showModal: true,
             creating_new_person: true
@@ -193,6 +229,7 @@ export default class MusicLibraryPeople extends React.Component {
           columns={columns}
           data={MusicLibraryDatabase.people}
           noDataIndication={indication()}
+          defaultSorted={defaultSorted}
         />
       </div>
 

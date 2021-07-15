@@ -6,7 +6,6 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPlusSquare } from '@fortawesome/free-solid-svg-icons'
 import MusicLibraryDatabase from "./MusicLibraryDatabase";
 import MusicLibrarySongDataGrid from "./MusicLibrarySongDataGrid"
-import MusicLibrarySongPage from "./MusicLibrarySongPage";
 import MusicLibrarySongDetail from "./MusicLibrarySongDetail";
 ReactModal.setAppElement('#root')
 
@@ -45,26 +44,24 @@ export default class MusicLibrarySongs extends React.Component {
         close_song_page={this.handleCloseSongPage}
         on_change={this.props.on_change}
         creating_new_song={this.state.creating_new_song}
-        /></div>
+      /></div>
     } else {
       return (
         <div>
-          <div>
-            <Button style={{ float: "right" }} outline color="info" className="Add_button"
-              onClick={() => {
-                this.setState({
-                  showSongPage: true,
-                  creating_new_song: true,
-                });
-              }}
-            ><FontAwesomeIcon icon={faPlusSquare} /> New Song </Button>
-            <MusicLibrarySongDataGrid
-              songs={MusicLibraryDatabase.songs}
-              on_change={this.props.on_change}
-              people={MusicLibraryDatabase.people}
-              publishers={MusicLibraryDatabase.publishers}
-            />
-          </div>
+          <Button style={{ float: "right" }} outline color="info" className="Add_button"
+            onClick={() => {
+              this.setState({
+                showSongPage: true,
+                creating_new_song: true,
+              });
+            }}
+          ><FontAwesomeIcon icon={faPlusSquare} /> New Song </Button>
+          <MusicLibrarySongDataGrid
+            songs={MusicLibraryDatabase.songs}
+            on_change={this.props.on_change}
+            people={MusicLibraryDatabase.people}
+            publishers={MusicLibraryDatabase.publishers}
+          />
         </div>
       );
     }

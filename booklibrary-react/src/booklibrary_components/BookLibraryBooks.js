@@ -53,7 +53,7 @@ export default class BookLibraryBooks extends React.Component {
           showCreateButtons={true}
           re_open={this.re_open} />
         <div>
-          <Button style={{ float: "right" }} outline color="green" className="Add_button" onClick={() => {
+          <Button style={{ float: "right" }} outline className="Add_button btn-outline-maroon" onClick={() => {
             this.setState({
               showModal: true,
               creating_new_book: true

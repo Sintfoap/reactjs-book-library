@@ -45,12 +45,18 @@ urlpatterns = [
     #PUBLISHERS
     re_path(r'^api/musiclibrary/publishers$', views.publishers_list),
     path(r'api/musiclibrary/publishers/<int:id>', views.publisher_detail),
+    #COLLECTIONS
+    re_path(r'^api/musiclibrary/collections$', views.collections_list),
+    path(r'api/musiclibrary/collections/<int:id>', views.collection_detail),
     # PEOPLE
     re_path(r'^api/musiclibrary/people$', views.people_list),
     path(r'api/musiclibrary/people/<int:id>', views.people_detail),
     # TAGS
     re_path(r'^api/musiclibrary/tags$', views.tag_list),
     path(r'api/musiclibrary/tags/<int:id>', views.tag_detail),
+    # DATES
+    re_path(r'^api/musiclibrary/dates$', views.date_list),
+    path(r'api/musiclibrary/dates/<int:id>', views.date_detail),
     #TESTERROR
     re_path(r'^api/booklibrary/throwerror$', views.throw_error),
 ]

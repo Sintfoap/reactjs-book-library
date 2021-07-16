@@ -29,7 +29,7 @@ logging.info("PRINTING INFO LOGS")
 @api_view(['GET', 'POST'])
 def books_list(request):
     if request.method == 'GET':
-        data = Book.objects.all()
+        data = Book.objects.all().prefetch_related("author").prefetch_related("genre").prefetch_related("series")
 
         serializer = BookGetSerializer(data, context={'request': request}, many=True)
 

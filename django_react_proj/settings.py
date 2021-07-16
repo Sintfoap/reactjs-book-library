@@ -81,7 +81,7 @@ WSGI_APPLICATION = 'django_react_proj.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'NAME': BASE_DIR / 'prod_db.sqlite3',
     }
 }
 

@@ -65,23 +65,23 @@ export default class BookLibraryBookDataGrid extends React.Component {
 
 
     find_author = (book) => {
-        if (book.author_obj) {
-            return book.author_obj.last_name + ", " + book.author_obj.first_name;
+        if (book.author) {
+            return book.author.last_name + ", " + book.author.first_name;
         }
     };
 
     find_genre = (book) => {
-        if (book.genre_obj) {
-            return book.genre_obj.category;
+        if (book.genre) {
+            return book.genre.category;
         }
     };
 
     find_series = (book) => {
-        if (book.series_obj) {
+        if (book.series) {
             if (book.number_in_series) {
-                return book.series_obj.name + " #" + book.number_in_series.toString();
+                return book.series.name + " #" + book.number_in_series.toString();
             }
-            return book.series_obj.name;
+            return book.series.name;
         }
     };
 
@@ -288,6 +288,7 @@ export default class BookLibraryBookDataGrid extends React.Component {
 
         return (
             <div>
+                { this.state.showModal && 
                 <BookLibraryBookModal
                     isOpen={this.state.showModal}
                     contentLabel="Book Modal"
@@ -300,6 +301,7 @@ export default class BookLibraryBookDataGrid extends React.Component {
                     series={this.props.series}
                     number_in_series={this.props.number_in_series}
                     owned={this.props.owned} />
+                }
                 <DeleteModal
                     isOpen={this.state.showDeleteModal}
                     contentLabel="Delete Book"

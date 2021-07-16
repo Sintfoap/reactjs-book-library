@@ -54,9 +54,9 @@ export default class BookLibraryBookModal extends React.Component {
                 id: -1,
                 title: "",
                 notes: "",
-                author: "",
-                genre: "",
-                series: "",
+                author: {},
+                genre: {},
+                series: {},
                 number_in_series: "",
                 showAuthorModal: false,
                 showGenreModal: false,
@@ -126,7 +126,6 @@ export default class BookLibraryBookModal extends React.Component {
 
 
     onChange = e => {
-        // console.log(e)
         if (e.target.name === "owned") {
             this.setState({ [e.target.name]: e.target.checked });
         } else if (e.target.name === "keep_creating") {
@@ -137,44 +136,51 @@ export default class BookLibraryBookModal extends React.Component {
     };
 
     onDropdownChange = (id, item) => {
-        this.setState({ [item.type]: id });
+        let new_obj = this.state[item.type] || {}
+        new_obj.id = id
+        this.setState({ [item.type]: new_obj });
     };
 
     createBook = e => {
         e.preventDefault();
-        let book_obj = this.state;
-        book_obj.genre = parseInt(book_obj.genre);
-        book_obj.author = parseInt(book_obj.author);
-        book_obj.series = book_obj.series === " " || book_obj.series === undefined ? "" : parseInt(book_obj.series);
-        book_obj.number_in_series = book_obj.number_in_series === " " || book_obj.number_in_series === undefined ? "" : parseInt(book_obj.number_in_series);
-        // if (book_obj.series === "") {
-        //     delete book_obj.series;
-        // }
-        // if (book_obj.number_in_series === "") {
-        //     delete book_obj.number_in_series;
-        // }
-        // console.log(this.state);
-        axios.post(BOOK_API_URL + 'books', this.state).then(() => {
+        let book_obj = {};
+        book_obj.id = this.state.id
+        book_obj.title = this.state.title
+        book_obj.notes = this.state.notes
+        book_obj.author = parseInt(this.state.author.id);
+        book_obj.genre = parseInt(this.state.genre.id);
+        book_obj.series = this.state.series === {} || this.state.series === undefined ? "" : parseInt(this.state.series.id);
+        book_obj.number_in_series = this.state.number_in_series === " " || this.state.number_in_series === undefined ? "" : parseInt(this.state.number_in_series);
+        book_obj.owned = this.state.owned
+
+        axios.post(BOOK_API_URL + 'books', book_obj).then(() => {
             toast.success("Successfully created Book: " + book_obj.title);
             this.props.on_change();
             if (this.state.keep_creating) {
                 this.setState({id: -1, notes: "", title: ""})
             } else {
-                this.props.handleCloseModal();
+                this.props.close_modal();
             }
 
         }).catch((thrown) => {
+            console.log(thrown)
             toast.error(JSON.stringify(find_error_message_in_response(thrown.response)));
         });
     };
 
     editBook = e => {
         e.preventDefault();
-        let book_obj = this.state;
-        book_obj.genre = parseInt(book_obj.genre);
-        book_obj.author = parseInt(book_obj.author);
-        book_obj.series = book_obj.series === " " ? "" : parseInt(book_obj.series);
-        book_obj.number_in_series = book_obj.number_in_series === " " ? "" : parseInt(book_obj.number_in_series);
+        let book_obj = {};
+        book_obj.id = this.state.id
+        book_obj.title = this.state.title
+        book_obj.notes = this.state.notes
+        book_obj.author = parseInt(this.state.author.id);
+        book_obj.genre = parseInt(this.state.genre.id);
+        book_obj.series = this.state.series === {} || this.state.series === undefined || this.state.series === null ? "" : parseInt(this.state.series.id);
+        if (!(this.state.number_in_series === " " || this.state.number_in_series === undefined || this.state.number_in_series === null)){
+            book_obj.number_in_series = parseInt(this.state.number_in_series);
+        }
+        book_obj.owned = this.state.owned
         axios.put(BOOK_API_URL + 'books/' + book_obj.id, book_obj).then(() => {
             this.props.on_change();
             toast.success("Successfully edited Book: " + book_obj.title);
@@ -236,6 +242,7 @@ export default class BookLibraryBookModal extends React.Component {
                 width: "50%"
             }
         };
+        console.log(this.state)
         return (
             <div>
                 <BookLibraryAuthorModal
@@ -289,7 +296,7 @@ export default class BookLibraryBookModal extends React.Component {
                                         name="author"
                                         search
                                         placeholder="Select an Author"
-                                        value={this.state.author || ""}
+                                        value={this.state.author.id || ""}
                                         options={this.authors_dropdown_list()}
                                         onChange={this.onDropdownChange}
                                     />
@@ -303,7 +310,7 @@ export default class BookLibraryBookModal extends React.Component {
                                         name="genre"
                                         search
                                         placeholder="Select a Genre"
-                                        value={this.state.genre || ""}
+                                        value={this.state.genre.id || ""}
                                         options={this.genres_dropdown_list()}
                                         onChange={this.onDropdownChange}
                                     />
@@ -318,7 +325,7 @@ export default class BookLibraryBookModal extends React.Component {
                                         name="series"
                                         search
                                         placeholder="Select a Series"
-                                        value={this.state.series || ""}
+                                        value={(this.state.series || {}).id || ""}
                                         options={this.series_dropdown_list()}
                                         onChange={this.onDropdownChange}
                                     />
@@ -330,6 +337,7 @@ export default class BookLibraryBookModal extends React.Component {
                                 <FormGroup>
                                     <Label for="number_in_series">Number in Series:</Label>
                                     <Input
+                                        required={true}
                                         type="number"
                                         name="number_in_series"
                                         onChange={this.onChange}

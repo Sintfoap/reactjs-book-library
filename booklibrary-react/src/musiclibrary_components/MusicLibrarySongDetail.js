@@ -277,166 +277,170 @@ class MusicLibrarySongDetail extends React.Component {
         if (this.state.song_confirmation) {
             return (
                 <div className="container">
-                    <MusicLibraryPersonModal
-                        isOpen={this.state.showPersonModal}
-                        contentLabel="Person Modal"
-                        new={true}
-                        close_modal={this.handleClosePersonModal}
-                        on_change={this.on_person_change} />
-                    <MusicLibraryPublisherModal
-                        isOpen={this.state.showPublisherModal}
-                        contentLabel="Publisher Modal"
-                        new={true}
-                        close_modal={this.handleClosePublisherModal}
-                        on_change={this.on_publishers_change} />
-                    <MusicLibraryCollectionModal
-                        isOpen={this.state.showPublisherModal}
-                        contentLabel="Publisher Modal"
-                        new={true}
-                        close_modal={this.handleClosePublisherModal}
-                        on_change={this.on_publishers_change} />
-                    <MusicLibraryDateModal
-                        song_id={this.state.id}
-                        isOpen={this.state.showDateModal}
-                        contentLabel="Date Modal"
-                        viewing_date={this.state.date}
-                        new={true}
-                        close_modal={this.handleCloseDateModal}
-                        on_change={this.on_date_change} />
-                    {!this.props.creating_new_song &&
-                        <Label style={{ margin: "1% " }}> Editing
-                            <ButtonGroup style={{ marginBottom: "1.5%", marginTop: "1.5%" }} className="col-6">
-                                <Button color="outline-info" onClick={() => this.setState({ editing: false })} active={this.state.editing === false}>Off</Button>
-                                <Button color="outline-info" onClick={() => this.setState({ editing: true })} active={this.state.editing === true}>On</Button>
-                            </ButtonGroup></Label>}
-                    <Form onSubmit={this.state.creating_new_song ? this.create_song : this.edit_song} className="row">
-                        <FormGroup className="col-12">
-                            <Label for="title">Title:</Label>
-                            <Input
-                                type="text"
-                                name="title"
-                                onChange={this.onChange}
-                                value={this.state.title || ""}
-                                required={true}
-                                disabled={!this.state.editing}
-                            />
-                        </FormGroup>
-                        <FormGroup className="col-12">Publisher:
-                            <Label className="col-6" for="publisher">
-                                <SelectSearch
-                                    name="publisher"
-                                    search
-                                    placeholder="Select a Publisher"
-                                    value={this.state.publisher || ""}
-                                    options={this.publishers_dropdown_list()}
-                                    onChange={this.onDropdownChange}
-                                    disabled={!this.state.editing}
-                                /></Label>
-                            {this.state.editing &&
-                                <Button style={{ float: "right" }} outline color="info" className="Add_button" onClick={() => {
-                                    this.setState({
-                                        showPublisherModal: true,
-                                    });
-                                }}><FontAwesomeIcon icon={faPlusSquare} /> New Publisher </Button>
-                            }
-                        </FormGroup>
-                        <FormGroup className="col-12">Collection:
-                            <Label className="col-6" for="collection">
-                                <SelectSearch
-                                    name="collection"
-                                    search
-                                    placeholder="Select a Collection"
-                                    value={this.state.publisher || ""}
-                                    options={this.collections_dropdown_list()}
-                                    onChange={this.onDropdownChange}
-                                    disabled={!this.state.editing}
-                                /></Label>
-                            {this.state.editing &&
-                                <Button style={{ float: "right" }} outline color="info" className="Add_button" onClick={() => {
-                                    this.setState({
-                                        showCollectionModal: true,
-                                    });
-                                }}><FontAwesomeIcon icon={faPlusSquare} /> New Collection </Button>
-                            }
-                        </FormGroup>
-                        {this.state.editing && !this.state.creating_new_song &&
-                            <div className="col-12" style={{ textAlign: "right" }}><Button outline color="info" className="Add_button btn-sm" onClick={() => {
-                                this.setState({
-                                    showPersonModal: true,
-                                });
-                            }}><FontAwesomeIcon icon={faPlusSquare} /> New Person </Button></div>}
-                        {!this.state.creating_new_song &&
+                    <div>
+                        <MusicLibraryPersonModal
+                            isOpen={this.state.showPersonModal}
+                            contentLabel="Person Modal"
+                            new={true}
+                            close_modal={this.handleClosePersonModal}
+                            on_change={this.on_person_change} />
+                        <MusicLibraryPublisherModal
+                            isOpen={this.state.showPublisherModal}
+                            contentLabel="Publisher Modal"
+                            new={true}
+                            close_modal={this.handleClosePublisherModal}
+                            on_change={this.on_publishers_change} />
+                        <MusicLibraryCollectionModal
+                            isOpen={this.state.showPublisherModal}
+                            contentLabel="Publisher Modal"
+                            new={true}
+                            close_modal={this.handleClosePublisherModal}
+                            on_change={this.on_publishers_change} />
+                        <MusicLibraryDateModal
+                            song_id={this.state.id}
+                            isOpen={this.state.showDateModal}
+                            contentLabel="Date Modal"
+                            viewing_date={this.state.date}
+                            new={true}
+                            close_modal={this.handleCloseDateModal}
+                            on_change={this.on_date_change} />
+                    </div>
+                    <div>
+                        {!this.props.creating_new_song &&
+                            <Label style={{ margin: "1% " }}> Editing
+                                <ButtonGroup style={{ marginBottom: "1.5%", marginTop: "1.5%" }} className="col-6">
+                                    <Button color="outline-info" onClick={() => this.setState({ editing: false })} active={this.state.editing === false}>Off</Button>
+                                    <Button color="outline-info" onClick={() => this.setState({ editing: true })} active={this.state.editing === true}>On</Button>
+                                </ButtonGroup></Label>}
+                        <Form onSubmit={this.state.creating_new_song ? this.create_song : this.edit_song} className="row">
                             <FormGroup className="col-12">
-                                <Label className="col-6" for="lyricists">Lyricists:
-                                    <MusicLibrarySongPeopleDataGrid
-                                        song_id={this.state.id}
-                                        relationship={"lyricists"}
-                                        related_people={this.state.lyricists}
-                                        add_relationship_function={this.add_lyricist}
-                                        remove_relationship_function={this.remove_lyricist}
-                                        disabled={!this.state.editing}
-                                        placeholder={"Enter Lyricist..."}
-                                    /></Label>
-                                <Label className="col-6"> Composers:
-                                    <MusicLibrarySongPeopleDataGrid
-                                        song_id={this.state.id}
-                                        relationship={"composers"}
-                                        related_people={this.state.composers}
-                                        add_relationship_function={this.add_composer}
-                                        remove_relationship_function={this.remove_composer}
-                                        disabled={!this.state.editing}
-                                        placeholder={"Enter Composer..."}
-                                    /></Label>
-                            </FormGroup>}
-                        {this.state.editing && !this.state.creating_new_song &&
-                            <div className="col-12" style={{ textAlign: "right" }}><Button outline color="info" className="btn-sm Add_button" onClick={() => {
-                                this.handleOpenDateModal()
-                            }}><FontAwesomeIcon icon={faPlusSquare} /> Add Date</Button></div>
-                        }
-                        {!this.state.creating_new_song &&
-                            <FormGroup className="col-12">
-                                <Label className="col-6"> Arrangers:
-                                    <MusicLibrarySongPeopleDataGrid
-                                        song_id={this.state.id}
-                                        relationship={"arrangers"}
-                                        related_people={this.state.arrangers}
-                                        add_relationship_function={this.add_arranger}
-                                        remove_relationship_function={this.remove_arranger}
-                                        disabled={!this.state.editing}
-                                        placeholder={"Enter Arranger..."}
-                                    />
-                                </Label>
-
-                                <Label className="col-6" for="dates">Dates:
-                                    <MusicLibraryDatesDataGrid
-                                        viewing_song={this.state}
-                                        dates={MusicLibraryDatabase.dates}
-                                        songs={this.state}
-                                        sort_field={"title"}
-                                        disabled={!this.state.editing}
-                                    /></Label>
-                            </FormGroup>}
-                        {!this.state.creating_new_song &&
-                            <FormGroup className="col-12">
-                                <Label for="notes">Notes:</Label>
+                                <Label for="title">Title:</Label>
                                 <Input
-                                    type="textarea"
-                                    name="notes"
+                                    type="text"
+                                    name="title"
                                     onChange={this.onChange}
-                                    value={this.state.notes || ""}
-                                    required={false}
+                                    value={this.state.title || ""}
+                                    required={true}
                                     disabled={!this.state.editing}
                                 />
-                            </FormGroup>}
-                        <br></br>
-                        {this.state.editing &&
-                            <div className="col-12">
-                                {this.state.creating_new_song &&
-                                    <Button color="info" outline >Continue</Button>}
-                                {this.state.editing && !this.state.creating_new_song &&
-                                    <Button color="info" outline >Save</Button>}
-                                <Button color="info" outline href="/musiclibrary/music" className={"close_modal_button"} style={{ float: 'right' }}>Cancel</Button></div>}
-                    </Form>
+                            </FormGroup>
+                            <FormGroup className="col-12">Publisher:
+                                <Label className="col-6" for="publisher">
+                                    <SelectSearch
+                                        name="publisher"
+                                        search
+                                        placeholder="Select a Publisher"
+                                        value={this.state.publisher || ""}
+                                        options={this.publishers_dropdown_list()}
+                                        onChange={this.onDropdownChange}
+                                        disabled={!this.state.editing}
+                                    /></Label>
+                                {this.state.editing &&
+                                    <Button style={{ float: "right" }} outline color="info" className="Add_button" onClick={() => {
+                                        this.setState({
+                                            showPublisherModal: true,
+                                        });
+                                    }}><FontAwesomeIcon icon={faPlusSquare} /> New Publisher </Button>
+                                }
+                            </FormGroup>
+                            <FormGroup className="col-12">Collection:
+                                <Label className="col-6" for="collection">
+                                    <SelectSearch
+                                        name="collection"
+                                        search
+                                        placeholder="Select a Collection"
+                                        value={this.state.publisher || ""}
+                                        options={this.collections_dropdown_list()}
+                                        onChange={this.onDropdownChange}
+                                        disabled={!this.state.editing}
+                                    /></Label>
+                                {this.state.editing &&
+                                    <Button style={{ float: "right" }} outline color="info" className="Add_button" onClick={() => {
+                                        this.setState({
+                                            showCollectionModal: true,
+                                        });
+                                    }}><FontAwesomeIcon icon={faPlusSquare} /> New Collection </Button>
+                                }
+                            </FormGroup>
+                            {this.state.editing && !this.state.creating_new_song &&
+                                <div className="col-12" style={{ textAlign: "right" }}><Button outline color="info" className="Add_button btn-sm" onClick={() => {
+                                    this.setState({
+                                        showPersonModal: true,
+                                    });
+                                }}><FontAwesomeIcon icon={faPlusSquare} /> New Person </Button></div>}
+                            {!this.state.creating_new_song &&
+                                <FormGroup className="col-12">
+                                    <Label className="col-6" for="lyricists">Lyricists:
+                                        <MusicLibrarySongPeopleDataGrid
+                                            song_id={this.state.id}
+                                            relationship={"lyricists"}
+                                            related_people={this.state.lyricists}
+                                            add_relationship_function={this.add_lyricist}
+                                            remove_relationship_function={this.remove_lyricist}
+                                            disabled={!this.state.editing}
+                                            placeholder={"Enter Lyricist..."}
+                                        /></Label>
+                                    <Label className="col-6"> Composers:
+                                        <MusicLibrarySongPeopleDataGrid
+                                            song_id={this.state.id}
+                                            relationship={"composers"}
+                                            related_people={this.state.composers}
+                                            add_relationship_function={this.add_composer}
+                                            remove_relationship_function={this.remove_composer}
+                                            disabled={!this.state.editing}
+                                            placeholder={"Enter Composer..."}
+                                        /></Label>
+                                </FormGroup>}
+                            {this.state.editing && !this.state.creating_new_song &&
+                                <div className="col-12" style={{ textAlign: "right" }}><Button outline color="info" className="btn-sm Add_button" onClick={() => {
+                                    this.handleOpenDateModal()
+                                }}><FontAwesomeIcon icon={faPlusSquare} /> Add Date</Button></div>
+                            }
+                            {!this.state.creating_new_song &&
+                                <FormGroup className="col-12">
+                                    <Label className="col-6"> Arrangers:
+                                        <MusicLibrarySongPeopleDataGrid
+                                            song_id={this.state.id}
+                                            relationship={"arrangers"}
+                                            related_people={this.state.arrangers}
+                                            add_relationship_function={this.add_arranger}
+                                            remove_relationship_function={this.remove_arranger}
+                                            disabled={!this.state.editing}
+                                            placeholder={"Enter Arranger..."}
+                                        />
+                                    </Label>
+
+                                    <Label className="col-6" for="dates">Dates:
+                                        <MusicLibraryDatesDataGrid
+                                            viewing_song={this.state}
+                                            dates={MusicLibraryDatabase.dates}
+                                            songs={this.state}
+                                            sort_field={"title"}
+                                            disabled={!this.state.editing}
+                                        /></Label>
+                                </FormGroup>}
+                            {!this.state.creating_new_song &&
+                                <FormGroup className="col-12">
+                                    <Label for="notes">Notes:</Label>
+                                    <Input
+                                        type="textarea"
+                                        name="notes"
+                                        onChange={this.onChange}
+                                        value={this.state.notes || ""}
+                                        required={false}
+                                        disabled={!this.state.editing}
+                                    />
+                                </FormGroup>}
+                            <br></br>
+                            {this.state.editing &&
+                                <div className="col-12">
+                                    {this.state.creating_new_song &&
+                                        <Button color="info" outline >Continue</Button>}
+                                    {this.state.editing && !this.state.creating_new_song &&
+                                        <Button color="info" outline >Save</Button>}
+                                    <Button color="info" outline href="/musiclibrary/music" className={"close_modal_button"} style={{ float: 'right' }}>Cancel</Button></div>}
+                        </Form>
+                    </div>
                 </div>
             );
         } else {

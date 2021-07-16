@@ -14,13 +14,18 @@ export default class MusicLibrarySongs extends React.Component {
     super();
     this.state = {
       showSongPage: false,
-      creating_new_song: false,
-      hide_page: false
+      creating_new_song: false
     };
 
     this.check_if_ready_to_render = this.check_if_ready_to_render.bind(this);
     this.handleOpenSongPage = this.handleOpenSongPage.bind(this);
     this.handleCloseSongPage = this.handleCloseSongPage.bind(this);
+  }
+  componentDidUpdate(prevProps) {
+    // comparison to avoid infinite loop
+    if (this.props !== prevProps) {
+      this.setState({showSongPage: false});
+    }
   }
 
   check_if_ready_to_render() {

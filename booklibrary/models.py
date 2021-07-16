@@ -38,7 +38,7 @@ class Book(models.Model):
         Genre, on_delete=models.PROTECT, related_name='books')
     series = models.ForeignKey(
         Series, on_delete=models.PROTECT, blank=True, null=True, related_name='books')
-    number_in_series = models.IntegerField(null=True)
+    number_in_series = models.IntegerField(null=True, blank=True)
     owned = models.BooleanField(default=True)
 
     def __str__(self):

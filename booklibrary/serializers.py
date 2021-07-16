@@ -28,26 +28,14 @@ class BookEditSerializer(serializers.ModelSerializer):
 
 
 class BookGetSerializer(serializers.ModelSerializer):
-    author_obj = serializers.SerializerMethodField('get_author')
-    genre_obj = serializers.SerializerMethodField('get_genre')
-    series_obj = serializers.SerializerMethodField('get_series')
-
-    def get_author(self, book):
-        return AuthorEditSerializer(book.author, many=False).data
-
-    def get_genre(self, book):
-        return GenreEditSerializer(book.genre, many=False).data
-
-    def get_series(self, book):
-        if book.series:
-            return SeriesEditSerializer(book.series, many=False).data
-        else:
-            return {}
+    author = AuthorEditSerializer(many=False)
+    genre = GenreEditSerializer(many=False)
+    series = SeriesEditSerializer(many=False)
 
     class Meta:
         model = Book
         fields = ('id', 'title', 'notes', 'author', 'genre', 'series',
-                  'author_obj', 'genre_obj', 'series_obj', 'number_in_series', 'owned')
+                  'number_in_series', 'owned')
 
 
 class AuthorGetSerializer(serializers.ModelSerializer):

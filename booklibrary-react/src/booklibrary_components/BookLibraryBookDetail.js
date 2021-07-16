@@ -64,28 +64,30 @@ class BookLibraryBookDetail extends React.Component {
         if (this.state.book_confirmation) {
             return (<div>
                 <div className="container">
-                    <BookLibraryBookModal
-                        isOpen={this.state.showModal}
-                        contentLabel="Book Modal"
-                        new={false}
-                        close_modal={this.handleCloseModal}
-                        on_change={this.on_book_change}
-                        authors={BookLibraryDatabase.authors}
-                        genres={BookLibraryDatabase.genres}
-                        series={BookLibraryDatabase.series}
-                        viewing_book={this.state.viewing_book}
-                    />
+                    {this.state.showModal &&
+                        <BookLibraryBookModal
+                            isOpen={this.state.showModal}
+                            contentLabel="Book Modal"
+                            new={false}
+                            close_modal={this.handleCloseModal}
+                            on_change={this.on_book_change}
+                            authors={BookLibraryDatabase.authors}
+                            genres={BookLibraryDatabase.genres}
+                            series={BookLibraryDatabase.series}
+                            viewing_book={this.state.viewing_book}
+                        />
+                    }
                     <div>
                         <div className="row" style={{ marginTop: 60 }}><h1>{this.state.book.title}</h1><Button href="#" outline color="primary" className="btn-sm edit-delete-button" onClick={() => this.handleOpenModal(this.state.book)} style={{ marginLeft: 13, marginTop: 13 }}><FontAwesomeIcon icon={faEdit} /></Button></div>
                         {this.state.book.notes.length > 0 &&
                             <p className="card-body card" style={{ maxWidth: "75%", float: "right" }}>{this.state.book.notes}</p>
                         }
                         <div style={{ float: "left" }}>
-                            <h5>Author: <Link className="btn btn-outline-maroon Nav_button" to={"/authors/" + String(this.state.book.author)}>{this.state.book.author_obj.last_name}, {this.state.book.author_obj.first_name}</Link></h5>
-                            <h5>Genre: <Link className="btn btn-outline-maroon Nav_button" to={"/genres/" + String(this.state.book.genre)}>{this.state.book.genre_obj.category}</Link></h5>
-                            {Object.keys(this.state.book.series_obj).length > 0 &&
+                            <h5>Author: <Link className="btn btn-outline-maroon Nav_button" to={"/authors/" + String(this.state.book.author.id)}>{this.state.book.author.last_name}, {this.state.book.author.first_name}</Link></h5>
+                            <h5>Genre: <Link className="btn btn-outline-maroon Nav_button" to={"/genres/" + String(this.state.book.genre.id)}>{this.state.book.genre.category}</Link></h5>
+                            {Object.keys(this.state.book.series).length > 0 &&
                                 <div>
-                                    <h5>Series: <Link className="btn btn-outline-maroon Nav_button" to={"/series/" + String(this.state.book.series)}>{this.state.book.series_obj.name}</Link></h5>
+                                    <h5>Series: <Link className="btn btn-outline-maroon Nav_button" to={"/series/" + String(this.state.book.series.id)}>{this.state.book.series.name}</Link></h5>
                                     <h5>Position in Series: {this.state.book.number_in_series}</h5>
                                 </div>
                             }

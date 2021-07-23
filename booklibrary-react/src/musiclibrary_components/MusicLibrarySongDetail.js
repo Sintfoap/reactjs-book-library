@@ -38,6 +38,8 @@ class MusicLibrarySongDetail extends React.Component {
         this.handleCloseDateModal = this.handleCloseDateModal.bind(this);
         this.handle_get_song_data = this.handle_get_song_data.bind(this);
         this.on_date_change = this.on_date_change.bind(this);
+        this.create_tag = this.create_tag.bind(this);
+        this.delete_tag = this.delete_tag.bind(this);
         this.create_song = this.create_song.bind(this);
         this.edit_song = this.edit_song.bind(this);
         this.add_composer = this.add_composer.bind(this);
@@ -228,8 +230,32 @@ class MusicLibrarySongDetail extends React.Component {
         return items;
     }
 
+    create_tag(e) {
+        e.preventDefault();
+        let tag = prompt("GIVE ME A TAG")
+        axios.put(MUSIC_API_URL + 'songs/' + this.state.id + '/tags/' + tag).then((response) => {
+            toast.success("Successfully Added Tag to Song: " + tag);
+            // this.props.on_change();
+        }).catch((thrown) => {
+            console.log(thrown)
+            toast.error(JSON.stringify(find_error_message_in_response(thrown.response)));
+        });
+    }
 
-    create_song = e => {
+    delete_tag(e) {
+        e.preventDefault();
+        let tag = prompt("GIVE ME A TAG")
+        axios.delete(MUSIC_API_URL + 'songs/' + this.state.id + '/tags/' + tag).then((response) => {
+            toast.success("Successfully Deleted Tag from Song: " + tag);
+            // this.props.on_change();
+        }).catch((thrown) => {
+            console.log(thrown)
+            toast.error(JSON.stringify(find_error_message_in_response(thrown.response)));
+        });
+    }
+
+
+    create_song(e) {
         e.preventDefault();
         if (this.state.publisher === "") {
             toast.warn("Publisher is required")
@@ -252,7 +278,7 @@ class MusicLibrarySongDetail extends React.Component {
         });
     };
 
-    edit_song = e => {
+    edit_song(e) {
         e.preventDefault();
         let song_obj = {
             id: this.state.id,
@@ -428,6 +454,9 @@ class MusicLibrarySongDetail extends React.Component {
                                         disabled={!this.state.editing}
                                     />
                                 </FormGroup>}
+
+                                <button onClick={this.create_tag}>CREATE TAG</button>  
+                            <button onClick={this.delete_tag}>DELETE TAG</button>    
                             <br></br>
                             {this.state.editing &&
                                 <div className="col-12">

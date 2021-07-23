@@ -85,9 +85,13 @@ export default class MusicLibrarySongDataGrid extends React.Component {
         }
     };
 
+    find_tag = (tag_id) => {
+        return MusicLibraryDatabase.tags.find(element => element.id == tag_id).tag
+    }
+
     find_tags = (song) => {
-        if (song.tags_list) {
-            return song.tags_list.map((a) => a.tag).join("; ")
+        if (song.tags) {
+            return song.tags.map((tag_id) => this.find_tag(tag_id)).join("; ")
         }
     };
 
@@ -174,7 +178,7 @@ export default class MusicLibrarySongDataGrid extends React.Component {
                 headerFormatter: headerFormatter
             },
             {
-                dataField: 'tags',
+                dataField: 'tags_list',
                 text: 'Tags ',
                 style: { width: 250, "fontStyle": "italic" },
                 filter: textFilter({ delay: 0 }),
@@ -201,7 +205,7 @@ export default class MusicLibrarySongDataGrid extends React.Component {
             item.lyricist_name = this.find_lyricist(item);
             item.publisher_name = this.find_publisher(item);
             item.colletion_name = this.find_collection(item);
-            item.tags = this.find_tags(item);
+            item.tags_list = this.find_tags(item);
             item.delete = { id: item.id, on_click: this.handleOpenDeleteModal };
             displayed_songs.push(item)
         });

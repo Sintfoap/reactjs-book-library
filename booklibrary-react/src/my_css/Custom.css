@@ -42,3 +42,7 @@ div.select-search {
     border-color: #671210;
     color: #ffff;
 }
+
+#root {
+    margin-bottom: 15px;
+}

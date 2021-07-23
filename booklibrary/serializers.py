@@ -107,7 +107,6 @@ class SongGetSerializer(serializers.ModelSerializer):
     collection_obj = serializers.SerializerMethodField('get_collection')
     arrangers_list = serializers.SerializerMethodField('get_arrangers')
     lyricists_list = serializers.SerializerMethodField('get_lyricists')
-    tags_list = serializers.SerializerMethodField('get_tags')
     date = serializers.SerializerMethodField('get_date')
 
     def get_composers(self, song):
@@ -125,16 +124,13 @@ class SongGetSerializer(serializers.ModelSerializer):
     def get_lyricists(self, song):
         return PeopleEditSerializer(song.lyricists, many=True).data
 
-    def get_tags(self, song):
-        return TagEditSerializer(song.tags, many=True).data
-
     def get_date(self, song):
         return DateEditSerializer(many=False).data
 
     class Meta:
         model = Song
         fields = ('id', 'title', 'notes', 'publisher', 'composers', 'arrangers', 'tags', 'lyricists',
-                  'publisher_obj', 'collection_obj', 'composers_list', 'arrangers_list', 'lyricists_list', 'tags_list', 'date')
+                  'publisher_obj', 'collection_obj', 'composers_list', 'arrangers_list', 'lyricists_list', 'date')
 
 
 class PeopleGetSerializer(serializers.ModelSerializer):

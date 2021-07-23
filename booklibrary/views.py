@@ -258,7 +258,9 @@ def song_detail(request, id):
         serializer = SongEditSerializer(song, data=request.data,context={'request': request})
         if serializer.is_valid():
             serializer.save()
-            return Response(status=status.HTTP_204_NO_CONTENT)
+            serializer = SongGetSerializer(song, context={'request': request})
+
+            return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     elif request.method == 'DELETE':
         song.delete()
@@ -319,20 +321,27 @@ def song_relationship_add_liricists(request, id, relationship_id):
     return Response(status=status.HTTP_204_NO_CONTENT)
 
 @api_view(['PUT','DELETE'])
-def song_relationship_add_tags(request, id, relationship_id):
+def song_relationship_add_tags(request, id, tag_name):
     try:
         song = Song.objects.get(id=id)
     except Song.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
     try:
-        tag = Tag.objects.get(id=relationship_id)
+        tag = Tag.objects.get(tag=tag_name)
     except Tag.DoesNotExist:
-        return Response(status=status.HTTP_404_NOT_FOUND)
+        tag = Tag(tag=tag_name)
+        tag.save()
 
     if request.method == 'PUT':
         song.tags.add(tag)
+        serializer = SongGetSerializer(song, context={'request': request})
+        return Response(serializer.data)
     elif request.method == 'DELETE':
         song.tags.remove(tag)
+        if tag.songs.count() == 0:
+            tag.delete()
+        serializer = SongGetSerializer(song, context={'request': request})
+        return Response(serializer.data)
 
     return Response(status=status.HTTP_204_NO_CONTENT)
 

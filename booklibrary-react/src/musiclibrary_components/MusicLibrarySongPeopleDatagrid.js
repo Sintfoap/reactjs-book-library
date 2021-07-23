@@ -7,7 +7,6 @@ import { MUSIC_API_URL } from "../constants";
 import { find_error_message_in_response } from "../constants/utils";
 import { toast } from "react-toastify";
 import MusicLibraryDatabase from "./MusicLibraryDatabase";
-import MusicLibraryPublisherModal from "./MusicLibraryPublisherModal";
 
 export default class MusicLibrarySongPeopleDataGrid extends React.Component {
     constructor(props) {

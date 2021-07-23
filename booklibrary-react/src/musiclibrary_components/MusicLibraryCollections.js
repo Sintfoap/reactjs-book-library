@@ -6,8 +6,7 @@ import EditorFormatter from "../components/Edit_formatter.js";
 import DeleteFormatter from "../components/Delete_formater.js";
 import DeleteModal from "../components/Delete_modal";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPlusSquare, faSort, faSortDown, faSortUp } from '@fortawesome/free-solid-svg-icons';
-import MusicLibraryPublisherModal from './MusicLibraryPublisherModal.js';
+import { faPlusSquare } from '@fortawesome/free-solid-svg-icons';
 import MusicLibraryDatabase from "./MusicLibraryDatabase";
 import { find_error_message_in_response } from "../constants/utils";
 import { toast } from "react-toastify";
@@ -17,6 +16,8 @@ import { MUSIC_API_URL } from "../constants/index.js";
 import BuildDetailFormatter from "../components/Detail_formatter.js";
 import paginationFactory from "react-bootstrap-table2-paginator";
 import MusicLibraryCollectionModal from "./MusicLibraryCollectionModal.js";
+import sortCaret from '../components/Sort_caret'
+import headerFormatter from '../components/Header_formater'
 
 ReactModal.setAppElement('#root')
 
@@ -70,26 +71,12 @@ export default class MusicLibraryCollections extends React.Component {
     }
 
     render() {
-        function headerFormatter(column, colIndex, { sortElement, filterElement }) {
-            return (
-                <div style={{ display: 'flex', flexDirection: 'column' }}>
-                    {filterElement}
-                    <div>{column.text}{sortElement}</div>
-                </div>
-            );
-        }
-
         const columns = [
             {
                 dataField: 'name',
                 text: 'Name ',
                 sort: true,
-                sortCaret: (order, column) => {
-                    if (!order) return (<span>&nbsp;&nbsp;<FontAwesomeIcon icon={faSort} /></span>);
-                    else if (order === 'asc') return (<span>&nbsp;&nbsp;<font><FontAwesomeIcon icon={faSortUp} /></font></span>);
-                    else if (order === 'desc') return (<span>&nbsp;&nbsp;<font><FontAwesomeIcon icon={faSortDown} /></font></span>);
-                    return null;
-                },
+                sortCaret:  sortCaret,
                 filter: textFilter({ delay: 0 }),
                 formatter: BuildDetailFormatter('/musiclibrary/collections/'),
                 headerFormatter: headerFormatter

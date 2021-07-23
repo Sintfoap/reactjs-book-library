@@ -78,7 +78,7 @@ export default class BookLibraryBookModal extends React.Component {
 
     on_author_change(new_author) {
         this.handleCloseAuthorModal();
-        this.setState({ author: new_author.id }); // setting author to the newly created author
+        this.setState({ author: new_author }); // setting author to the newly created author
         BookLibraryDatabase.resetState(this.check_if_ready_to_render);
     }
 
@@ -136,6 +136,7 @@ export default class BookLibraryBookModal extends React.Component {
     };
 
     onDropdownChange = (id, item) => {
+        console.log(this.state[item.type])
         let new_obj = this.state[item.type] || {}
         new_obj.id = id
         this.setState({ [item.type]: new_obj });
@@ -242,7 +243,6 @@ export default class BookLibraryBookModal extends React.Component {
                 width: "50%"
             }
         };
-        console.log(this.state)
         return (
             <div>
                 <BookLibraryAuthorModal

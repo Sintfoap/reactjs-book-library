@@ -3,7 +3,7 @@ import BootstrapTable from 'react-bootstrap-table-next';
 import filterFactory, { textFilter } from 'react-bootstrap-table2-filter';
 import { Button } from "reactstrap";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPlusSquare, faSort, faSortDown, faSortUp } from '@fortawesome/free-solid-svg-icons';
+import { faPlusSquare } from '@fortawesome/free-solid-svg-icons';
 import axios from "axios";
 import BookLibrarySeriesModal from "./BookLibrarySeriesModal";
 import DeleteModal from "../components/Delete_modal";
@@ -15,6 +15,8 @@ import BuildDetailFormatter from "../components/Detail_formatter";
 import BookLibraryDatabase from "./BookLibraryDatabase";
 import { toast } from "react-toastify";
 import paginationFactory from "react-bootstrap-table2-paginator";
+import sortCaret from "../components/Sort_caret";
+import headerFormatter from "../components/Header_formater";
 
 export default class BookLibrarySeries extends React.Component {
   constructor() {
@@ -63,26 +65,13 @@ export default class BookLibrarySeries extends React.Component {
   }
 
   render() {
-    function headerFormatter(column, colIndex, { sortElement, filterElement }) {
-      return (
-          <div style={{ display: 'flex', flexDirection: 'column' }}>
-              {filterElement}
-              <div>{column.text}{sortElement}</div>
-          </div>
-      );
-  }
     const columns = [
       // { key: 'id', name: 'ID' },
       {
         dataField: 'name',
         text: 'Name ',
         sort: true,
-        sortCaret: (order, column) => {
-          if (!order) return (<span>&nbsp;&nbsp;<FontAwesomeIcon icon={faSort} /></span>);
-          else if (order === 'asc') return (<span>&nbsp;&nbsp;<font><FontAwesomeIcon icon={faSortUp} /></font></span>);
-          else if (order === 'desc') return (<span>&nbsp;&nbsp;<font><FontAwesomeIcon icon={faSortDown} /></font></span>);
-          return null;
-      },
+        sortCaret:  sortCaret,
         filter: textFilter({ delay: 0 }),
         formatter: BuildDetailFormatter('/booklibrary/series/'),
         headerFormatter: headerFormatter

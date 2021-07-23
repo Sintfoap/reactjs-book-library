@@ -13,6 +13,8 @@ import BuildDetailFormatter from "../components/Detail_formatter";
 import { toast } from "react-toastify";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSort, faSortDown, faSortUp } from "@fortawesome/free-solid-svg-icons";
+import sortCaret from "../components/Sort_caret";
+import headerFormatter from "../components/Header_formater";
 
 export default class BookLibraryBookDataGrid extends React.Component {
     constructor(props) {
@@ -97,26 +99,12 @@ export default class BookLibraryBookDataGrid extends React.Component {
 
 
     render() {
-        function headerFormatter(column, colIndex, { sortElement, filterElement }) {
-            return (
-                <div style={{ display: 'flex', flexDirection: 'column' }}>
-                    {filterElement}
-                    <div>{column.text}{sortElement}</div>
-                </div>
-            );
-        }
-
         const columns = [
             // { key: 'id', name: 'ID' },
             {
                 dataField: 'title', text: 'Title',
                 sort: true,
-                sortCaret: (order, column) => {
-                    if (!order) return (<span>&nbsp;&nbsp;<FontAwesomeIcon icon={faSort} /></span>);
-                    else if (order === 'asc') return (<span>&nbsp;&nbsp;<font><FontAwesomeIcon icon={faSortUp} /></font></span>);
-                    else if (order === 'desc') return (<span>&nbsp;&nbsp;<font><FontAwesomeIcon icon={faSortDown} /></font></span>);
-                    return null;
-                },
+                sortCaret: sortCaret,
                 filter: textFilter({ delay: 0 }),
                 formatter: BuildDetailFormatter('/booklibrary/books/'),
                 headerFormatter: headerFormatter
@@ -132,12 +120,7 @@ export default class BookLibraryBookDataGrid extends React.Component {
                 dataField: 'author_name',
                 text: 'Author', filter: textFilter({ delay: 0 }),
                 sort: true,
-                sortCaret: (order, column) => {
-                    if (!order) return (<span>&nbsp;&nbsp;<FontAwesomeIcon icon={faSort} /></span>);
-                    else if (order === 'asc') return (<span>&nbsp;&nbsp;<font><FontAwesomeIcon icon={faSortUp} /></font></span>);
-                    else if (order === 'desc') return (<span>&nbsp;&nbsp;<font><FontAwesomeIcon icon={faSortDown} /></font></span>);
-                    return null;
-                },
+                sortCaret: sortCaret,
                 formatter: BuildDetailFormatter('/booklibrary/authors/', 'author'),
                 headerFormatter: headerFormatter
             },
@@ -145,12 +128,7 @@ export default class BookLibraryBookDataGrid extends React.Component {
                 dataField: 'genre_name',
                 text: 'Genre',
                 sort: true,
-                sortCaret: (order, column) => {
-                    if (!order) return (<span>&nbsp;&nbsp;<FontAwesomeIcon icon={faSort} /></span>);
-                    else if (order === 'asc') return (<span>&nbsp;&nbsp;<font><FontAwesomeIcon icon={faSortUp} /></font></span>);
-                    else if (order === 'desc') return (<span>&nbsp;&nbsp;<font><FontAwesomeIcon icon={faSortDown} /></font></span>);
-                    return null;
-                },
+                sortCaret: sortCaret,
                 filter: textFilter({ delay: 0 }),
                 formatter: BuildDetailFormatter('/booklibrary/genres/', 'genre'),
                 headerFormatter: headerFormatter
@@ -159,12 +137,7 @@ export default class BookLibraryBookDataGrid extends React.Component {
                 dataField: 'series_name',
                 text: 'Series',
                 sort: true,
-                sortCaret: (order, column) => {
-                    if (!order) return (<span>&nbsp;&nbsp;<FontAwesomeIcon icon={faSort} /></span>);
-                    else if (order === 'asc') return (<span>&nbsp;&nbsp;<font><FontAwesomeIcon icon={faSortUp} /></font></span>);
-                    else if (order === 'desc') return (<span>&nbsp;&nbsp;<font><FontAwesomeIcon icon={faSortDown} /></font></span>);
-                    return null;
-                },
+                sortCaret: sortCaret,
                 filter: textFilter({ delay: 0 }),
                 formatter: BuildDetailFormatter('/booklibrary/series/', 'series'),
                 headerFormatter: headerFormatter

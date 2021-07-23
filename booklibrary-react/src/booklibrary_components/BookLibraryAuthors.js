@@ -15,6 +15,8 @@ import { find_error_message_in_response } from "../constants/utils";
 import BuildDetailFormatter from "../components/Detail_formatter";
 import BookLibraryDatabase from "./BookLibraryDatabase";
 import { toast } from "react-toastify";
+import sortCaret from "../components/Sort_caret";
+import headerFormatter from "../components/Header_formater";
 
 export default class BookLibraryAuthors extends React.Component {
   constructor() {
@@ -65,26 +67,13 @@ export default class BookLibraryAuthors extends React.Component {
   }
 
   render() {
-    function headerFormatter(column, colIndex, { sortElement, filterElement }) {
-      return (
-        <div style={{ display: 'flex', flexDirection: 'column' }}>
-          {filterElement}
-          <div>{column.text}{sortElement}</div>
-        </div>
-      );
-    }
     const columns = [
       // { key: 'id', name: 'ID' },
       {
         dataField: 'full_name',
         text: 'Name ',
         sort: true,
-        sortCaret: (order, column) => {
-          if (!order) return (<span>&nbsp;&nbsp;<FontAwesomeIcon icon={faSort} /></span>);
-          else if (order === 'asc') return (<span>&nbsp;&nbsp;<font><FontAwesomeIcon icon={faSortUp} /></font></span>);
-          else if (order === 'desc') return (<span>&nbsp;&nbsp;<font><FontAwesomeIcon icon={faSortDown} /></font></span>);
-          return null;
-        },
+        sortCaret: sortCaret,
         filter: textFilter({ delay: 0 }),
         formatter: BuildDetailFormatter('/booklibrary/authors/'),
         headerFormatter: headerFormatter

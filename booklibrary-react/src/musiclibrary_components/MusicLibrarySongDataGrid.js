@@ -11,8 +11,8 @@ import { toast } from "react-toastify";
 import { ButtonGroup, Button } from "reactstrap";
 import MusicLibraryDatabase from "./MusicLibraryDatabase";
 import paginationFactory from "react-bootstrap-table2-paginator";
-import { faSort, faSortDown, faSortUp } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import sortCaret from "../components/Sort_caret";
+import headerFormatter from "../components/Header_formater";
 
 export default class MusicLibrarySongDataGrid extends React.Component {
     constructor(props) {
@@ -111,26 +111,12 @@ export default class MusicLibrarySongDataGrid extends React.Component {
     };
 
     render() {
-        function headerFormatter(column, colIndex, { sortElement, filterElement }) {
-            return (
-                <div style={{ display: 'flex', flexDirection: 'column' }}>
-                    {filterElement}
-                    <div>{column.text}{sortElement}</div>
-                </div>
-            );
-        }
-
         const columns = [
             {
                 dataField: 'title',
                 text: 'Title ',
                 sort: true,
-                sortCaret: (order, column) => {
-                    if (!order) return (<span>&nbsp;&nbsp;<FontAwesomeIcon icon={faSort} /></span>);
-                    else if (order === 'asc') return (<span>&nbsp;&nbsp;<font><FontAwesomeIcon icon={faSortUp} /></font></span>);
-                    else if (order === 'desc') return (<span>&nbsp;&nbsp;<font><FontAwesomeIcon icon={faSortDown} /></font></span>);
-                    return null;
-                },
+                sortCaret: sortCaret,
                 filter: textFilter({ delay: 0 }),
                 formatter: BuildDetailFormatter('/musiclibrary/songs/'),
                 headerFormatter: headerFormatter
@@ -146,12 +132,7 @@ export default class MusicLibrarySongDataGrid extends React.Component {
                 dataField: 'publisher_name',
                 text: 'Publisher ',
                 sort: true,
-                sortCaret: (order, column) => {
-                    if (!order) return (<span>&nbsp;&nbsp;<FontAwesomeIcon icon={faSort} /></span>);
-                    else if (order === 'asc') return (<span>&nbsp;&nbsp;<font><FontAwesomeIcon icon={faSortUp} /></font></span>);
-                    else if (order === 'desc') return (<span>&nbsp;&nbsp;<font><FontAwesomeIcon icon={faSortDown} /></font></span>);
-                    return null;
-                },
+                sortCaret: sortCaret,
                 filter: textFilter({ delay: 0 }),
                 formatter: BuildDetailFormatter('/musiclibrary/publisher/', 'publisher'),
                 hidden: !this.state.showPublisherColumn,
@@ -161,12 +142,7 @@ export default class MusicLibrarySongDataGrid extends React.Component {
                 dataField: 'collection_name',
                 text: 'Collection ',
                 sort: true,
-                sortCaret: (order, column) => {
-                    if (!order) return (<span>&nbsp;&nbsp;<FontAwesomeIcon icon={faSort} /></span>);
-                    else if (order === 'asc') return (<span>&nbsp;&nbsp;<font><FontAwesomeIcon icon={faSortUp} /></font></span>);
-                    else if (order === 'desc') return (<span>&nbsp;&nbsp;<font><FontAwesomeIcon icon={faSortDown} /></font></span>);
-                    return null;
-                },
+                sortCaret: sortCaret,
                 filter: textFilter({ delay: 0 }),
                 formatter: BuildDetailFormatter('/musiclibrary/collection/',
                     'collection'),
@@ -177,12 +153,7 @@ export default class MusicLibrarySongDataGrid extends React.Component {
                 dataField: 'arranger_name',
                 text: 'Arranger ',
                 sort: true,
-                sortCaret: (order, column) => {
-                    if (!order) return (<span>&nbsp;&nbsp;<FontAwesomeIcon icon={faSort} /></span>);
-                    else if (order === 'asc') return (<span>&nbsp;&nbsp;<font><FontAwesomeIcon icon={faSortUp} /></font></span>);
-                    else if (order === 'desc') return (<span>&nbsp;&nbsp;<font><FontAwesomeIcon icon={faSortDown} /></font></span>);
-                    return null;
-                },
+                sortCaret: sortCaret,
                 filter: textFilter({ delay: 0 }),
                 headerFormatter: headerFormatter
             },
@@ -190,12 +161,7 @@ export default class MusicLibrarySongDataGrid extends React.Component {
                 dataField: 'composer_name',
                 text: 'Composer ',
                 sort: true,
-                sortCaret: (order, column) => {
-                    if (!order) return (<span>&nbsp;&nbsp;<FontAwesomeIcon icon={faSort} /></span>);
-                    else if (order === 'asc') return (<span>&nbsp;&nbsp;<font><FontAwesomeIcon icon={faSortUp} /></font></span>);
-                    else if (order === 'desc') return (<span>&nbsp;&nbsp;<font><FontAwesomeIcon icon={faSortDown} /></font></span>);
-                    return null;
-                },
+                sortCaret: sortCaret,
                 filter: textFilter({ delay: 0 }),
                 headerFormatter: headerFormatter
             },
@@ -203,12 +169,7 @@ export default class MusicLibrarySongDataGrid extends React.Component {
                 dataField: 'lyricist_name',
                 text: 'Lyricist ',
                 sort: true,
-                sortCaret: (order, column) => {
-                    if (!order) return (<span>&nbsp;&nbsp;<FontAwesomeIcon icon={faSort} /></span>);
-                    else if (order === 'asc') return (<span>&nbsp;&nbsp;<font><FontAwesomeIcon icon={faSortUp} /></font></span>);
-                    else if (order === 'desc') return (<span>&nbsp;&nbsp;<font><FontAwesomeIcon icon={faSortDown} /></font></span>);
-                    return null;
-                },
+                sortCaret: sortCaret,
                 filter: textFilter({ delay: 0 }),
                 headerFormatter: headerFormatter
             },
@@ -270,7 +231,7 @@ export default class MusicLibrarySongDataGrid extends React.Component {
             }
             return (
                 <li className="page-item">
-                    <a href="#" onClick={handleClick} style={activeStyle} className="btn-sm">{page}</a>
+                    <a onClick={handleClick} style={activeStyle} className="btn-sm">{page}</a>
                 </li>
             );
         };

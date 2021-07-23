@@ -16,6 +16,8 @@ import BootstrapTable from "react-bootstrap-table-next";
 import { MUSIC_API_URL } from "../constants/index.js";
 import BuildDetailFormatter from "../components/Detail_formatter.js";
 import paginationFactory from "react-bootstrap-table2-paginator";
+import sortCaret from "../components/Sort_caret.js";
+import headerFormatter from "../components/Header_formater.js";
 
 ReactModal.setAppElement('#root')
 
@@ -69,26 +71,12 @@ export default class MusicLibraryPublishers extends React.Component {
     }
 
     render() {
-        function headerFormatter(column, colIndex, { sortElement, filterElement }) {
-            return (
-                <div style={{ display: 'flex', flexDirection: 'column' }}>
-                    {filterElement}
-                    <div>{column.text}{sortElement}</div>
-                </div>
-            );
-        }
-
         const columns = [
             {
                 dataField: 'name',
                 text: 'Name ',
                 sort: true,
-                sortCaret: (order, column) => {
-                    if (!order) return (<span>&nbsp;&nbsp;<FontAwesomeIcon icon={faSort} /></span>);
-                    else if (order === 'asc') return (<span>&nbsp;&nbsp;<font><FontAwesomeIcon icon={faSortUp} /></font></span>);
-                    else if (order === 'desc') return (<span>&nbsp;&nbsp;<font><FontAwesomeIcon icon={faSortDown} /></font></span>);
-                    return null;
-                },
+                sortCaret: sortCaret,
                 filter: textFilter({ delay: 0 }),
                 formatter: BuildDetailFormatter('/musiclibrary/publishers/'),
                 headerFormatter: headerFormatter

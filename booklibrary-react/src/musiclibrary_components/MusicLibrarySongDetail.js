@@ -1,12 +1,9 @@
 import axios from "axios";
 import React from "react";
-import BootstrapTable from "react-bootstrap-table-next";
-import filterFactory, { textFilter } from "react-bootstrap-table2-filter";
 import ReactModal from 'react-modal';
 import SelectSearch from "react-select-search";
 import { toast } from "react-toastify";
 import { Button, Form, FormGroup, Input, Label, ButtonGroup } from "reactstrap";
-import BuildDetailFormatter from "../components/Detail_formatter";
 import { MUSIC_API_URL } from "../constants";
 import { find_error_message_in_response } from "../constants/utils";
 import MusicLibrarySongPeopleDataGrid from "./MusicLibrarySongPeopleDatagrid";
@@ -234,7 +231,7 @@ class MusicLibrarySongDetail extends React.Component {
 
     create_song = e => {
         e.preventDefault();
-        if (this.state.publisher == "") {
+        if (this.state.publisher === "") {
             toast.warn("Publisher is required")
             return
         }

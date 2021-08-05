@@ -7,6 +7,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import 'react-toastify/dist/ReactToastify.css';
 import "react-datepicker/dist/react-datepicker.css";
 import './my_css/Custom.css'
+import './my_css/Tag.css'
 
 ReactDOM.render(
   <React.StrictMode>

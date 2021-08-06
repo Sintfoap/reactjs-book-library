@@ -149,7 +149,7 @@ class MusicLibrarySongDetail extends React.Component {
 
     handleOpenCollectionModal(row) {
         MusicLibraryDatabase.resetState(this.check_if_ready_to_render)
-        this.setState({ showCollectionModal: true });
+        this.setState({ showCollectionsModal: true });
     }
 
     handleCloseDateModal() {
@@ -157,7 +157,7 @@ class MusicLibrarySongDetail extends React.Component {
     }
 
     handleCloseCollectionModal() {
-        this.setState({ showCollectionModal: false });
+        this.setState({ showCollectionsModal: false });
     }
 
     handleClosePublisherModal() {
@@ -321,7 +321,6 @@ class MusicLibrarySongDetail extends React.Component {
             const tag_suggestions = MusicLibraryDatabase.tags.filter(tag => this.state.tags.indexOf(tag.id) === -1).map((tag) => { tag.name = tag.tag; return tag })
             return (
                 <div className="container">
-                    <div>
                         <MusicLibraryPersonModal
                             isOpen={this.state.showPersonModal}
                             contentLabel="Person Modal"
@@ -335,11 +334,11 @@ class MusicLibrarySongDetail extends React.Component {
                             close_modal={this.handleClosePublisherModal}
                             on_change={this.on_publishers_change} />
                         <MusicLibraryCollectionModal
-                            isOpen={this.state.showPublisherModal}
-                            contentLabel="Publisher Modal"
+                            isOpen={this.state.showCollectionsModal}
+                            contentLabel="Collection Modal"
                             new={true}
-                            close_modal={this.handleClosePublisherModal}
-                            on_change={this.on_publishers_change} />
+                            close_modal={this.handleCloseCollectionModal}
+                            on_change={this.on_collections_change} />
                         <MusicLibraryDateModal
                             song_id={this.state.id}
                             isOpen={this.state.showDateModal}
@@ -348,7 +347,6 @@ class MusicLibrarySongDetail extends React.Component {
                             new={true}
                             close_modal={this.handleCloseDateModal}
                             on_change={this.on_date_change} />
-                    </div>
                     <div>
 
                         <ReactTags
@@ -411,7 +409,7 @@ class MusicLibrarySongDetail extends React.Component {
                                 {this.state.editing &&
                                     <Button style={{ float: "right" }} outline color="info" className="Add_button" onClick={() => {
                                         this.setState({
-                                            showCollectionModal: true,
+                                            showCollectionsModal: true,
                                         });
                                     }}><FontAwesomeIcon icon={faPlusSquare} /> New Collection </Button>
                                 }

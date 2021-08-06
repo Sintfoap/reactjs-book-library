@@ -39,6 +39,22 @@ export default class MusicLibraryDatabase extends Component {
             });
     };
 
+    static updateSong = (song) => {
+        let index = 0;
+        let found_song = false
+        while(!found_song && index < MusicLibraryDatabase.songs.length) {
+            if (MusicLibraryDatabase.songs[index].id == song.id) {
+                found_song = true
+                MusicLibraryDatabase.songs[index] = song
+            }else {
+                index += 1
+            }
+        }
+        if(!found_song){
+            MusicLibraryDatabase.songs.push(song)
+        }
+    }
+
     static getPeople = (callback) => {
         axios.get(MUSIC_API_URL + 'people').then(res => {
             MusicLibraryDatabase.people = res.data;

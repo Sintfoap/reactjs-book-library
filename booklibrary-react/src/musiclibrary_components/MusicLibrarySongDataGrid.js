@@ -1,6 +1,6 @@
 import React from "react";
 import BootstrapTable from 'react-bootstrap-table-next';
-import filterFactory, { textFilter } from 'react-bootstrap-table2-filter';
+import filterFactory, { textFilter, customFilter, Comparator} from 'react-bootstrap-table2-filter';
 import axios from "axios";
 import DeleteModal from "../components/Delete_modal";
 import DeleteFormatter from "../components/Delete_formater.js";
@@ -13,24 +13,55 @@ import MusicLibraryDatabase from "./MusicLibraryDatabase";
 import paginationFactory from "react-bootstrap-table2-paginator";
 import sortCaret from "../components/Sort_caret";
 import headerFormatter from "../components/Header_formater";
+import TagFilter from "./MusicLibraryTagsFilter";
 
 export default class MusicLibrarySongDataGrid extends React.Component {
     constructor(props) {
         super(props);
+        let all_songs = [];
+        this.props.songs.forEach((item) => {
+            item.composer_name = this.find_composer(item);
+            item.arranger_name = this.find_arranger(item);
+            item.lyricist_name = this.find_lyricist(item);
+            item.publisher_name = this.find_publisher(item);
+            item.colletion_name = this.find_collection(item);
+            item.tags_list = this.find_tags(item);
+            item.delete = { id: item.id, on_click: this.handleOpenDeleteModal };
+            all_songs.push(item)
+        });
         this.state = {
-            showModal: false,
             showDeleteModal: false,
             showNotesColumn: false,
             showPublisherColumn: false,
             showCollectionColumn: false,
-            viewing_song: {}
+            viewing_song: {},
+            filtered_songs: all_songs,
+            all_songs: all_songs
         };
         this.handleOpenDeleteModal = this.handleOpenDeleteModal.bind(this);
-        this.handleOpenModal = this.handleOpenModal.bind(this);
         this.handleCloseModal = this.handleCloseModal.bind(this);
         this.on_delete_song_change = this.on_delete_song_change.bind(this);
         this.sort_songs = this.sort_songs.bind(this);
+        this.handleTableChange = this.handleTableChange.bind(this);
     }
+
+    componentDidUpdate(prevProps) {
+        // comparison to avoid infinite loop
+        if (this.props !== prevProps) {
+            let all_songs = [];
+            this.props.songs.forEach((item) => {
+                item.composer_name = this.find_composer(item);
+                item.arranger_name = this.find_arranger(item);
+                item.lyricist_name = this.find_lyricist(item);
+                item.publisher_name = this.find_publisher(item);
+                item.colletion_name = this.find_collection(item);
+                item.tags_list = this.find_tags(item);
+                item.delete = { id: item.id, on_click: this.handleOpenDeleteModal };
+                all_songs.push(item)
+            });
+            this.setState({all_songs: all_songs, filtered_songs: all_songs})
+        }
+      }
 
 
     on_delete_song_change() {
@@ -42,16 +73,12 @@ export default class MusicLibrarySongDataGrid extends React.Component {
         });
     }
 
-    handleOpenModal(row) {
-        this.setState({ viewing_song: row, showModal: true });
-    }
-
     handleOpenDeleteModal(row) {
         this.setState({ viewing_song: row, showDeleteModal: true });
     }
 
     handleCloseModal() {
-        this.setState({ showModal: false, showDeleteModal: false });
+        this.setState({ showDeleteModal: false });
     }
 
 
@@ -113,6 +140,43 @@ export default class MusicLibrarySongDataGrid extends React.Component {
     sort_songs = (a, b) => {
         return a[this.props.sort_field] - b[this.props.sort_field];
     };
+
+    handleTableChange = (type, { filters }) => {
+        console.log("handleTableChange")
+        setTimeout(() => {
+            const result = this.state.all_songs.filter((row) => {
+                let valid = true;
+                for (const dataField in filters) {
+                    const { filterVal, filterType, comparator } = filters[dataField];
+                    console.log(filterType)
+
+                    if (filterType === 'TEXT') {
+                        if (comparator === Comparator.LIKE) {
+                            valid = row[dataField].toString().indexOf(filterVal) > -1;
+                        } else {
+                            valid = row[dataField] === filterVal;
+                        }
+                    }else if (filterType === undefined) {
+                        // WE FOUND OUR CUSTOM TAGS FILTER
+                        if(filterVal.length > 0){
+                            valid = false
+                            filterVal.forEach((tag) => {
+                                if(row.tags_list.split('; ').find(tag_name => tag.name === tag_name) !== undefined) {
+                                    valid = true;
+                                }
+                            })
+                        }
+
+                    }
+                    if (!valid) break;
+                }
+                return valid;
+            });
+            this.setState(() => ({
+                filtered_songs: result
+            }));
+        }, 10);
+    }
 
     render() {
         const columns = [
@@ -181,7 +245,11 @@ export default class MusicLibrarySongDataGrid extends React.Component {
                 dataField: 'tags_list',
                 text: 'Tags ',
                 style: { width: 250, "fontStyle": "italic" },
-                filter: textFilter({ delay: 0 }),
+                filter: customFilter({
+                    getFilter: (f) => { console.log(f) }
+                }),
+                filterRenderer: (onFilter, column) =>
+                    <TagFilter onFilter={onFilter} column={column} />,
                 headerFormatter: headerFormatter
             },
             {
@@ -198,17 +266,6 @@ export default class MusicLibrarySongDataGrid extends React.Component {
             order: 'asc'
         }]
 
-        let displayed_songs = [];
-        this.props.songs.forEach((item) => {
-            item.composer_name = this.find_composer(item);
-            item.arranger_name = this.find_arranger(item);
-            item.lyricist_name = this.find_lyricist(item);
-            item.publisher_name = this.find_publisher(item);
-            item.colletion_name = this.find_collection(item);
-            item.tags_list = this.find_tags(item);
-            item.delete = { id: item.id, on_click: this.handleOpenDeleteModal };
-            displayed_songs.push(item)
-        });
         function indication() {
             return "Table got nothing"
         }
@@ -308,11 +365,13 @@ export default class MusicLibrarySongDataGrid extends React.Component {
                     on_change={this.on_delete_song_change} />
                 <BootstrapTable
                     keyField={"wut"}
+                    remote={{ filter: true }}
+                    onTableChange={this.handleTableChange}
                     pagination={paginationFactory(options)}
                     noDataIndication={indication()}
                     filter={filterFactory()}
                     columns={columns}
-                    data={displayed_songs}
+                    data={this.state.filtered_songs}
                     defaultSorted={defaultSorted} />
             </div>
         );

@@ -57,7 +57,6 @@ class MusicLibrarySongDetail extends React.Component {
         this.handleOpenPersonModal = this.handleOpenPersonModal.bind(this);
         this.handleClosePersonModal = this.handleClosePersonModal.bind(this);
         this.on_person_change = this.on_person_change.bind(this);
-        this.get_tags = this.get_tags.bind(this);
         this.reactTags = React.createRef()
     }
 
@@ -77,6 +76,7 @@ class MusicLibrarySongDetail extends React.Component {
             composers: new Set(),
             arrangers: new Set(),
             lyricists: new Set(),
+            tags: [],
             publisher: "",
             collection: "",
             creating_new_song: true,
@@ -92,8 +92,6 @@ class MusicLibrarySongDetail extends React.Component {
         new_state.composers = new Set(new_state.composers)
         new_state.arrangers = new Set(new_state.arrangers)
         new_state.lyricists = new Set(new_state.lyricists)
-        new_state.tags = this.get_tags(data.tags, 'tags')
-        new_state.suggestions = this.get_tags(data.tags, 'suggestions')
         this.setState(new_state)
     }
 
@@ -240,6 +238,11 @@ class MusicLibrarySongDetail extends React.Component {
     add_tag(tag) {
         axios.put(MUSIC_API_URL + 'songs/' + this.state.id + '/tags/' + tag).then((response) => {
             toast.success("Successfully Added Tag to Song: " + tag);
+            MusicLibraryDatabase.updateSong(response.data)
+            const found_tag = MusicLibraryDatabase.tags.filter(tag_in_db => tag_in_db.tag == tag).length > 0
+            if(!found_tag){
+                MusicLibraryDatabase.resetTags(this.check_if_ready_to_render)
+            }
             // this.props.on_change();
         }).catch((thrown) => {
             console.log(thrown)
@@ -250,6 +253,7 @@ class MusicLibrarySongDetail extends React.Component {
     remove_tag(tag) {
         axios.delete(MUSIC_API_URL + 'songs/' + this.state.id + '/tags/' + tag).then((response) => {
             toast.success("Successfully Deleted Tag from Song: " + tag);
+            MusicLibraryDatabase.updateSong(response.data)
             // this.props.on_change();
         }).catch((thrown) => {
             console.log(thrown)
@@ -299,53 +303,6 @@ class MusicLibrarySongDetail extends React.Component {
         });
     };
 
-    get_tags(tag_ids, method) {
-        let tags = []
-        let suggestions = []
-        MusicLibraryDatabase.tags.forEach(tag => {
-            if (tag_ids.indexOf(tag.id) != -1) {
-                let new_tag = {
-                    id: tag.id,
-                    name: tag.tag,
-                    songs: tag.songs
-                }
-                tags.push(new_tag)
-            } else {
-                let new_suggestion = {
-                    id: tag.id,
-                    name: tag.tag,
-                    songs: tag.songs
-                }
-                suggestions.push(new_suggestion)
-            }
-        })
-        if (method === 'tags') {
-            return tags
-        } else if (method === 'suggestions') {
-            return suggestions
-        }
-    }
-
-    select_tags() {
-        let tags = []
-        this.state.tags.forEach(tag => {
-            if (tag != undefined) {
-                tags.push(tag)
-            }
-        })
-        return tags
-    }
-
-    select_suggestions() {
-        let suggestions = []
-        this.state.suggestions.forEach(suggestion => {
-            if (suggestion != undefined) {
-                suggestions.push(suggestion)
-            }
-        })
-        return suggestions
-    }
-
     onDelete(i) {
         const tags = this.state.tags.slice(0)
         this.remove_tag(tags.splice(i, 1)[0].name)
@@ -353,13 +310,15 @@ class MusicLibrarySongDetail extends React.Component {
     }
 
     onAddition(tag) {
-        const tags = [].concat(this.state.tags, tag)
+        const tags = [].concat(this.state.tags, tag.id)
         this.add_tag(tag.name)
         this.setState({ tags: tags })
     }
 
     render() {
         if (this.state.song_confirmation) {
+            const tags = MusicLibraryDatabase.tags.filter(tag => this.state.tags.indexOf(tag.id) !== -1).map((tag) => { tag.name = tag.tag; return tag })
+            const tag_suggestions = MusicLibraryDatabase.tags.filter(tag => this.state.tags.indexOf(tag.id) === -1).map((tag) => { tag.name = tag.tag; return tag })
             return (
                 <div className="container">
                     <div>
@@ -390,16 +349,16 @@ class MusicLibrarySongDetail extends React.Component {
                             close_modal={this.handleCloseDateModal}
                             on_change={this.on_date_change} />
                     </div>
-
-                    <ReactTags
-                        ref={this.reactTags}
-                        tags={this.select_tags()}
-                        allowNew={true}
-                        suggestions={this.select_suggestions()}
-                        onDelete={this.onDelete.bind(this)}
-                        onAddition={this.onAddition.bind(this)}
-                    />
                     <div>
+
+                        <ReactTags
+                            ref={this.reactTags}
+                            tags={tags}
+                            allowNew={true}
+                            suggestions={tag_suggestions}
+                            onDelete={this.onDelete.bind(this)}
+                            onAddition={this.onAddition.bind(this)}
+                        />
 
                         {!this.props.creating_new_song &&
                             <Label style={{ margin: "1% " }}> Editing

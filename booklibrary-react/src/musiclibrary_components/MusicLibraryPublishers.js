@@ -6,7 +6,7 @@ import EditorFormatter from "../components/Edit_formatter.js";
 import DeleteFormatter from "../components/Delete_formater.js";
 import DeleteModal from "../components/Delete_modal";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPlusSquare, faSort, faSortDown, faSortUp } from '@fortawesome/free-solid-svg-icons';
+import { faPlusSquare } from '@fortawesome/free-solid-svg-icons';
 import MusicLibraryPublisherModal from './MusicLibraryPublisherModal.js';
 import MusicLibraryDatabase from "./MusicLibraryDatabase";
 import { find_error_message_in_response } from "../constants/utils";

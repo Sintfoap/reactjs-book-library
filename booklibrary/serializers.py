@@ -169,14 +169,14 @@ class CollectionGetSerializer(serializers.ModelSerializer):
 
 
 class TagGetSerializer(serializers.ModelSerializer):
-    songs = serializers.SerializerMethodField('get_songs')
+    # songs = serializers.SerializerMethodField('get_songs')
 
     def get_songs(self, tag):
         return SongEditSerializer(tag.songs, many=True).data
 
     class Meta:
         model = Tag
-        fields = ('id', 'tag', 'songs')
+        fields = ('id', 'tag')
 
 
 class DateGetSerializer(serializers.ModelSerializer):

@@ -277,7 +277,7 @@ class MusicLibrarySongDetail extends React.Component {
         }
         axios.post(MUSIC_API_URL + 'songs', song_obj).then((response) => {
             toast.success("Successfully created Song: " + response.data.title);
-            this.props.on_change();
+            // this.props.on_change();
             this.setState({ creating_new_song: false, id: response.data.id })
         }).catch((thrown) => {
             console.log(thrown)

@@ -24,6 +24,7 @@ urlpatterns = [
     ##### BOOKLIBRARY
     #BOOKS
     re_path(r'^api/booklibrary/books$', views.books_list),
+    re_path(r'^api/booklibrary/total_books$', views.total_books),
     path(r'api/booklibrary/books/<int:id>', views.book_detail),
     #AUTHORS
     re_path(r'^api/booklibrary/authors$', views.authors_list),

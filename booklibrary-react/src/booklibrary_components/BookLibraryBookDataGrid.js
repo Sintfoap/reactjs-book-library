@@ -11,8 +11,6 @@ import { BOOK_API_URL } from "../constants";
 import { find_error_message_in_response } from "../constants/utils";
 import BuildDetailFormatter from "../components/Detail_formatter";
 import { toast } from "react-toastify";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSort, faSortDown, faSortUp } from "@fortawesome/free-solid-svg-icons";
 import sortCaret from "../components/Sort_caret";
 import headerFormatter from "../components/Header_formater";
 
@@ -24,7 +22,13 @@ export default class BookLibraryBookDataGrid extends React.Component {
             showModal: false,
             showDeleteModal: false,
             filterUnowned: this.props.filter_unowned === undefined ? true : this.props.filter_unowned,
-            viewing_book: {}
+            viewing_book: {},
+            viewing_books: [],
+            filters: {},
+            changing_filters: undefined,
+            page: 1,
+            page_size: 10,
+            total_books: 0
         };
         this.handleOpenDeleteModal = this.handleOpenDeleteModal.bind(this);
         this.handleOpenModal = this.handleOpenModal.bind(this);
@@ -33,6 +37,19 @@ export default class BookLibraryBookDataGrid extends React.Component {
         this.on_delete_book_change = this.on_delete_book_change.bind(this);
         this.sort_books = this.sort_books.bind(this);
         this.on_change_owned_filter = this.on_change_owned_filter.bind(this);
+        this.get_books = this.get_books.bind(this);
+        this.on_table_change = this.on_table_change.bind(this);
+        this.componentDidUpdate = this.componentDidUpdate.bind(this);
+    }
+
+    componentDidMount() {
+        this.get_books()
+    }
+
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        if(prevState.page != this.state.page || prevState.page_size != this.state.page_size || prevState.changing_filters != this.state.changing_filters || prevState.filterUnowned != this.state.filterUnowned) {
+            this.get_books()
+        }
     }
 
     on_book_change() {
@@ -47,6 +64,22 @@ export default class BookLibraryBookDataGrid extends React.Component {
         }).catch((thrown) => {
             toast.error(JSON.stringify(find_error_message_in_response(thrown.response)));
         });
+    }
+
+    get_books() {
+        axios.get(BOOK_API_URL + 'books?page=' + this.state.page.toString() + "&page_size=" + this.state.page_size.toString() +"&filters=" + JSON.stringify(this.state.filters) + "&filter_unowned=" + this.state.filterUnowned.toString()).then(res => {
+            res.data.books.forEach((item) => {
+                item.author_name = this.find_author(item);
+                item.genre_name = this.find_genre(item);
+                item.series_name = this.find_series(item);
+                item.edit = { id: item.id, on_click: this.handleOpenModal };
+                item.delete = { id: item.id, on_click: this.handleOpenDeleteModal };
+            });
+            this.setState({viewing_books: res.data.books, total_books: res.data.total_books})
+        }).catch((thrown) => {
+            toast.error(JSON.stringify(find_error_message_in_response(thrown.response)));
+        });
+        
     }
 
     on_change_owned_filter(e) {
@@ -97,6 +130,15 @@ export default class BookLibraryBookDataGrid extends React.Component {
         }
     };
 
+    on_table_change(type, newState) {
+        console.log(type, newState)
+        if(type === "pagination") {
+            this.setState({page: newState.page, page_size: newState.sizePerPage})
+        }else if(type === "filter") {
+            this.setState({filters: newState.filters, changing_filters: Date.now()})
+        }
+    }
+
 
     render() {
         const columns = [
@@ -105,7 +147,7 @@ export default class BookLibraryBookDataGrid extends React.Component {
                 dataField: 'title', text: 'Title',
                 sort: true,
                 sortCaret: sortCaret,
-                filter: textFilter({ delay: 0 }),
+                filter: textFilter({ delay: 500 }),
                 formatter: BuildDetailFormatter('/booklibrary/books/'),
                 headerFormatter: headerFormatter
             },
@@ -113,12 +155,12 @@ export default class BookLibraryBookDataGrid extends React.Component {
                 dataField: 'notes',
                 text: 'Notes',
                 style: { width: 250, "fontStyle": "italic" },
-                filter: textFilter({ delay: 0 }),
+                filter: textFilter({ delay: 500 }),
                 headerFormatter: headerFormatter
             },
             {
                 dataField: 'author_name',
-                text: 'Author', filter: textFilter({ delay: 0 }),
+                text: 'Author', filter: textFilter({ delay: 500 }),
                 sort: true,
                 sortCaret: sortCaret,
                 formatter: BuildDetailFormatter('/booklibrary/authors/', 'author'),
@@ -129,7 +171,7 @@ export default class BookLibraryBookDataGrid extends React.Component {
                 text: 'Genre',
                 sort: true,
                 sortCaret: sortCaret,
-                filter: textFilter({ delay: 0 }),
+                filter: textFilter({ delay: 500 }),
                 formatter: BuildDetailFormatter('/booklibrary/genres/', 'genre'),
                 headerFormatter: headerFormatter
             },
@@ -138,7 +180,7 @@ export default class BookLibraryBookDataGrid extends React.Component {
                 text: 'Series',
                 sort: true,
                 sortCaret: sortCaret,
-                filter: textFilter({ delay: 0 }),
+                filter: textFilter({ delay: 500 }),
                 formatter: BuildDetailFormatter('/booklibrary/series/', 'series'),
                 headerFormatter: headerFormatter
             },
@@ -161,17 +203,12 @@ export default class BookLibraryBookDataGrid extends React.Component {
             dataField: 'author_name',
             order: 'asc'
         }]
-        let displayed_books = [];
-        this.props.books.forEach((item) => {
-            item.author_name = this.find_author(item);
-            item.genre_name = this.find_genre(item);
-            item.series_name = this.find_series(item);
-            item.edit = { id: item.id, on_click: this.handleOpenModal };
-            item.delete = { id: item.id, on_click: this.handleOpenDeleteModal };
+        let displayed_books = []
+        this.state.viewing_books.forEach((item) => {
             if (!this.state.filterUnowned || item.owned) {
                 displayed_books.push(item);
             }
-        });
+        })
         if (this.props.sort_field) {
             // console.log(this.props.sort_field)
             displayed_books.sort(this.sort_books);
@@ -229,6 +266,19 @@ export default class BookLibraryBookDataGrid extends React.Component {
                 }
             </div>
         );
+        console.log(this.state.total_books)
+        let pagination_sizes = [{
+            text: '10', value: 10
+        }, {
+            text: '20', value: 20
+        }, {
+            text: '50', value: 50
+        }]
+        if(this.state.total_books > 25){
+            pagination_sizes.push({
+                text: this.state.total_books.toString(), value: this.state.total_books
+            })
+        }
         const options = {
             sizePerPageRenderer,
             pageButtonRenderer,
@@ -236,7 +286,6 @@ export default class BookLibraryBookDataGrid extends React.Component {
             pageStartIndex: 1,
             // alwaysShowAllBtns: true, // Always show next and previous button
             // withFirstAndLast: false, // Hide the going to First and Last page button
-            // hideSizePerPage: true, // Hide the sizePerPage dropdown always
             hidePageListOnlyOnePage: true, // Hide the pagination list when only one page
             firstPageText: 'First',
             prePageText: 'Back',
@@ -246,17 +295,13 @@ export default class BookLibraryBookDataGrid extends React.Component {
             prePageTitle: 'Pre page',
             firstPageTitle: 'Next page',
             lastPageTitle: 'Last page',
-            showTotal: true,
+            // custom: true,
+            showTotal: this.state.total_books != 0,
+            totalSize: this.state.total_books,
+            page: this.state.page,
+            sizePerPage: this.state.page_size,
             disablePageTitle: true,
-            sizePerPageList: [{
-                text: '10', value: 10
-            }, {
-                text: '15', value: 15
-            }, {
-                text: '20', value: 20
-            }, {
-                text: 'All', value: this.props.books.length
-            }]
+            sizePerPageList: pagination_sizes
         };
 
         return (
@@ -269,11 +314,7 @@ export default class BookLibraryBookDataGrid extends React.Component {
                     new={false}
                     close_modal={this.handleCloseModal}
                     on_change={this.on_book_change}
-                    authors={this.props.authors}
-                    genres={this.props.genres}
-                    series={this.props.series}
-                    number_in_series={this.props.number_in_series}
-                    owned={this.props.owned} />
+                    />
                 }
                 <DeleteModal
                     isOpen={this.state.showDeleteModal}
@@ -296,7 +337,14 @@ export default class BookLibraryBookDataGrid extends React.Component {
                     data={displayed_books}
                     rowStyle={this.find_owned}
                     noDataIndication={indication}
-                    defaultSorted={defaultSorted} />
+                    defaultSorted={defaultSorted}
+                    onTableChange={this.on_table_change}
+                    remote={ {
+                        // filter: true,
+                        pagination: true,
+                        // sort: false,
+                        // cellEdit: false
+                      } }/>
             </div>
         );
     }

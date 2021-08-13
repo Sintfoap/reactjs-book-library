@@ -27,7 +27,7 @@
     "react-modal": "^3.12.1",
     "react-router-dom": "^5.2.0",
     "react-scripts": "^4.0.1",
-    "react-select-search": "^2.2.3",
+    "react-select-search": "^3.0.8",
     "react-toastify": "^7.0.4",
     "reactstrap": "^8.9.0",
     "web-vitals": ""

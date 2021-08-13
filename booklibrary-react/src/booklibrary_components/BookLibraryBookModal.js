@@ -13,7 +13,7 @@ import BookLibraryGenreModal from "./BookLibraryGenreModal";
 import BookLibrarySeriesModal from "./BookLibrarySeriesModal";
 import { toast } from "react-toastify";
 import BookLibraryAuthorModal from "./BookLibraryAuthorModal";
-import { get } from "jquery";
+import { ajax, get } from "jquery";
 
 export default class BookLibraryBookModal extends React.Component {
     constructor(props) {
@@ -294,7 +294,7 @@ export default class BookLibraryBookModal extends React.Component {
                                 <Label className="col-11" for="author">Author:
                                 <SelectSearch
                                         name="author"
-                                        search
+                                        search={true}
                                         placeholder="Select an Author"
                                         value={this.state.author.id || ""}
                                         options={this.authors_dropdown_list()}

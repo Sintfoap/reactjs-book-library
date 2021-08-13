@@ -10,7 +10,7 @@ export default class BookLibraryBooks extends React.Component {
   constructor() {
     super();
     this.state = {
-      showModal: false
+      showModal: false,
     };
 
     this.check_if_ready_to_render = this.check_if_ready_to_render.bind(this);
@@ -47,9 +47,6 @@ export default class BookLibraryBooks extends React.Component {
           new={true}
           close_modal={this.handleCloseModal}
           on_change={this.on_book_change}
-          authors={BookLibraryDatabase.authors}
-          genres={BookLibraryDatabase.genres}
-          series={BookLibraryDatabase.series}
           showCreateButtons={true}
           re_open={this.re_open} />
         <div>

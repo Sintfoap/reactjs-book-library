@@ -1,4 +1,6 @@
 from django.shortcuts import render
+from django.core.paginator import Paginator
+from django.db.models import Q
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from rest_framework import status
@@ -7,6 +9,7 @@ from .models import *
 from .serializers import *
 
 from django.conf import settings
+import json
 import logging
 logging.basicConfig(level=logging.DEBUG if settings.DEBUG else logging.INFO)
 logging.debug("PRINTING DEBUG LOGS")
@@ -26,14 +29,34 @@ logging.info("PRINTING INFO LOGS")
 ###############################     BOOKS     ###################################################################################################################################
 #################################################################################################################################################################################
 
+@api_view(['GET'])
+def total_books(request):
+    data = Book.objects.count()
+    return Response({"total_books": data})
+
+
 @api_view(['GET', 'POST'])
 def books_list(request):
     if request.method == 'GET':
-        data = Book.objects.all().prefetch_related("author").prefetch_related("genre").prefetch_related("series")
+        data = Book.objects.all().order_by('id')
+        filters = json.loads(request.GET.get("filters"))
+        filter_unknown = request.GET.get("filter_unowned", "false") == "true"
+        if filter_unknown:
+            data = data.filter(owned=True)
+        for key in filters:
+            if key == "title":
+                data = data.filter(title__icontains=filters[key]["filterVal"])
+            elif key == "notes":
+                data = data.filter(notes__icontains=filters[key]["filterVal"])
+            elif key == "author_name":
+                data = data.filter(Q(author__first_name__icontains=filters[key]["filterVal"]) | Q(author__last_name__icontains=filters[key]["filterVal"]))
 
-        serializer = BookGetSerializer(data, context={'request': request}, many=True)
+        paginator = Paginator(data, int(request.GET.get("page_size",10))) # Show 25 contacts per page.
 
-        return Response(serializer.data)
+        page_obj = paginator.get_page(int(request.GET.get("page",1))) #.prefetch_related("author").prefetch_related("genre").prefetch_related("series")
+        serializer = BookGetSerializer(page_obj, context={'request': request}, many=True)
+
+        return Response({"books": serializer.data, "total_books": data.count()})
 
     elif request.method == 'POST':
         serializer = BookEditSerializer(data=request.data)
@@ -74,9 +97,13 @@ def book_detail(request, id):
 @api_view(['GET', 'POST'])
 def authors_list(request):
     if request.method == 'GET':
-        data = Author.objects.all()
-
-        serializer = AuthorGetSerializer(data, context={'request': request}, many=True)
+        if request.GET.get('get_all') == "true":
+            data = Author.objects.all()
+            serializer = AuthorEditSerializer(data, context={'request': request}, many=True)
+            
+        else:
+            data = Author.objects.all()
+            serializer = AuthorGetSerializer(data, context={'request': request}, many=True)
 
         return Response(serializer.data)
 
@@ -121,9 +148,13 @@ def author_detail(request, id):
 @api_view(['GET', 'POST'])
 def genre_list(request):
     if request.method == 'GET':
-        data = Genre.objects.all()
-
-        serializer = GenreGetSerializer(data, context={'request': request}, many=True)
+        if request.GET.get('get_all') == "true":
+            data = Genre.objects.all()
+            serializer = GenreEditSerializer(data, context={'request': request}, many=True)
+            
+        else:
+            data = Genre.objects.all()
+            serializer = GenreGetSerializer(data, context={'request': request}, many=True)
 
         return Response(serializer.data)
 
@@ -166,9 +197,13 @@ def genre_detail(request, id):
 @api_view(['GET', 'POST'])
 def series_list(request):
     if request.method == 'GET':
-        data = Series.objects.all()
-
-        serializer = SeriesGetSerializer(data, context={'request': request}, many=True)
+        if request.GET.get('get_all') == "true":
+            data = Series.objects.all()
+            serializer = SeriesEditSerializer(data, context={'request': request}, many=True)
+            
+        else:
+            data = Series.objects.all()
+            serializer = SeriesGetSerializer(data, context={'request': request}, many=True)
 
         return Response(serializer.data)
 

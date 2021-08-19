@@ -35,41 +35,50 @@ export default class MusicLibrarySongPeopleDataGrid extends React.Component {
     }
 
     render() {
+        let disabled = this.props.disabled
         let hiddenRowKeys = []
         const columns = [
-            { dataField: 'name', filter: textFilter({ delay: 0, placeholder: this.props.placeholder }) }
+            { dataField: 'name', filter: textFilter({ delay: 0, placeholder: this.props.placeholder, onFilter: filterVal => getSongs(filterVal) }) }
         ];
-        function getSongs() {
-            MusicLibraryDatabase.people.forEach((item) => {
-                if (displayed_people.indexOf(item) === -1) {
-                    item.name = item.last_name + ", " + item.first_name
-                    displayed_people.push(item)
-                }
-            })
+        function getSongs(filterVal = '') {
+            if (!disabled) {
+                MusicLibraryDatabase.people.forEach((item) => {
+                    if (filterVal === '') {
+                        let index = 0
+                        displayed_people.forEach(person => {
+                            if (index < 10) {
+                                index += 1
+                            } else {
+                                hiddenRowKeys.push(person.id)
+                            }
+                        })
+                    } else {
+                        hiddenRowKeys.splice(0,10000)
+                    }
+                    if (displayed_people.indexOf(item) === -1) {
+                        item.name = item.last_name + ", " + item.first_name
+                        displayed_people.push(item)
+                    }
+                })
+            }
         }
         let displayed_people = [];
         let selected = Array.from(this.props.related_people)
         if (this.props.disabled) {
             MusicLibraryDatabase.people.forEach((item) => {
-                let chosen = false
                 selected.forEach(person => {
                     if (person === item.id) {
-                        if (!chosen) {
-                            item.name = item.last_name + ", " + item.first_name
-                            displayed_people.push(item)
-                        }
+                        item.name = item.last_name + ", " + item.first_name
+                        displayed_people.push(item)
                     }
                 })
             });
         } else {
             MusicLibraryDatabase.people.forEach((item) => {
-                let chosen = false
                 selected.forEach(person => {
                     if (person === item.id) {
-                        if (!chosen) {
-                            item.name = item.last_name + ", " + item.first_name
-                            displayed_people.push(item)
-                        }
+                        item.name = item.last_name + ", " + item.first_name
+                        displayed_people.push(item)
                     }
                 })
             });
@@ -105,9 +114,11 @@ export default class MusicLibrarySongPeopleDataGrid extends React.Component {
                     keyField={"id"}
                     filter={filterFactory()}
                     columns={columns}
-                    data={displayed_people}
                     hiddenRows={hiddenRowKeys}
-                    selectRow={selectRow} />
+                    data={displayed_people}
+                    selectRow={selectRow}
+                    condensed
+                    hover />
             </div>
         );
     }

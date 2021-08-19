@@ -47,7 +47,6 @@ export default class MusicLibrarySongs extends React.Component {
     if (this.state.showSongPage) {
       return <div><MusicLibrarySongDetail
         close_song_page={this.handleCloseSongPage}
-        on_change={this.props.on_change}
         creating_new_song={this.state.creating_new_song}
       /></div>
     } else {

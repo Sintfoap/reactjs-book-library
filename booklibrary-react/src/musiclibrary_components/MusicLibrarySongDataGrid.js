@@ -26,7 +26,7 @@ export default class MusicLibrarySongDataGrid extends React.Component {
             item.publisher_name = this.find_publisher(item);
             item.colletion_name = this.find_collection(item);
             item.tags_list = this.find_tags(item);
-            item.delete = { id: item.id, on_click: this.handleOpenDeleteModal };
+            item.delete = { id: item.id, on_click: this.handleOpenDeleteModal.bind(this) };
             all_songs.push(item)
         });
         this.state = {
@@ -38,11 +38,11 @@ export default class MusicLibrarySongDataGrid extends React.Component {
             filtered_songs: all_songs,
             all_songs: all_songs
         };
-        this.handleOpenDeleteModal = this.handleOpenDeleteModal.bind(this);
         this.handleCloseModal = this.handleCloseModal.bind(this);
         this.on_delete_song_change = this.on_delete_song_change.bind(this);
         this.sort_songs = this.sort_songs.bind(this);
         this.handleTableChange = this.handleTableChange.bind(this);
+        this.handleOpenDeleteModal = this.handleOpenDeleteModal.bind(this);
     }
 
     componentDidUpdate(prevProps) {

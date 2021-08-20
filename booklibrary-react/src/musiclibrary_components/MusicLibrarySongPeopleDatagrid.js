@@ -34,55 +34,51 @@ export default class MusicLibrarySongPeopleDataGrid extends React.Component {
         });
     }
 
+    sort_people_alphabetically(people) {
+        people.sort(function(a, b) {
+            var nameA = a.name.toUpperCase(); // ignore upper and lowercase
+            var nameB = b.name.toUpperCase(); // ignore upper and lowercase
+            if (nameA < nameB) {
+              return -1;
+            } else if (nameA > nameB) {
+              return 1;
+            }
+            return 0;
+          });
+    }
+
     render() {
         let disabled = this.props.disabled
         let hiddenRowKeys = []
-        const columns = [
-            { dataField: 'name', filter: textFilter({ delay: 0, placeholder: this.props.placeholder, onFilter: filterVal => getSongs(filterVal) }) }
-        ];
-        function getSongs(filterVal = '') {
-            if (!disabled) {
-                MusicLibraryDatabase.people.forEach((item) => {
-                    if (filterVal === '') {
-                        let index = 0
-                        displayed_people.forEach(person => {
-                            if (index < 10) {
-                                index += 1
-                            } else {
-                                hiddenRowKeys.push(person.id)
-                            }
-                        })
-                    } else {
-                        hiddenRowKeys.splice(0,10000)
-                    }
-                    if (displayed_people.indexOf(item) === -1) {
-                        item.name = item.last_name + ", " + item.first_name
-                        displayed_people.push(item)
-                    }
-                })
+        function getSongs(filterVal, data) {
+            if(filterVal){
+                return data.filter(person => person.name.toLowerCase().includes(filterVal.toLowerCase()) || selected.find(selected_person => person.id === selected_person));
+            }
+            else {
+                return data;
             }
         }
+        const columns = [
+            { dataField: 'name', filter: textFilter({ delay: 0, placeholder: this.props.placeholder, onFilter: getSongs }) }
+        ];
         let displayed_people = [];
         let selected = Array.from(this.props.related_people)
-        if (this.props.disabled) {
-            MusicLibraryDatabase.people.forEach((item) => {
-                selected.forEach(person => {
-                    if (person === item.id) {
-                        item.name = item.last_name + ", " + item.first_name
-                        displayed_people.push(item)
-                    }
-                })
+        MusicLibraryDatabase.people.forEach((item) => {
+            selected.forEach(person => {
+                if (person === item.id) {
+                    item.name = item.last_name + ", " + item.first_name
+                    displayed_people.push(item)
+                }
+            })
+        });
+        this.sort_people_alphabetically(displayed_people)
+        if (!this.props.disabled) {
+            let unselected_people = MusicLibraryDatabase.people.filter(person => selected.find(selected_person => person.id === selected_person) === undefined)
+            unselected_people.forEach((item) => {
+                item.name = item.last_name + ", " + item.first_name
             });
-        } else {
-            MusicLibraryDatabase.people.forEach((item) => {
-                selected.forEach(person => {
-                    if (person === item.id) {
-                        item.name = item.last_name + ", " + item.first_name
-                        displayed_people.push(item)
-                    }
-                })
-            });
-            getSongs()
+            this.sort_people_alphabetically(unselected_people)
+            displayed_people = displayed_people.concat(unselected_people)
         }
 
         let non_selectable = [];
@@ -109,7 +105,7 @@ export default class MusicLibrarySongPeopleDataGrid extends React.Component {
             }
         };
         return (
-            <div>
+            <div class="musiclibrarysongpeopledatagrid">
                 <BootstrapTable
                     keyField={"id"}
                     filter={filterFactory()}

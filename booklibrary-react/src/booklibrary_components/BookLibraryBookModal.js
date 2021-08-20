@@ -79,7 +79,7 @@ export default class BookLibraryBookModal extends React.Component {
     on_author_change(new_author) {
         this.handleCloseAuthorModal();
         this.setState({ author: new_author }); // setting author to the newly created author
-        BookLibraryDatabase.resetState(this.check_if_ready_to_render);
+        BookLibraryDatabase.resetAuthors(this.check_if_ready_to_render);
     }
 
     handleOpenGenreModal() {
@@ -92,7 +92,7 @@ export default class BookLibraryBookModal extends React.Component {
 
     on_genre_change() {
         this.handleCloseGenreModal();
-        BookLibraryDatabase.resetState(this.check_if_ready_to_render);
+        BookLibraryDatabase.resetGenres(this.check_if_ready_to_render);
     }
 
     handleOpenSeriesModal() {
@@ -105,7 +105,7 @@ export default class BookLibraryBookModal extends React.Component {
 
     on_series_change() {
         this.handleCloseSeriesModal();
-        BookLibraryDatabase.resetState(this.check_if_ready_to_render);
+        BookLibraryDatabase.resetSeries(this.check_if_ready_to_render);
     }
 
     check_if_ready_to_render() {

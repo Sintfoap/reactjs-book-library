@@ -55,6 +55,7 @@ export default class BookLibraryBookDataGrid extends React.Component {
     on_book_change() {
         this.handleCloseModal();
         this.props.on_change();
+        this.get_books();
     }
 
     on_delete_book_change() {

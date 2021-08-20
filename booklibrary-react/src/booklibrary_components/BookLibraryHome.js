@@ -44,7 +44,8 @@ export default class BookLibraryHome extends Component {
         case "books":
           return (
             <BookLibraryBooks
-              on_change={() => { BookLibraryDatabase.resetBooks(this.check_if_ready_to_render); }} />
+              on_change={() => { }} //BookLibraryDatabase.resetBooks(this.check_if_ready_to_render); }}
+               />
           );
         case "authors":
           return (

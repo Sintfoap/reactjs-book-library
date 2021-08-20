@@ -39,7 +39,7 @@ def total_books(request):
 def books_list(request):
     if request.method == 'GET':
         data = Book.objects.all().order_by('id')
-        filters = json.loads(request.GET.get("filters"))
+        filters = json.loads(request.GET.get("filters", "{}"))
         filter_unknown = request.GET.get("filter_unowned", "false") == "true"
         if filter_unknown:
             data = data.filter(owned=True)

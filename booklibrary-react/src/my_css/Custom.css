@@ -46,3 +46,18 @@ div.select-search {
 #root {
     margin-bottom: 15px;
 }
+
+.musiclibrarysongpeopledatagrid tbody{
+    max-height: 300px;
+    overflow: auto;
+}
+.musiclibrarysongpeopledatagrid table{
+    border-collapse: collapse;
+    overflow-x: scroll;
+}
+.musiclibrarysongpeopledatagrid tbody, .musiclibrarysongpeopledatagrid thead {
+    display: block;
+}
+.musiclibrarysongpeopledatagrid tr, .musiclibrarysongpeopledatagrid th {
+    display: grid;
+}
